@@ -1,25 +1,31 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#07090d">
+<meta name="theme-color" content="#08090c">
 <title>AURA GEO METEO</title>
 
 <style>
 :root{
---bg:#07090d;
---text:#f6f7fa;
---muted:#8993a3;
---line:#242b35;
---gold:#e8c969;
---blue:#5da8ff;
---cyan:#63d6ff;
---red:#ff7272;
---green:#63d58b
+--bg:#08090c;
+--panel:rgba(18,20,25,.78);
+--panel2:rgba(255,255,255,.025);
+--line:rgba(255,255,255,.08);
+--text:#f3f2ee;
+--muted:#8f929b;
+--gold:#c7a86b;
+--gold2:#ead7a7;
+--green:#75d5a4;
+--red:#ef727c;
+--blue:#8ca9ff;
+--cyan:#76d7e8;
+--radius:22px
 }
 
-*{box-sizing:border-box}
+*{
+box-sizing:border-box
+}
 
 html,body{
 margin:0;
@@ -28,81 +34,116 @@ height:100%;
 overflow:hidden;
 background:var(--bg);
 color:var(--text);
-font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Arial,sans-serif;
+font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Inter,sans-serif;
 -webkit-text-size-adjust:100%
+}
+
+body{
+background:
+radial-gradient(circle at 70% -10%,rgba(199,168,107,.09),transparent 34%),
+linear-gradient(180deg,#08090c,#0b0d11 55%,#07080a)
 }
 
 button{
 font:inherit;
+color:inherit;
 border:0;
 background:none;
-color:inherit;
-cursor:pointer
+-webkit-tap-highlight-color:transparent
 }
 
-body:before{
-content:"";
+.ambient{
 position:fixed;
-inset:0;
+width:320px;
+height:320px;
+filter:blur(100px);
+opacity:.08;
 pointer-events:none;
-background:
-radial-gradient(circle at 50% -15%,rgba(232,201,105,.12),transparent 38%),
-radial-gradient(circle at 100% 65%,rgba(72,117,180,.08),transparent 40%)
+border-radius:50%
+}
+
+.ambient-a{
+background:#b58a45;
+top:10%;
+right:-170px
+}
+
+.ambient-b{
+background:#5369a8;
+bottom:-170px;
+left:-150px
 }
 
 .app{
+width:100%;
 height:100dvh;
-padding:env(safe-area-inset-top) 16px calc(66px + env(safe-area-inset-bottom));
+padding:
+env(safe-area-inset-top)
+14px
+calc(67px + env(safe-area-inset-bottom))
+14px;
 overflow:hidden
 }
 
-.top{
-height:65px;
+.topbar{
+height:55px;
 display:flex;
-align-items:center;
 justify-content:space-between;
+align-items:center;
 border-bottom:1px solid var(--line)
 }
 
 .brand{
-font-size:25px;
-font-weight:900;
-letter-spacing:-1px
-}
-
-.brand span{
-color:var(--gold)
-}
-
-.updated{
-color:var(--muted);
-font-size:11px;
-margin-top:4px
-}
-
-.cities{
 display:flex;
-gap:4px
+gap:10px;
+align-items:center
 }
 
-.city{
-padding:7px 11px;
-border-radius:20px;
-color:var(--muted);
-font-size:12px;
+.brand-mark{
+display:grid;
+place-items:center;
+width:34px;
+height:34px;
+border:1px solid rgba(199,168,107,.55);
+border-radius:10px;
+color:var(--gold2);
 font-weight:800
 }
 
-.city.active{
-background:var(--gold);
-color:#111
+.brand-name{
+font-weight:800;
+font-size:16px;
+letter-spacing:.15em
+}
+
+.brand-sub{
+font-size:7px;
+letter-spacing:.2em;
+color:var(--muted);
+margin-top:2px
+}
+
+.status{
+display:flex;
+align-items:center;
+gap:6px;
+font-size:8px;
+color:#8d9099
+}
+
+.live{
+width:6px;
+height:6px;
+border-radius:50%;
+background:var(--green);
+box-shadow:0 0 10px var(--green)
 }
 
 .screen{
 height:calc(
 100dvh -
-65px -
-66px -
+55px -
+67px -
 env(safe-area-inset-top) -
 env(safe-area-inset-bottom)
 );
@@ -119,11 +160,55 @@ overflow:hidden
 display:block
 }
 
-.weather{
+/* WEATHER */
+
+.weather-page{
 height:100%;
 display:grid;
-grid-template-rows:116px 34px 242px 1fr;
+grid-template-rows:73px 112px 38px 205px 1fr;
 gap:0
+}
+
+.hero{
+display:flex;
+align-items:center;
+justify-content:space-between;
+border-bottom:1px solid var(--line)
+}
+
+.location-name{
+font-size:25px;
+font-weight:750;
+letter-spacing:-.04em
+}
+
+.location-state{
+font-size:8px;
+letter-spacing:.18em;
+color:var(--muted);
+margin-top:4px
+}
+
+.city-switch{
+display:flex;
+padding:3px;
+border:1px solid var(--line);
+border-radius:14px;
+background:rgba(255,255,255,.025)
+}
+
+.city{
+padding:8px 10px;
+border-radius:10px;
+font-size:9px;
+font-weight:700;
+color:#777a83
+}
+
+.city.active{
+background:rgba(199,168,107,.14);
+color:var(--gold2);
+box-shadow:inset 0 0 0 1px rgba(199,168,107,.17)
 }
 
 .current{
@@ -134,383 +219,432 @@ border-bottom:1px solid var(--line)
 }
 
 .temp{
-font-size:66px;
-font-weight:900;
-letter-spacing:-4px;
-line-height:.85
+font-size:61px;
+font-weight:750;
+letter-spacing:-.075em;
+line-height:1
 }
 
 .condition{
-font-size:21px;
-font-weight:850;
-margin-top:8px
+font-size:14px;
+font-weight:600;
+margin-top:4px
 }
 
 .feels{
-font-size:14px;
+font-size:9px;
 color:var(--muted);
 margin-top:4px
 }
 
-.meta{
+.current-right{
 text-align:right;
-color:#bdc5d0;
-font-size:14px;
-line-height:1.8
+font-size:10px;
+color:var(--muted);
+line-height:1.9
 }
 
-.meta b{
-color:#fff
+.current-right strong{
+color:#e1e0dd
 }
 
-.section-title{
+.chart-head{
 display:flex;
 align-items:end;
-color:var(--muted);
-font-size:12px;
-font-weight:850;
-letter-spacing:.08em;
-text-transform:uppercase
+justify-content:space-between
 }
 
-.chart-area{
-position:relative;
-height:242px;
-padding-top:4px
+.chart-title{
+font-size:8px;
+letter-spacing:.18em;
+color:var(--muted);
+font-weight:700
 }
 
 .chart-tabs{
-height:30px;
 display:flex;
-gap:7px;
-align-items:center
+gap:4px
 }
 
 .chart-tab{
-padding:5px 10px;
-border-radius:16px;
-color:var(--muted);
-font-size:12px;
-font-weight:800
+padding:4px 8px;
+border-radius:9px;
+font-size:8px;
+color:#777a83
 }
 
 .chart-tab.active{
-background:#171d26;
-color:#fff
+background:rgba(199,168,107,.12);
+color:var(--gold2)
 }
 
 .chart-box{
+height:205px;
 position:relative;
-height:207px
+padding-top:2px
 }
 
 .chart-svg{
-position:absolute;
-inset:0;
 width:100%;
-height:100%;
+height:172px;
+display:block;
 touch-action:none
 }
 
 .chart-read{
 position:absolute;
-top:8px;
-left:8px;
-padding:7px 9px;
-border:1px solid #343e4c;
-border-radius:10px;
-background:rgba(7,9,13,.88);
+top:3px;
+left:5px;
+min-width:104px;
+padding:5px 7px;
+border:1px solid rgba(255,255,255,.09);
+border-radius:9px;
+background:rgba(10,12,16,.9);
 backdrop-filter:blur(12px);
-pointer-events:none;
-font-size:12px;
+font-size:8px;
 line-height:1.35;
-min-width:112px
+pointer-events:none
 }
 
 .chart-read strong{
 display:block;
-color:var(--gold);
-font-size:18px
+font-size:14px;
+color:var(--gold2)
 }
 
-.chart-range{
-display:none
-}
-
-.days{
-min-height:0;
+.day-strip{
 display:grid;
-grid-template-rows:repeat(7,1fr);
-border-top:1px solid var(--line)
+grid-template-columns:repeat(7,1fr);
+gap:5px;
+align-items:stretch
 }
 
 .day{
-min-height:0;
-width:100%;
-display:grid;
-grid-template-columns:69px 32px 1fr 72px 48px;
+min-width:0;
+border:1px solid var(--line);
+border-radius:12px;
+background:rgba(255,255,255,.018);
+display:flex;
+flex-direction:column;
+justify-content:center;
 align-items:center;
-text-align:left;
-border-bottom:1px solid #1d242e
-}
-
-.day:last-child{
-border-bottom:0
+gap:3px;
+padding:4px 2px
 }
 
 .day.selected{
-background:linear-gradient(
-90deg,
-rgba(232,201,105,.09),
-transparent
-);
-border-radius:7px
+border-color:rgba(199,168,107,.42);
+background:rgba(199,168,107,.08)
 }
 
-.dn{
-font-size:14px;
-font-weight:850
+.day-name{
+font-size:8px;
+font-weight:700;
+color:#c9c8c5
 }
 
-.dd{
-font-size:10px;
-color:var(--muted);
-margin-top:2px
+.day-date{
+font-size:7px;
+color:#686b73
 }
 
-.di{
-font-size:21px;
-text-align:center
+.day-icon{
+font-size:17px;
+line-height:20px
 }
 
-.dt{
-text-align:right;
-font-size:14px;
-font-weight:850
+.day-temp{
+font-size:8px;
+font-weight:700
 }
 
-.dr{
-text-align:right;
-color:var(--blue);
-font-size:12px
+.day-rain{
+font-size:7px;
+color:var(--blue)
 }
 
-.nav{
-position:fixed;
-left:0;
-bottom:0;
-width:100%;
-height:calc(61px + env(safe-area-inset-bottom));
-padding:3px 7px env(safe-area-inset-bottom);
-display:grid;
-grid-template-columns:repeat(5,1fr);
-background:rgba(7,9,13,.96);
-border-top:1px solid var(--line);
-z-index:20
-}
-
-.nav button{
-color:#7f8998;
-font-size:11px;
-font-weight:750
-}
-
-.nav button.active{
-color:var(--gold)
-}
-
-.nav i{
-display:block;
-font-style:normal;
-font-size:20px;
-line-height:21px
-}
+/* OTHER PAGES */
 
 .simple{
 height:100%;
-padding-top:5px
+display:grid;
+grid-template-rows:43px 1fr;
+overflow:hidden
 }
 
-.title{
-height:40px;
+.page-title{
+height:43px;
 display:flex;
 align-items:center;
 justify-content:space-between;
-font-size:21px;
-font-weight:900;
 border-bottom:1px solid var(--line)
 }
 
-.action{
-color:var(--blue);
-font-size:13px;
-font-weight:800
+.page-title h2{
+margin:0;
+font-size:19px;
+letter-spacing:-.03em
 }
 
-.big{
-display:flex;
-align-items:center;
-gap:18px;
-padding:17px 0;
-border-bottom:1px solid var(--line)
-}
-
-.big-num{
-font-size:61px;
-font-weight:900;
-line-height:.8
-}
-
-.big-label{
-font-size:21px;
-font-weight:850
-}
-
-.muted{
+.kicker{
+font-size:7px;
+letter-spacing:.2em;
 color:var(--muted)
 }
 
-.polls{
+.content{
+height:100%;
+overflow:hidden
+}
+
+/* AIR */
+
+.air-main{
+height:100%;
+display:grid;
+grid-template-rows:105px 72px 1fr
+}
+
+.air-score{
+display:flex;
+align-items:center;
+gap:16px;
+border-bottom:1px solid var(--line)
+}
+
+.score{
+font-size:54px;
+font-weight:750;
+letter-spacing:-.06em
+}
+
+.score small{
+font-size:7px;
+font-weight:500;
+letter-spacing:.15em;
+color:var(--muted)
+}
+
+.air-label{
+font-size:16px;
+font-weight:650
+}
+
+.air-sub{
+font-size:9px;
+color:var(--muted);
+margin-top:4px
+}
+
+.pollutants{
 display:grid;
 grid-template-columns:repeat(5,1fr);
-border-bottom:1px solid var(--line);
-padding:14px 0
+border-bottom:1px solid var(--line)
 }
 
-.poll{
-padding:0 6px;
-border-left:1px solid var(--line);
-text-align:left
+.pollutant{
+display:flex;
+flex-direction:column;
+justify-content:center;
+gap:4px;
+padding-left:8px
 }
 
-.poll:first-child{
-border-left:0;
-padding-left:0
+.pollutant+.pollutant{
+border-left:1px solid var(--line)
 }
 
-.poll b{
-font-size:14px
+.pollutant span{
+font-size:7px;
+color:#737680;
+letter-spacing:.1em
 }
 
-.poll small{
-display:block;
-color:var(--muted);
-font-size:9px;
-margin-top:3px
+.pollutant strong{
+font-size:13px
 }
 
-.rows{
-display:grid
+.pollutant small{
+font-size:7px;
+color:#656870
 }
 
-.row{
-height:45px;
+.air-info{
+padding-top:10px
+}
+
+.info-row{
+height:39px;
 display:flex;
 align-items:center;
 justify-content:space-between;
-border-bottom:1px solid #1d242e;
-font-size:14px
+border-bottom:1px solid var(--line);
+font-size:10px
 }
 
-.row b{
-font-size:15px
+.info-row span{
+color:var(--muted)
 }
 
-.kp-main{
-height:130px;
+.info-row strong{
+font-size:11px
+}
+
+/* KP */
+
+.kp-page{
+height:100%;
+display:grid;
+grid-template-rows:100px 64px 1fr
+}
+
+.kp-hero{
 display:flex;
 align-items:center;
 justify-content:space-between;
 border-bottom:1px solid var(--line)
 }
 
-.kp{
-font-size:72px;
-font-weight:900;
-line-height:.8
+.kp-number{
+font-size:57px;
+font-weight:750;
+letter-spacing:-.07em
 }
 
-.kp-right{
+.kp-label{
+font-size:16px;
+font-weight:650;
 text-align:right
 }
 
-.kp-right b{
-font-size:21px
-}
-
-.kp-right span{
-display:block;
+.kp-sub{
+font-size:8px;
 color:var(--muted);
-font-size:13px;
-margin-top:5px
+margin-top:4px;
+text-align:right
 }
 
-.kp-grid{
+.kp-meter-wrap{
+display:flex;
+align-items:center
+}
+
+.kp-meter{
+height:7px;
+width:100%;
+border-radius:99px;
+background:linear-gradient(
+90deg,
+#536b78 0%,
+#7f9271 45%,
+#c19d58 65%,
+#b96366 100%
+);
+overflow:hidden
+}
+
+.kp-fill{
+height:100%;
+width:0;
+background:#fff;
+box-shadow:0 0 12px #fff
+}
+
+.kp-list{
 display:grid;
-grid-template-columns:repeat(4,1fr)
+grid-template-rows:repeat(6,1fr);
+border-top:1px solid var(--line)
 }
 
-.kp-item{
-text-align:center;
-padding:13px 3px;
-border-left:1px solid var(--line)
-}
-
-.kp-item:first-child{
-border-left:0
-}
-
-.kp-item small{
-display:block;
-color:var(--muted);
+.kp-row{
+display:flex;
+align-items:center;
+justify-content:space-between;
+border-bottom:1px solid var(--line);
 font-size:10px
 }
 
-.kp-item b{
-display:block;
-margin-top:4px;
-font-size:16px
+.kp-row span{
+color:var(--muted)
 }
 
-.quake-main{
-height:92px;
+.kp-row strong{
+font-size:12px
+}
+
+/* EARTHQUAKES */
+
+.quake-page{
+height:100%;
+display:grid;
+grid-template-rows:80px 1fr
+}
+
+.quake-summary{
 display:flex;
 align-items:center;
 gap:15px;
 border-bottom:1px solid var(--line)
 }
 
-.qcount{
-font-size:60px;
-font-weight:900
+.quake-count{
+font-size:53px;
+font-weight:750;
+letter-spacing:-.07em
 }
 
-.qrow{
-height:47px;
+.quake-summary-text{
+font-size:12px;
+font-weight:600
+}
+
+.quake-summary-sub{
+font-size:8px;
+color:var(--muted);
+margin-top:4px
+}
+
+.quake-list{
 display:grid;
-grid-template-columns:1fr 45px 55px;
-align-items:center;
-border-bottom:1px solid #1d242e;
-font-size:13px
+grid-template-rows:repeat(8,1fr)
 }
 
-.qrow span{
+.quake{
+display:grid;
+grid-template-columns:49px 1fr 53px;
+align-items:center;
+gap:8px;
+border-bottom:1px solid var(--line)
+}
+
+.mag{
+font-size:15px;
+font-weight:750;
+color:var(--gold2)
+}
+
+.place{
+font-size:9px;
 overflow:hidden;
 text-overflow:ellipsis;
 white-space:nowrap
 }
 
-.qrow b{
-text-align:right
-}
-
-.qrow small{
-text-align:right;
+.qtime{
+font-size:7px;
 color:var(--muted);
-font-size:10px
+margin-top:2px
 }
 
-.moon{
+.qdistance{
+text-align:right;
+font-size:8px;
+color:var(--muted)
+}
+
+/* MOON */
+
+.moon-page{
 height:100%;
 display:flex;
 flex-direction:column;
@@ -520,25 +654,96 @@ text-align:center
 }
 
 .moon-icon{
-font-size:92px
+font-size:86px;
+line-height:1
 }
 
 .moon-name{
-font-size:27px;
-font-weight:900;
-margin-top:12px
+font-size:25px;
+font-weight:750;
+margin-top:18px
+}
+
+.moon-sub{
+font-size:10px;
+color:var(--muted);
+margin-top:6px
 }
 
 .moon-data{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+width:100%;
+max-width:310px;
+margin-top:25px;
+border-top:1px solid var(--line);
+border-bottom:1px solid var(--line)
+}
+
+.moon-cell{
+padding:13px
+}
+
+.moon-cell+.moon-cell{
+border-left:1px solid var(--line)
+}
+
+.moon-cell span{
+display:block;
+font-size:7px;
 color:var(--muted);
-font-size:15px;
-line-height:1.7;
-margin-top:6px
+letter-spacing:.12em
+}
+
+.moon-cell strong{
+display:block;
+font-size:14px;
+margin-top:5px
+}
+
+/* NAV */
+
+.bottom-nav{
+position:fixed;
+z-index:50;
+left:0;
+right:0;
+bottom:0;
+height:calc(64px + env(safe-area-inset-bottom));
+padding:
+4px
+7px
+env(safe-area-inset-bottom);
+display:grid;
+grid-template-columns:repeat(5,1fr);
+background:rgba(8,9,12,.94);
+backdrop-filter:blur(18px);
+border-top:1px solid var(--line)
+}
+
+.nav-btn{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:3px;
+color:#70737c;
+font-size:8px;
+font-weight:700
+}
+
+.nav-icon{
+font-size:19px;
+line-height:20px
+}
+
+.nav-btn.active{
+color:var(--gold2)
 }
 
 .modal{
 position:fixed;
-z-index:50;
+z-index:100;
 inset:0;
 display:none;
 align-items:flex-end;
@@ -552,172 +757,118 @@ display:flex
 
 .sheet{
 width:100%;
-background:#10151d;
-border:1px solid #303a48;
-border-radius:22px 22px 0 0;
-padding:14px
+background:#111419;
+border:1px solid var(--line);
+border-radius:20px 20px 0 0;
+padding:15px
 }
 
-.sheethead{
-height:38px;
+.sheet-head{
 display:flex;
 align-items:center;
 justify-content:space-between
 }
 
-.sheet h2{
-font-size:22px;
-margin:0
+.sheet-title{
+font-size:19px;
+font-weight:700
 }
 
 .close{
-width:36px;
-height:36px;
+width:32px;
+height:32px;
 border-radius:50%;
-background:#202833;
-color:#fff;
-font-size:24px
+background:#20242b;
+font-size:20px
 }
 
-.details{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-border-top:1px solid var(--line);
-border-left:1px solid var(--line)
-}
-
-.detail{
-padding:9px;
-border-right:1px solid var(--line);
-border-bottom:1px solid var(--line)
-}
-
-.detail small{
-display:block;
-color:var(--muted);
-font-size:11px
-}
-
-.detail b{
-display:block;
-margin-top:3px;
-font-size:16px
-}
-
-.guide{
-display:grid
-}
-
-.guide div{
-padding:10px 0;
+.sheet-row{
+display:flex;
+justify-content:space-between;
+padding:11px 0;
 border-bottom:1px solid var(--line);
-font-size:14px
+font-size:10px
+}
+
+.sheet-row span{
+color:var(--muted)
 }
 
 @media(max-width:430px){
 
 .app{
-padding-left:13px;
-padding-right:13px
+padding-left:12px;
+padding-right:12px
 }
 
-.top{
-height:62px
+.topbar{
+height:53px
 }
 
-.brand{
+.brand-mark{
+width:32px;
+height:32px
+}
+
+.brand-name{
+font-size:15px
+}
+
+.weather-page{
+grid-template-rows:69px 107px 36px 198px 1fr
+}
+
+.location-name{
 font-size:23px
 }
 
-.city{
-font-size:11px;
-padding:7px 9px
-}
-
-.screen{
-height:calc(
-100dvh -
-62px -
-66px -
-env(safe-area-inset-top) -
-env(safe-area-inset-bottom)
-)
-}
-
-.weather{
-grid-template-rows:108px 32px 238px 1fr
-}
-
 .temp{
-font-size:60px
-}
-
-.condition{
-font-size:20px
-}
-
-.feels{
-font-size:13px
-}
-
-.meta{
-font-size:13px
-}
-
-.chart-area{
-height:238px
-}
-
-.chart-box{
-height:205px
-}
-
-.day{
-grid-template-columns:67px 30px 1fr 70px 46px
-}
-
-.dn{
-font-size:13px
-}
-
-.dt{
-font-size:13px
-}
-
-.dr{
-font-size:11px
-}
-
-.di{
-font-size:20px
-}
-
-.title{
-font-size:20px
-}
-
-.big-num{
 font-size:57px
 }
 
-.big-label{
-font-size:20px
+.current-right{
+font-size:9px
 }
 
-.kp{
-font-size:64px
+.chart-box{
+height:198px
 }
 
-.kp-right b{
-font-size:19px
+.chart-svg{
+height:166px
 }
 
-.qcount{
-font-size:55px
+.day-icon{
+font-size:15px
 }
 
-.moon-icon{
-font-size:80px
+.day-temp{
+font-size:7px
+}
+
+.day-rain{
+font-size:6px
+}
+
+}
+
+@media(max-width:370px){
+
+.city{
+padding:7px 8px;
+font-size:8px
+}
+
+.weather-page{
+grid-template-rows:67px 102px 35px 190px 1fr
+}
+
+.temp{
+font-size:52px
+}
+
+.location-name{
+font-size:21px
 }
 
 }
@@ -726,51 +877,100 @@ font-size:80px
 
 <body>
 
+<div class="ambient ambient-a"></div>
+<div class="ambient ambient-b"></div>
+
 <div class="app">
 
-<header class="top">
+<header class="topbar">
 
-<div>
-<div class="brand">AURA <span>GEO METEO</span></div>
-<div id="status" class="updated">Синхронизация…</div>
+<div class="brand">
+
+<div class="brand-mark">
+A
 </div>
 
-<div class="cities">
-<button class="city active" data-city="varna">ВАРНА</button>
-<button class="city" data-city="odesa">ОДЕССА</button>
+<div>
+<div class="brand-name">
+AURA
+</div>
+
+<div class="brand-sub">
+GEO METEO
+</div>
+</div>
+
+</div>
+
+<div class="status">
+<span class="live"></span>
+<span>LIVE</span>
+<span id="updated">обновление…</span>
 </div>
 
 </header>
 
 <main class="screen">
 
+<!-- WEATHER -->
+
 <section class="page active" id="page-weather">
 
-<div class="weather">
+<div class="weather-page">
+
+<div class="hero">
+
+<div>
+
+<div class="location-name" id="locationName">
+Варна
+</div>
+
+<div class="location-state">
+ATMOSPHERIC CONDITIONS
+</div>
+
+</div>
+
+<div class="city-switch">
+
+<button class="city active" data-city="varna">
+ВАРНА
+</button>
+
+<button class="city" data-city="odesa">
+ОДЕССА
+</button>
+
+</div>
+
+</div>
 
 <div class="current" id="current">
 Загрузка…
 </div>
 
-<div class="section-title">
-Почасовой прогноз
-</div>
+<div class="chart-head">
 
-<div class="chart-area">
+<div class="chart-title">
+ПОЧАСОВОЙ ПРОГНОЗ
+</div>
 
 <div class="chart-tabs">
 
 <button class="chart-tab active" data-metric="temp">
-Температура
+°C
 </button>
 
 <button class="chart-tab" data-metric="rain">
-Осадки
+☂
 </button>
 
 <button class="chart-tab" data-metric="wind">
-Ветер
+WIND
 </button>
+
+</div>
 
 </div>
 
@@ -778,73 +978,144 @@ font-size:80px
 Загрузка…
 </div>
 
+<div class="day-strip" id="days">
 </div>
-
-<div class="days" id="days"></div>
 
 </div>
 
 </section>
+
+<!-- AIR -->
 
 <section class="page" id="page-air">
 
 <div class="simple">
 
-<div class="title">
-Воздух
-<button class="action" onclick="openAirGuide()">AQI</button>
+<div class="page-title">
+
+<div>
+<div class="kicker">ATMOSPHERE</div>
+<h2>Качество воздуха</h2>
 </div>
 
-<div id="air">
+<button onclick="openAirGuide()">
+AQI
+</button>
+
+</div>
+
+<div class="content">
+
+<div class="air-main">
+
+<div class="air-score" id="air-score">
 Загрузка…
+</div>
+
+<div class="pollutants" id="pollutants">
+</div>
+
+<div class="air-info" id="air-info">
+</div>
+
+</div>
+
 </div>
 
 </div>
 
 </section>
+
+<!-- MAGNETIC -->
 
 <section class="page" id="page-magnetic">
 
 <div class="simple">
 
-<div class="title">
-Магнитные бури
-<button class="action" onclick="openKpGuide()">Шкала</button>
+<div class="page-title">
+
+<div>
+<div class="kicker">SPACE WEATHER</div>
+<h2>Магнитные бури</h2>
 </div>
 
-<div id="magnetic">
+<button onclick="openKpGuide()">
+Kp
+</button>
+
+</div>
+
+<div class="content">
+
+<div class="kp-page">
+
+<div class="kp-hero" id="kpHero">
 Загрузка…
+</div>
+
+<div class="kp-meter-wrap">
+
+<div class="kp-meter">
+<div class="kp-fill" id="kpFill"></div>
+</div>
+
+</div>
+
+<div class="kp-list" id="kpList">
+</div>
+
+</div>
+
 </div>
 
 </div>
 
 </section>
+
+<!-- EARTHQUAKES -->
 
 <section class="page" id="page-seismo">
 
 <div class="simple">
 
-<div class="title">
-Землетрясения
-<button class="action" onclick="loadQuakes()">Обновить</button>
+<div class="page-title">
+
+<div>
+<div class="kicker">SEISMIC MONITOR</div>
+<h2>Землетрясения</h2>
 </div>
 
-<div id="seismo">
+<button onclick="loadQuakes()">
+↻
+</button>
+
+</div>
+
+<div class="content">
+
+<div class="quake-page">
+
+<div class="quake-summary" id="quakeSummary">
 Загрузка…
+</div>
+
+<div class="quake-list" id="quakeList">
+</div>
+
+</div>
+
 </div>
 
 </div>
 
 </section>
 
+<!-- MOON -->
+
 <section class="page" id="page-moon">
 
-<div class="simple">
-
-<div class="moon" id="moon">
+<div class="moon-page" id="moon">
 Загрузка…
-</div>
-
 </div>
 
 </section>
@@ -853,31 +1124,31 @@ font-size:80px
 
 </div>
 
-<nav class="nav">
+<nav class="bottom-nav">
 
-<button class="active" data-page="weather">
-<i>☁</i>
-Погода
+<button class="nav-btn active" data-page="weather">
+<span class="nav-icon">☁</span>
+<span>Погода</span>
 </button>
 
-<button data-page="air">
-<i>◉</i>
-Воздух
+<button class="nav-btn" data-page="air">
+<span class="nav-icon">◉</span>
+<span>Воздух</span>
 </button>
 
-<button data-page="magnetic">
-<i>⚡</i>
-Магнитные
+<button class="nav-btn" data-page="magnetic">
+<span class="nav-icon">ϟ</span>
+<span>Магнитные</span>
 </button>
 
-<button data-page="seismo">
-<i>⌁</i>
-Сейсмо
+<button class="nav-btn" data-page="seismo">
+<span class="nav-icon">⌁</span>
+<span>Сейсмо</span>
 </button>
 
-<button data-page="moon">
-<i>☾</i>
-Луна
+<button class="nav-btn" data-page="moon">
+<span class="nav-icon">☾</span>
+<span>Луна</span>
 </button>
 
 </nav>
@@ -886,11 +1157,11 @@ font-size:80px
 
 <div class="sheet">
 
-<div class="sheethead">
+<div class="sheet-head">
 
-<h2 id="modalTitle">
+<div class="sheet-title" id="modalTitle">
 Подробно
-</h2>
+</div>
 
 <button class="close" onclick="closeModal()">
 ×
@@ -910,112 +1181,120 @@ font-size:80px
 const CITIES={
 varna:{
 name:"Варна",
-country:"Болгария",
-lat:43.21,
-lon:27.91
+lat:43.2141,
+lon:27.9147,
+tz:"Europe/Sofia"
 },
-
 odesa:{
 name:"Одесса",
-country:"Украина",
-lat:46.48,
-lon:30.72
+lat:46.4825,
+lon:30.7233,
+tz:"Europe/Kyiv"
 }
 };
 
 const WMO={
-0:["Ясно","☀"],
-1:["Преимущественно ясно","🌤"],
+0:["Ясно","☀️"],
+1:["Преимущественно ясно","🌤️"],
 2:["Переменная облачность","⛅"],
-3:["Пасмурно","☁"],
-45:["Туман","🌫"],
-48:["Туман","🌫"],
-51:["Морось","🌦"],
-53:["Морось","🌦"],
-55:["Сильная морось","🌧"],
-56:["Ледяная морось","🌧"],
-57:["Ледяная морось","🌧"],
-61:["Небольшой дождь","🌦"],
-63:["Дождь","🌧"],
-65:["Сильный дождь","🌧"],
-66:["Ледяной дождь","🌧"],
-67:["Сильный ледяной дождь","🌧"],
-71:["Снег","🌨"],
-73:["Снег","🌨"],
-75:["Сильный снег","❄"],
-77:["Снежные зерна","❄"],
-80:["Ливни","🌦"],
-81:["Сильные ливни","🌧"],
-82:["Очень сильные ливни","⛈"],
-85:["Снегопад","🌨"],
-86:["Сильный снегопад","❄"],
-95:["Гроза","⛈"],
-96:["Гроза с градом","⛈"],
-99:["Сильная гроза с градом","⛈"]
-};
-
-const AQI=[
-{max:20,label:"Хорошо",cls:"good"},
-{max:40,label:"Удовлетворительно",cls:"good"},
-{max:60,label:"Умеренно",cls:"warn"},
-{max:80,label:"Плохо",cls:"warn"},
-{max:100,label:"Очень плохо",cls:"bad"},
-{max:Infinity,label:"Крайне плохо",cls:"bad"}
-];
-
-const POLL={
-pm2_5:["PM2.5","µg/m³"],
-pm10:["PM10","µg/m³"],
-nitrogen_dioxide:["NO₂","µg/m³"],
-ozone:["O₃","µg/m³"],
-sulphur_dioxide:["SO₂","µg/m³"]
+3:["Пасмурно","☁️"],
+45:["Туман","🌫️"],
+48:["Туман","🌫️"],
+51:["Морось","🌦️"],
+53:["Морось","🌦️"],
+55:["Сильная морось","🌧️"],
+56:["Ледяная морось","🌧️"],
+57:["Ледяная морось","🌧️"],
+61:["Небольшой дождь","🌦️"],
+63:["Дождь","🌧️"],
+65:["Сильный дождь","🌧️"],
+66:["Ледяной дождь","🌧️"],
+67:["Сильный ледяной дождь","🌧️"],
+71:["Снег","🌨️"],
+73:["Снег","🌨️"],
+75:["Сильный снег","❄️"],
+77:["Снежные зерна","❄️"],
+80:["Ливни","🌦️"],
+81:["Сильные ливни","🌧️"],
+82:["Очень сильные ливни","⛈️"],
+85:["Снегопад","🌨️"],
+86:["Сильный снегопад","❄️"],
+95:["Гроза","⛈️"],
+96:["Гроза с градом","⛈️"],
+99:["Сильная гроза с градом","⛈️"]
 };
 
 const S={
 city:"varna",
 weather:null,
 air:null,
-kp:[],
-kpf:[],
-quakes:[],
 day:0,
 metric:"temp",
-chartPoints:[]
+points:[],
+kp:[],
+forecastKp:[],
+quakes:[]
 };
+
+const $=id=>document.getElementById(id);
 
 function city(){
 return CITIES[S.city];
 }
 
-function num(v,d=0){
-const n=Number(v);
-if(!Number.isFinite(n))return "—";
-return n.toFixed(d).replace(".0","");
+function n(v,d=0){
+const x=Number(v);
+return Number.isFinite(x)
+?x.toFixed(d).replace(".0","")
+:"—";
 }
 
-function esc(v){
-return String(v)
-.replaceAll("&","&amp;")
-.replaceAll("<","&lt;")
-.replaceAll(">","&gt;")
-.replaceAll('"',"&quot;");
+function time(v){
+return new Date(v).toLocaleTimeString("ru-RU",{
+hour:"2-digit",
+minute:"2-digit"
+});
 }
 
-function setStatus(t){
-document.getElementById("status").textContent=t;
+function dateShort(v){
+return new Date(v+"T12:00:00").toLocaleDateString(
+"ru-RU",
+{day:"2-digit",month:"2-digit"}
+);
 }
 
-async function getJSON(url){
-const r=await fetch(url,{cache:"no-store"});
+function dayName(v,i){
+if(i===0)return"Сегодня";
+if(i===1)return"Завтра";
+
+return new Date(v+"T12:00:00")
+.toLocaleDateString("ru-RU",{weekday:"short"})
+.replace(".","")
+.replace(/^./,x=>x.toUpperCase());
+}
+
+async function json(url){
+const r=await fetch(
+url+(url.includes("?")?"&":"?")+"_="+Date.now(),
+{cache:"no-store"}
+);
+
 if(!r.ok)throw new Error("HTTP "+r.status);
-return await r.json();
+
+return r.json();
 }
 
-function weatherURL(c){
+/* WEATHER */
+
+async function loadWeather(){
+
+const c=city();
 
 const p=new URLSearchParams({
+
 latitude:c.lat,
 longitude:c.lon,
+
 current:[
 "temperature_2m",
 "relative_humidity_2m",
@@ -1032,8 +1311,6 @@ hourly:[
 "apparent_temperature",
 "precipitation_probability",
 "precipitation",
-"rain",
-"snowfall",
 "weather_code",
 "wind_speed_10m",
 "wind_gusts_10m",
@@ -1047,8 +1324,6 @@ daily:[
 "apparent_temperature_max",
 "apparent_temperature_min",
 "precipitation_sum",
-"rain_sum",
-"snowfall_sum",
 "precipitation_probability_max",
 "wind_speed_10m_max",
 "wind_gusts_10m_max",
@@ -1057,16 +1332,489 @@ daily:[
 "sunset"
 ].join(","),
 
-timezone:"auto",
-forecast_days:"7"
+timezone:c.tz,
+forecast_days:7
 });
 
-return "https://api.open-meteo.com/v1/forecast?"+p;
+S.weather=await json(
+"https://api.open-meteo.com/v1/forecast?"+p
+);
+
+renderWeather();
 }
 
-function airURL(c){
+function renderWeather(){
+
+const d=S.weather;
+const c=d.current;
+const w=WMO[c.weather_code]||["Неизвестно","•"];
+
+$("locationName").textContent=city().name;
+
+$("current").innerHTML=`
+
+<div>
+
+<div class="temp">
+${n(c.temperature_2m)}°
+</div>
+
+<div class="condition">
+${w[1]} ${w[0]}
+</div>
+
+<div class="feels">
+Ощущается ${n(c.apparent_temperature)}° · влажность ${n(c.relative_humidity_2m)}%
+</div>
+
+</div>
+
+<div class="current-right">
+
+<div>
+Ветер <strong>${n(c.wind_speed_10m)} км/ч</strong>
+</div>
+
+<div>
+Порывы <strong>${n(c.wind_gusts_10m)} км/ч</strong>
+</div>
+
+<div>
+Давление <strong>${n(c.pressure_msl)} гПа</strong>
+</div>
+
+</div>
+
+`;
+
+$("days").innerHTML=d.daily.time.map((date,i)=>{
+
+const w=WMO[d.daily.weather_code[i]]||["","•"];
+
+return`
+
+<button class="day ${i===S.day?"selected":""}"
+onclick="selectDay(${i})">
+
+<div class="day-name">
+${dayName(date,i)}
+</div>
+
+<div class="day-date">
+${dateShort(date)}
+</div>
+
+<div class="day-icon">
+${w[1]}
+</div>
+
+<div class="day-temp">
+${n(d.daily.temperature_2m_max[i])}° /
+${n(d.daily.temperature_2m_min[i])}°
+</div>
+
+<div class="day-rain">
+${n(d.daily.precipitation_probability_max[i])}%
+</div>
+
+</button>
+
+`;
+
+}).join("");
+
+renderChart();
+}
+
+function selectDay(i){
+S.day=i;
+
+document.querySelectorAll(".day")
+.forEach((x,n)=>{
+x.classList.toggle("selected",n===i);
+});
+
+renderChart();
+}
+
+function getHours(){
+
+const target=S.weather.daily.time[S.day];
+
+return S.weather.hourly.time
+.map((t,i)=>String(t).startsWith(target)?i:-1)
+.filter(i=>i>=0);
+}
+
+function renderChart(){
+
+const h=S.weather.hourly;
+const ids=getHours();
+
+if(!ids.length)return;
+
+const pts=ids.map(i=>({
+
+time:time(h.time[i]),
+temp:Number(h.temperature_2m[i]),
+feels:Number(h.apparent_temperature[i]),
+rain:Number(h.precipitation_probability[i]??0),
+precip:Number(h.precipitation[i]??0),
+wind:Number(h.wind_speed_10m[i]??0),
+gust:Number(h.wind_gusts_10m[i]??0)
+
+}));
+
+S.points=pts;
+
+const W=720;
+const H=175;
+const L=34;
+const R=10;
+const T=14;
+const B=25;
+const PW=W-L-R;
+const PH=H-T-B;
+
+const vals=
+S.metric==="temp"
+?pts.map(x=>x.temp)
+:S.metric==="rain"
+?pts.map(x=>x.rain)
+:pts.map(x=>x.wind);
+
+let min=Math.floor(Math.min(...vals));
+let max=Math.ceil(Math.max(...vals));
+
+if(min===max){
+min--;
+max++;
+}
+
+const x=i=>
+L+(pts.length===1
+?PW/2
+:i*PW/(pts.length-1));
+
+const y=v=>
+T+(max-v)*PH/(max-min);
+
+const path=pts.map((p,i)=>
+(i?"L":"M")+
+x(i).toFixed(1)+" "+
+y(vals[i]).toFixed(1)
+).join(" ");
+
+const area=
+path+
+` L ${x(pts.length-1)} ${H-B} L ${x(0)} ${H-B} Z`;
+
+const grid=[
+max,
+Math.round((max+min)/2),
+min
+].map(v=>`
+
+<line
+x1="${L}"
+y1="${y(v)}"
+x2="${W-R}"
+y2="${y(v)}"
+stroke="rgba(255,255,255,.07)"
+/>
+
+<text
+x="${L-6}"
+y="${y(v)+3}"
+text-anchor="end"
+fill="#737680"
+font-size="10"
+>
+${n(v)}
+</text>
+
+`).join("");
+
+const labels=pts.map((p,i)=>
+(i%4===0||i===pts.length-1)
+?`
+
+<text
+x="${x(i)}"
+y="${H-5}"
+text-anchor="middle"
+fill="#737680"
+font-size="9"
+>
+${p.time}
+</text>
+
+`
+:""
+).join("");
+
+let bars="";
+
+if(S.metric==="rain"){
+
+bars=pts.map((p,i)=>{
+
+const bh=(p.rain/100)*PH;
+
+return`
+
+<rect
+x="${x(i)-3}"
+y="${H-B-bh}"
+width="6"
+height="${bh}"
+rx="3"
+fill="#8ca9ff"
+opacity=".45"
+/>
+
+`;
+
+}).join("");
+
+}
+
+if(S.metric==="wind"){
+
+const scale=Math.max(1,max);
+
+bars=pts.map((p,i)=>{
+
+const bh=Math.min(
+PH,
+p.wind/scale*PH
+);
+
+return`
+
+<rect
+x="${x(i)-3}"
+y="${H-B-bh}"
+width="6"
+height="${bh}"
+rx="3"
+fill="#76d7e8"
+opacity=".35"
+/>
+
+`;
+
+}).join("");
+
+}
+
+const stroke=
+S.metric==="temp"
+?"#ead7a7"
+:S.metric==="rain"
+?"#8ca9ff"
+:"#76d7e8";
+
+$("chart").innerHTML=`
+
+<svg
+id="weatherChart"
+class="chart-svg"
+viewBox="0 0 ${W} ${H}"
+preserveAspectRatio="none"
+>
+
+<defs>
+
+<linearGradient
+id="chartGradient"
+x1="0"
+y1="0"
+x2="0"
+y2="1"
+>
+
+<stop
+offset="0"
+stop-color="#c7a86b"
+stop-opacity=".23"
+/>
+
+<stop
+offset="1"
+stop-color="#c7a86b"
+stop-opacity="0"
+/>
+
+</linearGradient>
+
+</defs>
+
+${grid}
+
+${S.metric==="temp"
+?`<path d="${area}" fill="url(#chartGradient)"/>`
+:""}
+
+${bars}
+
+<path
+d="${path}"
+fill="none"
+stroke="${stroke}"
+stroke-width="3.5"
+stroke-linecap="round"
+stroke-linejoin="round"
+/>
+
+${S.metric==="temp"
+?pts.map((p,i)=>`
+
+<circle
+class="dot"
+data-i="${i}"
+cx="${x(i)}"
+cy="${y(vals[i])}"
+r="4"
+fill="#ead7a7"
+stroke="#0a0c10"
+stroke-width="2"
+/>
+
+`).join("")
+:""}
+
+<line
+id="marker"
+x1="${x(0)}"
+y1="${T}"
+x2="${x(0)}"
+y2="${H-B}"
+stroke="#fff"
+stroke-width="1"
+opacity=".7"
+/>
+
+${labels}
+
+</svg>
+
+<div class="chart-read" id="chartRead"></div>
+`;
+
+bindChart();
+}
+
+function bindChart(){
+
+const svg=$("weatherChart");
+const marker=$("marker");
+const read=$("chartRead");
+
+if(!svg||!S.points.length)return;
+
+function show(i){
+
+i=Math.max(
+0,
+Math.min(S.points.length-1,Number(i))
+);
+
+const p=S.points[i];
+
+const W=720;
+const L=34;
+const R=10;
+const PW=W-L-R;
+
+const xx=L+
+(S.points.length===1
+?PW/2
+:i*PW/(S.points.length-1));
+
+marker.setAttribute("x1",xx);
+marker.setAttribute("x2",xx);
+
+svg.querySelectorAll(".dot")
+.forEach((d,n)=>{
+d.setAttribute("r",n===i?7:4);
+});
+
+let value;
+
+if(S.metric==="temp"){
+value=n(p.temp)+"°C";
+}else if(S.metric==="rain"){
+value=n(p.rain)+"%";
+}else{
+value=n(p.wind)+" км/ч";
+}
+
+read.innerHTML=`
+
+<strong>
+${p.time} · ${value}
+</strong>
+
+Ощущается ${n(p.feels)}° ·
+дождь ${n(p.precip,1)} мм ·
+порывы ${n(p.gust)} км/ч
+
+`;
+}
+
+function pick(e){
+
+const r=svg.getBoundingClientRect();
+
+const px=Math.max(
+0,
+Math.min(r.width,e.clientX-r.left)
+);
+
+const i=Math.round(
+px/r.width*(S.points.length-1)
+);
+
+show(i);
+}
+
+svg.addEventListener(
+"pointerdown",
+e=>{
+svg.setPointerCapture?.(e.pointerId);
+pick(e);
+}
+);
+
+svg.addEventListener(
+"pointermove",
+e=>{
+if(e.buttons)pick(e);
+}
+);
+
+svg.querySelectorAll(".dot")
+.forEach(d=>
+d.addEventListener(
+"click",
+()=>show(d.dataset.i)
+)
+);
+
+show(0);
+}
+
+/* AIR */
+
+async function loadAir(){
+
+try{
+
+const c=city();
 
 const p=new URLSearchParams({
+
 latitude:c.lat,
 longitude:c.lon,
 
@@ -1079,756 +1827,157 @@ current:[
 "sulphur_dioxide"
 ].join(","),
 
-timezone:"auto"
+timezone:c.tz
 });
 
-return "https://air-quality-api.open-meteo.com/v1/air-quality?"+p;
-}
-
-function time(v){
-
-if(!v)return "—";
-
-const d=new Date(v);
-
-return d.toLocaleTimeString("ru-RU",{
-hour:"2-digit",
-minute:"2-digit"
-});
-}
-
-function dateShort(v){
-
-const d=new Date(v+"T12:00:00");
-
-return d.toLocaleDateString("ru-RU",{
-day:"2-digit",
-month:"2-digit"
-});
-}
-
-function dayName(v,i){
-
-if(i===0)return "Сегодня";
-
-if(i===1)return "Завтра";
-
-return new Date(v+"T12:00:00")
-.toLocaleDateString("ru-RU",{weekday:"short"})
-.replace(".","")
-.replace(/^./,x=>x.toUpperCase());
-}
-
-async function loadWeather(){
-
-const d=await getJSON(weatherURL(city()));
-
-S.weather=d;
-
-renderWeather();
-
-}
-
-function renderWeather(){
-
-const d=S.weather;
-const c=d.current;
-const w=WMO[c.weather_code]||["Неизвестно","•"];
-
-document.getElementById("current").innerHTML=`
-
-<div>
-
-<div class="temp">
-${num(c.temperature_2m)}°
-</div>
-
-<div class="condition">
-${w[1]} ${w[0]}
-</div>
-
-<div class="feels">
-Ощущается ${num(c.apparent_temperature)}° · ${esc(city().name)}
-</div>
-
-</div>
-
-<div class="meta">
-
-<div>Ветер <b>${num(c.wind_speed_10m)} км/ч</b></div>
-
-<div>Порывы <b>${num(c.wind_gusts_10m)} км/ч</b></div>
-
-<div>Влажность <b>${num(c.relative_humidity_2m)}%</b></div>
-
-</div>
-
-`;
-
-const dd=d.daily;
-
-document.getElementById("days").innerHTML=
-dd.time.map((date,i)=>{
-
-const wi=WMO[dd.weather_code[i]]||["","•"];
-
-return `
-
-<button
-class="day ${i===S.day?"selected":""}"
-onclick="selectDay(${i})"
->
-
-<div>
-<div class="dn">${dayName(date,i)}</div>
-<div class="dd">${dateShort(date)}</div>
-</div>
-
-<div class="di">
-${wi[1]}
-</div>
-
-<div></div>
-
-<div class="dt">
-${num(dd.temperature_2m_max[i])}° /
-${num(dd.temperature_2m_min[i])}°
-</div>
-
-<div class="dr">
-💧 ${num(dd.precipitation_probability_max[i])}%
-</div>
-
-</button>
-
-`;
-
-}).join("");
-
-renderChart();
-
-}
-
-function hourlyForDay(day){
-
-const h=S.weather.hourly;
-const target=S.weather.daily.time[day];
-
-const result=[];
-
-for(let i=0;i<h.time.length;i++){
-
-if(String(h.time[i]).startsWith(target)){
-result.push(i);
-}
-
-}
-
-return result;
-
-}
-
-function selectDay(i){
-
-S.day=i;
-
-document
-.querySelectorAll(".day")
-.forEach((b,n)=>{
-b.classList.toggle("selected",n===i)
-});
-
-renderChart();
-
-}
-
-function renderChart(){
-
-const h=S.weather?.hourly;
-
-if(!h)return;
-
-const rows=hourlyForDay(S.day);
-
-if(!rows.length){
-
-document.getElementById("chart").innerHTML=
-'<div class="muted">Почасовые данные недоступны.</div>';
-
-return;
-
-}
-
-const pts=rows.map(i=>({
-
-i,
-
-time:time(h.time[i]),
-
-temp:Number(h.temperature_2m[i]),
-
-feels:Number(h.apparent_temperature[i]),
-
-rain:Number(h.precipitation_probability[i]??0),
-
-precip:Number(h.precipitation[i]??0),
-
-wind:Number(h.wind_speed_10m[i]??0),
-
-gust:Number(h.wind_gusts_10m[i]??0),
-
-code:Number(h.weather_code[i]??-1)
-
-}));
-
-S.chartPoints=pts;
-
-const W=720;
-const H=210;
-const L=38;
-const R=12;
-const T=18;
-const B=30;
-
-const PW=W-L-R;
-const PH=H-T-B;
-
-const vals=
-S.metric==="temp"
-?pts.map(p=>p.temp)
-:S.metric==="rain"
-?pts.map(p=>p.rain)
-:pts.map(p=>p.wind);
-
-let min=Math.floor(Math.min(...vals));
-let max=Math.ceil(Math.max(...vals));
-
-if(min===max){
-min-=1;
-max+=1;
-}
-
-const x=i=>
-L+
-(
-pts.length===1
-?PW/2
-:i*PW/(pts.length-1)
-);
-
-const y=v=>
-T+
-(max-v)*PH/(max-min);
-
-const path=pts
-.map((p,i)=>
-(i?"L":"M")+
-x(i).toFixed(1)+
-" "+
-y(vals[i]).toFixed(1)
-)
-.join(" ");
-
-const area=
-path+
-" L "+
-x(pts.length-1)+
-" "+
-(H-B)+
-" L "+
-x(0)+
-" "+
-(H-B)+
-" Z";
-
-const gid="g"+Date.now();
-
-const grid=[
-max,
-Math.round((max+min)/2),
-min
-]
-.map(v=>`
-
-<line
-x1="${L}"
-y1="${y(v)}"
-x2="${W-R}"
-y2="${y(v)}"
-stroke="#242d38"
-/>
-
-<text
-x="${L-7}"
-y="${y(v)+4}"
-text-anchor="end"
-fill="#8993a3"
-font-size="13"
->
-${num(v)}
-</text>
-
-`)
-.join("");
-
-const labels=pts
-.map((p,i)=>
-(i%4===0||i===pts.length-1)
-?`
-
-<text
-x="${x(i)}"
-y="${H-9}"
-text-anchor="middle"
-fill="#aeb7c4"
-font-size="12"
->
-${p.time}
-</text>
-
-`
-:""
-)
-.join("");
-
-const bars=
-S.metric==="rain"
-
-?pts.map((p,i)=>{
-
-const bh=(p.rain/100)*PH;
-
-return `
-
-<rect
-x="${x(i)-4}"
-y="${H-B-bh}"
-width="8"
-height="${bh}"
-rx="4"
-fill="#5da8ff"
-opacity=".55"
-/>
-
-`;
-
-}).join("")
-
-:S.metric==="wind"
-
-?pts.map((p,i)=>{
-
-const bh=
-Math.min(
-PH,
-(p.wind/Math.max(1,max))*PH
-);
-
-return `
-
-<rect
-x="${x(i)-3}"
-y="${H-B-bh}"
-width="6"
-height="${bh}"
-rx="3"
-fill="#63d6ff"
-opacity=".45"
-/>
-
-`;
-
-}).join("")
-
-:"";
-
-const dots=
-S.metric==="temp"
-
-?pts.map((p,i)=>`
-
-<circle
-class="chart-dot"
-data-i="${i}"
-cx="${x(i)}"
-cy="${y(vals[i])}"
-r="4.5"
-fill="#e8c969"
-stroke="#0b0e13"
-stroke-width="2"
-/>
-
-`).join("")
-
-:"";
-
-const stroke=
-S.metric==="rain"
-?"#5da8ff"
-:S.metric==="wind"
-?"#63d6ff"
-:"#e8c969";
-
-document.getElementById("chart").innerHTML=`
-
-<div class="chart-box">
-
-<svg
-id="weatherChart"
-class="chart-svg"
-viewBox="0 0 ${W} ${H}"
-preserveAspectRatio="none"
->
-
-${grid}
-
-<defs>
-
-<linearGradient
-id="${gid}"
-x1="0"
-y1="0"
-x2="0"
-y2="1"
->
-
-<stop
-offset="0"
-stop-color="#e8c969"
-stop-opacity=".25"
-/>
-
-<stop
-offset="1"
-stop-color="#e8c969"
-stop-opacity="0"
-/>
-
-</linearGradient>
-
-</defs>
-
-${
-S.metric==="temp"
-?
-`<path d="${area}" fill="url(#${gid})"/>`
-:""
-}
-
-<path
-d="${path}"
-fill="none"
-stroke="${stroke}"
-stroke-width="4"
-stroke-linecap="round"
-stroke-linejoin="round"
-/>
-
-${bars}
-
-${dots}
-
-${labels}
-
-<line
-id="chartMarker"
-x1="${x(0)}"
-y1="${T}"
-x2="${x(0)}"
-y2="${H-B}"
-stroke="#fff"
-stroke-width="1.5"
-opacity=".75"
-/>
-
-</svg>
-
-<div
-class="chart-read"
-id="chartRead"
-></div>
-
-</div>
-
-`;
-
-bindChart();
-
-}
-
-function bindChart(){
-
-const svg=document.getElementById("weatherChart");
-const read=document.getElementById("chartRead");
-const marker=document.getElementById("chartMarker");
-const pts=S.chartPoints;
-
-if(!svg||!pts.length)return;
-
-let active=0;
-
-const show=i=>{
-
-i=Math.max(
-0,
-Math.min(
-pts.length-1,
-Number(i)
-)
-);
-
-active=i;
-
-const p=pts[i];
-
-const W=720;
-const L=38;
-const R=12;
-const PW=W-L-R;
-
-const left=
-L+
-(
-pts.length===1
-?PW/2
-:i*PW/(pts.length-1)
-);
-
-marker.setAttribute("x1",left);
-marker.setAttribute("x2",left);
-
-svg
-.querySelectorAll(".chart-dot")
-.forEach((d,n)=>{
-d.setAttribute(
-"r",
-n===i?8:4.5
-);
-});
-
-let value=
-S.metric==="temp"
-?num(p.temp)+"°C"
-:S.metric==="rain"
-?num(p.rain)+"%"
-:num(p.wind)+" км/ч";
-
-read.innerHTML=`
-
-<strong>
-${esc(p.time)} · ${value}
-</strong>
-
-<br>
-
-Ощущается ${num(p.feels)}°
-· дождь ${num(p.precip,1)} мм
-· порывы ${num(p.gust)} км/ч
-
-`;
-
-};
-
-const pick=e=>{
-
-const r=svg.getBoundingClientRect();
-
-const px=Math.max(
-0,
-Math.min(
-r.width,
-e.clientX-r.left
-)
-);
-
-const i=
-Math.round(
-px/r.width*(pts.length-1)
-);
-
-show(i);
-
-};
-
-svg.addEventListener(
-"pointerdown",
-e=>{
-
-svg.setPointerCapture?.(e.pointerId);
-pick(e);
-
-}
-);
-
-svg.addEventListener(
-"pointermove",
-e=>{
-
-if(e.buttons){
-pick(e);
-}
-
-}
-);
-
-svg
-.querySelectorAll(".chart-dot")
-.forEach(d=>
-d.addEventListener(
-"click",
-()=>show(d.dataset.i)
-)
-);
-
-show(active);
-
-}
-
-async function loadAir(){
-
-try{
-
-S.air=await getJSON(
-airURL(city())
+S.air=await json(
+"https://air-quality-api.open-meteo.com/v1/air-quality?"+p
 );
 
 renderAir();
 
 }catch(e){
 
-document.getElementById("air").innerHTML=
-'<div class="muted" style="padding-top:15px">Данные недоступны.</div>';
+$("air-score").innerHTML=
+'<div class="air-sub">Данные недоступны</div>';
 
 }
+}
 
+function aqName(v){
+
+if(v<=20)return"Хорошо";
+if(v<=40)return"Удовлетворительно";
+if(v<=60)return"Умеренно";
+if(v<=80)return"Плохо";
+if(v<=100)return"Очень плохо";
+return"Крайне плохо";
 }
 
 function renderAir(){
 
 const a=S.air.current;
+const value=Number(a.european_aqi??0);
 
-const band=
-AQI.find(
-x=>Number(a.european_aqi)<=x.max
-)
-||AQI.at(-1);
+$("air-score").innerHTML=`
 
-const ks=Object.keys(POLL);
-
-document.getElementById("air").innerHTML=`
-
-<div class="big">
-
-<div class="big-num ${band.cls}">
-${num(a.european_aqi)}
+<div class="score">
+${n(value)}
+<small>EU AQI</small>
 </div>
 
 <div>
-
-<div class="big-label">
-${band.label}
+<div class="air-label">
+${aqName(value)}
 </div>
 
-<div class="muted">
-European AQI · ${esc(city().name)}
+<div class="air-sub">
+${city().name} · европейская шкала
 </div>
-
-</div>
-
-</div>
-
-<div class="polls">
-
-${ks.map(k=>`
-
-<div class="poll">
-
-<b>
-${num(a[k],1)}
-</b>
-
-<small>
-${POLL[k][0]} · ${POLL[k][1]}
-</small>
-
-</div>
-
-`).join("")}
-
-</div>
-
-<div class="rows">
-
-${ks.map(k=>`
-
-<div class="row">
-
-<span>
-${POLL[k][0]}
-</span>
-
-<b>
-${num(a[k],1)} µg/m³
-</b>
-
-</div>
-
-`).join("")}
-
 </div>
 
 `;
 
+const items=[
+["PM2.5",a.pm2_5],
+["PM10",a.pm10],
+["NO₂",a.nitrogen_dioxide],
+["O₃",a.ozone],
+["SO₂",a.sulphur_dioxide]
+];
+
+$("pollutants").innerHTML=items.map(x=>`
+
+<div class="pollutant">
+
+<span>${x[0]}</span>
+
+<strong>${n(x[1],1)}</strong>
+
+<small>µg/m³</small>
+
+</div>
+
+`).join("");
+
+$("air-info").innerHTML=`
+
+<div class="info-row">
+<span>European AQI</span>
+<strong>${n(value)}</strong>
+</div>
+
+<div class="info-row">
+<span>PM2.5</span>
+<strong>${n(a.pm2_5,1)} µg/m³</strong>
+</div>
+
+<div class="info-row">
+<span>PM10</span>
+<strong>${n(a.pm10,1)} µg/m³</strong>
+</div>
+
+<div class="info-row">
+<span>NO₂</span>
+<strong>${n(a.nitrogen_dioxide,1)} µg/m³</strong>
+</div>
+
+<div class="info-row">
+<span>O₃</span>
+<strong>${n(a.ozone,1)} µg/m³</strong>
+</div>
+
+`;
 }
 
 function openAirGuide(){
 
-document.getElementById("modalTitle")
-.textContent="European AQI";
+$("modalTitle").textContent="European AQI";
 
-document.getElementById("modalBody")
-.innerHTML=`
+$("modalBody").innerHTML=`
 
-<div class="guide">
-
-<div>
-<b>0–20</b> · Хорошо
+<div class="sheet-row">
+<span>0–20</span>
+<strong>Хорошо</strong>
 </div>
 
-<div>
-<b>21–40</b> · Удовлетворительно
+<div class="sheet-row">
+<span>21–40</span>
+<strong>Удовлетворительно</strong>
 </div>
 
-<div>
-<b>41–60</b> · Умеренно
+<div class="sheet-row">
+<span>41–60</span>
+<strong>Умеренно</strong>
 </div>
 
-<div>
-<b>61–80</b> · Плохо
+<div class="sheet-row">
+<span>61–80</span>
+<strong>Плохо</strong>
 </div>
 
-<div>
-<b>81–100</b> · Очень плохо
+<div class="sheet-row">
+<span>81–100</span>
+<strong>Очень плохо</strong>
 </div>
 
-<div>
-<b>>100</b> · Крайне плохо
-</div>
-
+<div class="sheet-row">
+<span>>100</span>
+<strong>Крайне плохо</strong>
 </div>
 
 `;
 
 openModal();
-
 }
 
-function parseKp(a){
+/* NOAA */
 
-return Array.isArray(a)
+function parseKp(data){
 
-?a
-.map(x=>({
+if(!Array.isArray(data))return[];
+
+return data.map(x=>({
 
 time:x.time_tag??x[0],
 
@@ -1838,166 +1987,236 @@ x.Kp??
 x[1]
 ),
 
-observed:x.observed??x[2]
+observed:x.observed??x[2],
+scale:x.noaa_scale
 
 }))
-.filter(
-x=>x.time&&Number.isFinite(x.kp)
+.filter(x=>
+x.time&&Number.isFinite(x.kp)
 )
 .sort(
 (a,b)=>
 new Date(a.time)-new Date(b.time)
-)
-
-:[];
-
+);
 }
 
 async function loadKp(){
 
 try{
 
-const[a,b]=await Promise.all([
+const[
+historyRaw,
+forecastRaw
+]=await Promise.all([
 
-getJSON(
+json(
 "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json"
 ),
 
-getJSON(
+json(
 "https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json"
 )
 
 ]);
 
-S.kp=parseKp(a);
-S.kpf=parseKp(b);
+S.kp=parseKp(historyRaw);
+S.forecastKp=parseKp(forecastRaw);
 
 renderKp();
 
 }catch(e){
 
-document.getElementById("magnetic").innerHTML=
-'<div class="muted" style="padding-top:15px">NOAA недоступен.</div>';
+$("kpHero").innerHTML=
+'<div class="kp-sub">NOAA недоступен</div>';
 
 }
+}
 
+function kpName(v){
+
+if(v>=9)return"Экстремальная буря";
+if(v>=8)return"Сильнейшая буря";
+if(v>=7)return"Сильная буря";
+if(v>=6)return"Умеренная буря";
+if(v>=5)return"Слабая буря";
+if(v>=4)return"Возмущённо";
+return"Спокойно";
 }
 
 function renderKp(){
 
-const c=S.kp.at(-1);
+const now=Date.now();
 
-if(!c)return;
+const past=S.kp.filter(x=>
+new Date(x.time).getTime()<=now
+);
 
-const level=
-c.kp>=5
-?["G1+","Магнитная буря","warn"]
-:c.kp>=4
-?["Kp 4","Возмущённо","warn"]
-:["Kp 0–3","Спокойно","good"];
+const current=
+past.at(-1)||S.kp.at(-1);
 
-const f=
-S.kpf
-.filter(
-x=>new Date(x.time)>new Date()
-)
-.slice(0,4);
+if(!current)return;
 
-document.getElementById("magnetic").innerHTML=`
+const future=S.forecastKp.filter(x=>{
+const t=new Date(x.time).getTime();
 
-<div class="kp-main">
+return t>now&&
+t<=now+24*60*60*1000;
+});
+
+const max24=Math.max(
+current.kp,
+...S.kp
+.filter(x=>{
+const t=new Date(x.time).getTime();
+return now-t<=86400000&&t<=now;
+})
+.map(x=>x.kp)
+);
+
+$("kpHero").innerHTML=`
 
 <div>
 
-<div class="kp">
-${num(c.kp,1)}
+<div class="kp-number">
+${n(current.kp,1)}
 </div>
 
-<div class="muted">
-Kp · ${time(c.time)}
-</div>
-
-</div>
-
-<div class="kp-right">
-
-<b class="${level[2]}">
-${level[0]}
-</b>
-
-<span>
-${level[1]}
-</span>
-
+<div class="kicker">
+PLANETARY K-INDEX
 </div>
 
 </div>
 
-<div class="kp-grid">
+<div>
 
-${f.map(x=>`
-
-<div class="kp-item">
-
-<small>
-${time(x.time)}
-</small>
-
-<b>
-Kp ${num(x.kp,1)}
-</b>
-
+<div class="kp-label">
+${kpName(current.kp)}
 </div>
 
-`).join("")}
+<div class="kp-sub">
+${time(current.time)}
+</div>
 
 </div>
 
 `;
 
+$("kpFill").style.width=
+Math.min(
+100,
+current.kp/9*100
+)+"%";
+
+const rows=[];
+
+rows.push(`
+<div class="kp-row">
+<span>Максимум за 24 часа</span>
+<strong>${n(max24,1)}</strong>
+</div>
+`);
+
+future.slice(0,5).forEach(x=>{
+
+rows.push(`
+<div class="kp-row">
+<span>${time(x.time)}</span>
+<strong>Kp ${n(x.kp,1)}</strong>
+</div>
+`);
+
+});
+
+while(rows.length<6){
+
+rows.push(`
+<div class="kp-row">
+<span>Прогноз</span>
+<strong>—</strong>
+</div>
+`);
+
 }
 
-function dist(a,b,c,d){
+$("kpList").innerHTML=rows.join("");
+}
+
+function openKpGuide(){
+
+$("modalTitle").textContent="Шкала Kp";
+
+$("modalBody").innerHTML=`
+
+<div class="sheet-row">
+<span>Kp 0–3</span>
+<strong>Спокойно</strong>
+</div>
+
+<div class="sheet-row">
+<span>Kp 4</span>
+<strong>Возмущённо</strong>
+</div>
+
+<div class="sheet-row">
+<span>Kp 5</span>
+<strong>G1</strong>
+</div>
+
+<div class="sheet-row">
+<span>Kp 6</span>
+<strong>G2</strong>
+</div>
+
+<div class="sheet-row">
+<span>Kp 7</span>
+<strong>G3</strong>
+</div>
+
+<div class="sheet-row">
+<span>Kp 8</span>
+<strong>G4</strong>
+</div>
+
+<div class="sheet-row">
+<span>Kp 9</span>
+<strong>G5</strong>
+</div>
+
+`;
+
+openModal();
+}
+
+/* EARTHQUAKES */
+
+function distance(lat1,lon1,lat2,lon2){
 
 const R=6371;
-
 const r=Math.PI/180;
 
-const p=a*r;
-const q=c*r;
+const a=
+Math.sin((lat2-lat1)*r/2)**2+
+Math.cos(lat1*r)*
+Math.cos(lat2*r)*
+Math.sin((lon2-lon1)*r/2)**2;
 
-const dp=(c-a)*r;
-const dl=(d-b)*r;
-
-const x=
-Math.sin(dp/2)**2+
-Math.cos(p)*
-Math.cos(q)*
-Math.sin(dl/2)**2;
-
-return 2*
-R*
-Math.asin(
-Math.sqrt(x)
-);
-
+return 2*R*Math.asin(Math.sqrt(a));
 }
 
 async function loadQuakes(){
 
 try{
 
-const d=await getJSON(
+const data=await json(
 "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson"
 );
 
 const c=city();
 
-S.quakes=
-(d.features||[])
+S.quakes=(data.features||[])
 .map(f=>{
 
-const[
+const [
 lon,
 lat,
 depth
@@ -2006,366 +2225,332 @@ depth
 return{
 
 mag:Number(f.properties.mag),
-
-place:
-f.properties.place||
-"Неизвестно",
-
-time:
-f.properties.time,
-
+place:f.properties.place||"Неизвестно",
+time:f.properties.time,
 depth,
-
-distance:
-dist(
-c.lat,
-c.lon,
-lat,
-lon
+distance:distance(
+c.lat,c.lon,lat,lon
 )
 
 };
 
 })
-.filter(
-q=>
-Number.isFinite(q.mag)&&
-q.distance<=500
+.filter(x=>
+Number.isFinite(x.mag)&&
+x.distance<=500
 )
-.sort(
-(a,b)=>b.time-a.time
-)
+.sort((a,b)=>b.time-a.time)
 .slice(0,8);
 
-document.getElementById("seismo").innerHTML=`
+$("quakeSummary").innerHTML=`
 
-<div class="quake-main">
-
-<div class="qcount">
+<div class="quake-count">
 ${S.quakes.length}
 </div>
 
 <div>
 
-<b>
+<div class="quake-summary-text">
 событий за 24 часа
-</b>
+</div>
 
-<div class="muted">
-радиус 500 км · ${esc(city().name)}
+<div class="quake-summary-sub">
+радиус 500 км · ${city().name}
 </div>
 
 </div>
 
+`;
+
+$("quakeList").innerHTML=S.quakes.length
+?S.quakes.map((q,i)=>`
+
+<div class="quake"
+onclick="quakeDetail(${i})">
+
+<div class="mag">
+M ${n(q.mag,1)}
 </div>
 
-${S.quakes.map(q=>`
+<div>
 
-<div class="qrow">
+<div class="place">
+${escapeHTML(q.place)}
+</div>
 
-<span>
-${esc(q.place)}
-</span>
-
-<b>
-M ${num(q.mag,1)}
-</b>
-
-<small>
-${num(q.distance)} км
-</small>
+<div class="qtime">
+${new Date(q.time).toLocaleString("ru-RU")}
+</div>
 
 </div>
 
-`).join("")}
+<div class="qdistance">
+${n(q.distance)} км
+</div>
+
+</div>
+
+`).join("")
+:`
+
+<div class="qtime" style="padding-top:15px">
+Нет землетрясений в радиусе 500 км.
+</div>
 
 `;
 
 }catch(e){
 
-document.getElementById("seismo").innerHTML=
-'<div class="muted">USGS недоступен.</div>';
+$("quakeSummary").innerHTML=
+'<div class="quake-summary-sub">USGS недоступен</div>';
 
+$("quakeList").innerHTML="";
+}
 }
 
+function escapeHTML(v){
+
+return String(v)
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;");
 }
 
-function moon(){
+function quakeDetail(i){
 
-const syn=29.530588853;
+const q=S.quakes[i];
 
-const known=
-new Date(
-Date.UTC(
-2000,
-0,
-6,
-18,
-14
-)
-);
+if(!q)return;
 
-const age=
-(
-(
-new Date()-known
-)/86400000
-%syn+
-syn
-)%syn;
+$("modalTitle").textContent=
+"M "+n(q.mag,1);
 
-const p=age/syn;
+$("modalBody").innerHTML=`
 
-let n,i;
-
-if(age<1.85){
-n="Новолуние";
-i="🌑";
-}
-else if(age<7.38){
-n="Растущий серп";
-i="🌒";
-}
-else if(age<9.22){
-n="Первая четверть";
-i="🌓";
-}
-else if(age<14.76){
-n="Растущая Луна";
-i="🌔";
-}
-else if(age<16.61){
-n="Полнолуние";
-i="🌕";
-}
-else if(age<22.15){
-n="Убывающая Луна";
-i="🌖";
-}
-else if(age<23.99){
-n="Последняя четверть";
-i="🌗";
-}
-else{
-n="Убывающий серп";
-i="🌘";
-}
-
-return[
-n,
-i,
-age,
-.5*
-(1-Math.cos(2*Math.PI*p))*
-100
-];
-
-}
-
-function renderMoon(){
-
-const m=moon();
-
-document.getElementById("moon").innerHTML=`
-
-<div class="moon-icon">
-${m[1]}
+<div class="sheet-row">
+<span>Место</span>
+<strong>${escapeHTML(q.place)}</strong>
 </div>
 
-<div class="moon-name">
-${m[0]}
+<div class="sheet-row">
+<span>Расстояние</span>
+<strong>${n(q.distance)} км</strong>
 </div>
 
-<div class="moon-data">
-
-Возраст:
-${num(m[2],1)}
-суток
-
-<br>
-
-Освещённость:
-${num(m[3],0)}%
-
-<br>
-
-${esc(city().name)}
-
+<div class="sheet-row">
+<span>Глубина</span>
+<strong>${n(q.depth)} км</strong>
 </div>
 
-`;
-
-}
-
-function openKpGuide(){
-
-document.getElementById("modalTitle")
-.textContent="Шкала Kp";
-
-document.getElementById("modalBody")
-.innerHTML=`
-
-<div class="guide">
-
-<div>
-<b>Kp 0–3</b> · спокойно
-</div>
-
-<div>
-<b>Kp 4</b> · возмущённо
-</div>
-
-<div>
-<b>Kp 5–6</b> · G1–G2
-</div>
-
-<div>
-<b>Kp 7–8</b> · G3–G4
-</div>
-
-<div>
-<b>Kp 9</b> · G5
-</div>
-
+<div class="sheet-row">
+<span>Время</span>
+<strong>${new Date(q.time).toLocaleString("ru-RU")}</strong>
 </div>
 
 `;
 
 openModal();
-
 }
 
-function openModal(){
+/* MOON */
 
-document
-.getElementById("modal")
-.classList.add("show");
+function renderMoon(){
 
-}
+const syn=29.530588853;
 
-function closeModal(){
-
-document
-.getElementById("modal")
-.classList.remove("show");
-
-}
-
-function openPage(p){
-
-document
-.querySelectorAll(".page")
-.forEach(x=>
-x.classList.remove("active")
+const epoch=Date.UTC(
+2000,0,6,18,14
 );
 
-document
-.getElementById("page-"+p)
+const age=
+(
+(
+Date.now()-epoch
+)/86400000%syn+syn
+)%syn;
+
+const phase=age/syn;
+
+let name;
+let icon;
+
+if(age<1.85){
+name="Новолуние";
+icon="🌑";
+}else if(age<7.38){
+name="Растущий серп";
+icon="🌒";
+}else if(age<9.22){
+name="Первая четверть";
+icon="🌓";
+}else if(age<14.76){
+name="Растущая Луна";
+icon="🌔";
+}else if(age<16.61){
+name="Полнолуние";
+icon="🌕";
+}else if(age<22.15){
+name="Убывающая Луна";
+icon="🌖";
+}else if(age<23.99){
+name="Последняя четверть";
+icon="🌗";
+}else{
+name="Убывающий серп";
+icon="🌘";
+}
+
+const illumination=
+.5*(1-Math.cos(2*Math.PI*phase))*100;
+
+$("moon").innerHTML=`
+
+<div class="moon-icon">
+${icon}
+</div>
+
+<div class="moon-name">
+${name}
+</div>
+
+<div class="moon-sub">
+${city().name} · текущая фаза Луны
+</div>
+
+<div class="moon-data">
+
+<div class="moon-cell">
+<span>ВОЗРАСТ</span>
+<strong>${n(age,1)} суток</strong>
+</div>
+
+<div class="moon-cell">
+<span>ОСВЕЩЁННОСТЬ</span>
+<strong>${n(illumination)}%</strong>
+</div>
+
+</div>
+
+`;
+}
+
+/* NAVIGATION */
+
+function openPage(page){
+
+document.querySelectorAll(".page")
+.forEach(x=>x.classList.remove("active"));
+
+$("page-"+page)
 .classList.add("active");
 
-document
-.querySelectorAll(".nav button")
+document.querySelectorAll(".nav-btn")
 .forEach(x=>
 x.classList.toggle(
 "active",
-x.dataset.page===p
+x.dataset.page===page
 )
 );
 
-closeModal();
-
 }
 
-document
-.querySelectorAll(".nav button")
-.forEach(b=>
-b.onclick=()=>
-openPage(b.dataset.page)
+document.querySelectorAll(".nav-btn")
+.forEach(btn=>{
+
+btn.onclick=()=>openPage(
+btn.dataset.page
 );
 
-document
-.querySelectorAll(".city")
-.forEach(b=>
+});
 
-b.onclick=()=>{
+/* CITY */
 
-document
-.querySelectorAll(".city")
-.forEach(x=>
-x.classList.remove("active")
-);
+document.querySelectorAll(".city")
+.forEach(btn=>{
 
-b.classList.add("active");
+btn.onclick=async()=>{
 
-S.city=b.dataset.city;
+document.querySelectorAll(".city")
+.forEach(x=>x.classList.remove("active"));
 
-refresh();
+btn.classList.add("active");
 
-}
+S.city=btn.dataset.city;
+S.day=0;
 
-);
+await refresh();
 
-document
-.querySelectorAll(".chart-tab")
-.forEach(b=>
+};
 
-b.onclick=()=>{
+});
 
-S.metric=b.dataset.metric;
+/* CHART */
 
-document
-.querySelectorAll(".chart-tab")
+document.querySelectorAll(".chart-tab")
+.forEach(btn=>{
+
+btn.onclick=()=>{
+
+S.metric=btn.dataset.metric;
+
+document.querySelectorAll(".chart-tab")
 .forEach(x=>
 x.classList.toggle(
 "active",
-x===b
+x===btn
 )
 );
 
 renderChart();
 
+};
+
+});
+
+/* MODAL */
+
+function openModal(){
+$("modal").classList.add("show");
 }
 
-);
+function closeModal(){
+$("modal").classList.remove("show");
+}
+
+/* REFRESH */
 
 async function refresh(){
 
-setStatus("Обновление…");
+$("updated").textContent="обновление…";
 
 await Promise.allSettled([
 
 loadWeather(),
-
 loadAir(),
-
 loadKp(),
-
 loadQuakes()
 
 ]);
 
 renderMoon();
 
-setStatus(
-"Обновлено "+
+$("updated").textContent=
 new Date().toLocaleTimeString(
 "ru-RU",
 {
 hour:"2-digit",
 minute:"2-digit"
 }
-)
 );
-
 }
 
 renderMoon();
-
 refresh();
 
 setInterval(
 refresh,
-900000
+15*60*1000
 );
 
 </script>
