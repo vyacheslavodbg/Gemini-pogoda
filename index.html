@@ -1,1968 +1,2487 @@
 <!DOCTYPE html>
-<html lang="ru" class="dark">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090b10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>AURA GEO METEO</title>
 
-  <title>AURA GEO METEO</title>
-
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              black: '#0b0c10',
-              card: '#161924',
-              gold: '#d4af37'
-            }
-          },
-          fontFamily: {
-            sans: ['Inter', 'sans-serif']
-          }
-        }
-      }
-    }
-  </script>
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"
-    rel="stylesheet"
-  >
-
-  <style>
-    body {
-      background-color: #0b0c10;
-      color: #e2e8f0;
-      font-family: 'Inter', sans-serif;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .glass-panel {
-      background: rgba(22, 25, 36, 0.88);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(212, 175, 55, 0.15);
-    }
-
-    .glass-card {
-      background: rgba(30, 34, 48, 0.65);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      transition: all 0.2s;
-    }
-
-    .glass-card:active {
-      transform: scale(0.98);
-      border-color: rgba(212, 175, 55, 0.4);
-    }
-
-    .gold-text {
-      background: linear-gradient(135deg, #fff, #d4af37);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    ::-webkit-scrollbar {
-      display: none;
-    }
-
-    .pb-safe {
-      padding-bottom: env(safe-area-inset-bottom, 20px);
-    }
-
-    .hour-scroll {
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-
-    .hour-scroll::-webkit-scrollbar {
-      display: none;
-    }
-  </style>
+<style>
+:root{
+  --bg:#090b10;
+  --panel:#11151d;
+  --panel2:#171c26;
+  --line:#2b3340;
+  --text:#f2f4f7;
+  --muted:#9ba5b3;
+  --gold:#e7ca72;
+  --blue:#78a9ff;
+  --green:#6bd58a;
+  --red:#ff7373;
+  --orange:#ffb45e;
+  --shadow:0 14px 40px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+html{
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Arial,sans-serif
+}
+body{
+  margin:0;
+  background:var(--bg);
+  min-height:100vh
+}
+.app{
+  max-width:980px;
+  margin:0 auto;
+  padding:18px 16px 100px
+}
+.header{
+  background:linear-gradient(145deg,#171c26,#0f131a);
+  border:1px solid #353b46;
+  border-radius:24px;
+  padding:24px 20px;
+  box-shadow:var(--shadow);
+  position:relative;
+  overflow:hidden
+}
+.header:after{
+  content:"";
+  position:absolute;
+  inset:auto -60px -110px auto;
+  width:260px;
+  height:260px;
+  border-radius:50%;
+  background:rgba(231,202,114,.08);
+  filter:blur(5px)
+}
+.brand{
+  position:relative;
+  z-index:1
+}
+.brand-icon{
+  font-size:32px;
+  line-height:1;
+  margin-bottom:16px
+}
+h1{
+  margin:0;
+  font-size:clamp(34px,8vw,62px);
+  line-height:.98;
+  letter-spacing:-2px
+}
+.gold{
+  color:var(--gold)
+}
+.subtitle{
+  margin:12px 0 0;
+  color:#d7dce5;
+  font-size:18px
+}
+.status{
+  margin-top:18px;
+  color:var(--muted);
+  font-size:15px
+}
+.city-tabs{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+  position:relative;
+  z-index:1
+}
+.city-btn{
+  border:1px solid #4a5260;
+  background:#202631;
+  color:#dfe4eb;
+  padding:10px 18px;
+  border-radius:999px;
+  font-weight:700
+}
+.city-btn.active{
+  background:var(--gold);
+  border-color:var(--gold);
+  color:#101216
+}
+.telegram{
+  margin-top:16px;
+  padding:16px 18px;
+  border:1px solid #2f3947;
+  border-radius:18px;
+  background:#10151d
+}
+.telegram-title{
+  font-weight:800;
+  font-size:17px
+}
+.telegram-text{
+  color:var(--muted);
+  font-size:14px;
+  margin-top:5px;
+  line-height:1.4
+}
+.telegram-btn{
+  display:inline-block;
+  margin-top:12px;
+  padding:9px 14px;
+  border-radius:10px;
+  background:#2a75d6;
+  color:white;
+  text-decoration:none;
+  font-weight:700
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  margin-top:18px
+}
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:18px;
+  box-shadow:0 8px 26px rgba(0,0,0,.18)
+}
+.card.full{
+  grid-column:1/-1
+}
+.card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px
+}
+.card-title{
+  font-size:14px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.12em
+}
+.card-action{
+  border:0;
+  background:transparent;
+  color:var(--blue);
+  padding:0;
+  font-weight:700
+}
+.current{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-top:12px
+}
+.temp{
+  font-size:58px;
+  font-weight:800;
+  letter-spacing:-2px
+}
+.weather-main{
+  font-size:18px;
+  font-weight:700
+}
+.weather-sub{
+  color:var(--muted);
+  font-size:14px;
+  margin-top:5px
+}
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-top:16px
+}
+.metric{
+  background:var(--panel2);
+  border-radius:14px;
+  padding:12px
+}
+.metric-label{
+  font-size:12px;
+  color:var(--muted)
+}
+.metric-value{
+  font-size:17px;
+  font-weight:700;
+  margin-top:4px
+}
+.forecast{
+  display:grid;
+  grid-template-columns:repeat(7,minmax(100px,1fr));
+  gap:9px;
+  overflow-x:auto;
+  margin-top:14px;
+  padding-bottom:3px
+}
+.day{
+  min-width:100px;
+  background:var(--panel2);
+  border:1px solid #252d38;
+  border-radius:15px;
+  padding:11px;
+  text-align:left;
+  color:var(--text)
+}
+.day.active{
+  border-color:var(--gold)
+}
+.day-name{
+  font-size:13px;
+  font-weight:800
+}
+.day-date{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:2px
+}
+.day-icon{
+  font-size:27px;
+  margin:9px 0
+}
+.day-temp{
+  font-weight:800
+}
+.day-rain{
+  font-size:12px;
+  color:var(--blue);
+  margin-top:5px
+}
+.air-score{
+  font-size:46px;
+  font-weight:800;
+  margin-top:10px
+}
+.good{color:var(--green)}
+.warn{color:var(--orange)}
+.bad{color:var(--red)}
+.pollutants{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px;
+  margin-top:14px
+}
+.pollutant{
+  background:var(--panel2);
+  border-radius:12px;
+  padding:10px;
+  text-align:center
+}
+.pollutant b{
+  display:block;
+  font-size:16px
+}
+.pollutant span{
+  font-size:11px;
+  color:var(--muted)
+}
+.kp-box{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-top:10px
+}
+.kp-number{
+  font-size:50px;
+  font-weight:900
+}
+.kp-label{
+  font-weight:800
+}
+.kp-help{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:4px
+}
+.kp-list,
+.quake-list{
+  display:grid;
+  gap:8px;
+  margin-top:14px
+}
+.row{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:11px 12px;
+  background:var(--panel2);
+  border-radius:12px;
+  font-size:14px
+}
+.row small{
+  color:var(--muted)
+}
+.empty{
+  color:var(--muted);
+  padding:12px 0
+}
+.loading{
+  color:var(--muted);
+  padding:14px 0
+}
+.error{
+  color:var(--red);
+  padding:12px 0;
+  line-height:1.4
+}
+.moon{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  margin-top:10px
+}
+.moon-icon{
+  font-size:55px
+}
+.moon-name{
+  font-size:20px;
+  font-weight:800
+}
+.muted{
+  color:var(--muted)
+}
+.bottom{
+  position:fixed;
+  left:50%;
+  bottom:0;
+  transform:translateX(-50%);
+  width:min(980px,100%);
+  padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+  background:rgba(9,11,16,.92);
+  backdrop-filter:blur(18px);
+  border-top:1px solid #202632;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:6px;
+  z-index:20
+}
+.nav{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  padding:7px 2px;
+  font-size:12px
+}
+.nav.active{
+  color:var(--gold)
+}
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.7);
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  z-index:50;
+  padding:12px
+}
+.modal.show{
+  display:flex
+}
+.sheet{
+  width:min(760px,100%);
+  max-height:88vh;
+  overflow:auto;
+  background:#11151d;
+  border:1px solid #333b48;
+  border-radius:24px 24px 12px 12px;
+  padding:20px;
+  box-shadow:0 20px 60px rgba(0,0,0,.5)
+}
+.sheet-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px
+}
+.sheet h2{
+  margin:0;
+  font-size:24px
+}
+.close{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  border:1px solid #394250;
+  background:#1a2029;
+  color:white;
+  font-size:22px
+}
+.hour-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:14px
+}
+.hour{
+  background:#181e27;
+  border-radius:12px;
+  padding:10px;
+  text-align:center
+}
+.hour-time{
+  font-size:12px;
+  color:var(--muted)
+}
+.hour-icon{
+  font-size:22px;
+  margin:4px 0
+}
+.hour-temp{
+  font-weight:800
+}
+.hour-rain{
+  font-size:11px;
+  color:var(--blue)
+}
+.guide{
+  display:grid;
+  gap:9px;
+  margin-top:14px
+}
+.guide-item{
+  background:#181e27;
+  border-radius:12px;
+  padding:12px
+}
+@media(max-width:700px){
+  .grid{
+    grid-template-columns:1fr
+  }
+  .card.full{
+    grid-column:auto
+  }
+  .pollutants{
+    grid-template-columns:repeat(3,1fr)
+  }
+  .hour-grid{
+    grid-template-columns:repeat(3,1fr)
+  }
+}
+@media(max-width:430px){
+  .app{
+    padding-left:12px;
+    padding-right:12px
+  }
+  .header{
+    padding:20px 16px
+  }
+  h1{
+    font-size:38px
+  }
+  .temp{
+    font-size:50px
+  }
+  .pollutants{
+    grid-template-columns:repeat(2,1fr)
+  }
+  .hour-grid{
+    grid-template-columns:repeat(2,1fr)
+  }
+}
+</style>
 </head>
 
-<body class="min-h-screen pb-28 antialiased">
+<body>
 
-<div class="max-w-4xl mx-auto px-4 pt-4 sm:pt-6">
+<div class="app">
 
-  <!-- HEADER -->
-  <header class="glass-panel rounded-2xl p-4 mb-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+<header class="header">
 
-    <div class="flex items-center gap-3">
+  <div class="brand">
 
-      <div class="w-10 h-10 rounded-xl bg-brand-gold/10 flex items-center justify-center border border-brand-gold/30 text-brand-gold text-xl">
-        ☀️
-      </div>
+    <div class="brand-icon">☀</div>
 
-      <div>
-        <div class="flex items-center gap-2">
-          <h1 class="text-xl font-extrabold gold-text tracking-tight">
-            AURA GEO METEO
-          </h1>
+    <h1>
+      AURA <span class="gold">GEO METEO</span>
+    </h1>
 
-          <span class="text-[9px] px-2 py-0.5 rounded-md bg-brand-gold text-black font-bold uppercase">
-            Premium
-          </span>
-        </div>
-
-        <p id="status-text" class="text-xs text-slate-400">
-          Синхронизация...
-        </p>
-      </div>
-
+    <div class="subtitle">
+      Premium геометеорологический мониторинг
     </div>
 
-    <div class="flex bg-slate-900 rounded-xl p-1 w-full sm:w-auto border border-slate-800">
-
-      <button
-        id="btn-varna"
-        onclick="setCity('varna')"
-        class="flex-1 px-6 py-2 rounded-lg text-sm font-bold bg-brand-gold text-black transition-all"
-      >
-        ВАРНА
-      </button>
-
-      <button
-        id="btn-odesa"
-        onclick="setCity('odesa')"
-        class="flex-1 px-6 py-2 rounded-lg text-sm font-bold text-slate-400 transition-all"
-      >
-        ОДЕССА
-      </button>
-
+    <div id="status" class="status">
+      Синхронизация...
     </div>
 
-  </header>
+  </div>
 
+  <div class="city-tabs">
 
-  <!-- TELEGRAM -->
-  <a
-    href="https://t.me/GmenialarmBot"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="block glass-panel rounded-2xl p-4 mb-5 bg-gradient-to-r from-blue-900/30 to-slate-900 border border-blue-500/20 active:opacity-70 transition-opacity"
-  >
-
-    <div class="flex items-center justify-between gap-3">
-
-      <div class="flex items-center gap-3">
-
-        <div class="w-10 h-10 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 text-xl">
-          ✈️
-        </div>
-
-        <div>
-
-          <h3 class="text-sm font-bold text-white uppercase tracking-wide">
-            Уведомления в Telegram
-          </h3>
-
-          <p class="text-[11px] text-slate-300 leading-tight mt-0.5">
-            Предупреждения о бурях Kp≥5 и землетрясениях
-          </p>
-
-        </div>
-
-      </div>
-
-      <div class="px-3 py-1.5 bg-blue-500 text-white text-xs font-bold rounded-lg shrink-0">
-        Подключить
-      </div>
-
-    </div>
-
-  </a>
-
-
-  <!-- CONTENT -->
-  <main id="content" class="min-h-[400px]">
-
-    <div class="flex h-48 items-center justify-center text-brand-gold animate-pulse text-sm font-bold tracking-widest uppercase">
-      Загрузка данных...
-    </div>
-
-  </main>
-
-</div>
-
-
-<!-- BOTTOM NAVIGATION -->
-<nav class="fixed bottom-0 left-0 right-0 z-40 bg-brand-black/95 backdrop-blur-xl border-t border-slate-800 pb-safe">
-
-  <div class="max-w-md mx-auto grid grid-cols-5 gap-1 text-center p-2">
-
-    <button
-      onclick="setTab('weather')"
-      id="nav-weather"
-      class="nav-btn py-2 text-brand-gold flex flex-col items-center gap-1"
-    >
-      <span class="text-xl">☁️</span>
-      <span class="text-[10px] font-bold">Погода</span>
+    <button class="city-btn active" data-city="varna">
+      ВАРНА
     </button>
 
-    <button
-      onclick="setTab('air')"
-      id="nav-air"
-      class="nav-btn py-2 text-slate-400 flex flex-col items-center gap-1"
-    >
-      <span class="text-xl">🫁</span>
-      <span class="text-[10px] font-bold">Воздух</span>
-    </button>
-
-    <button
-      onclick="setTab('geo')"
-      id="nav-geo"
-      class="nav-btn py-2 text-slate-400 flex flex-col items-center gap-1"
-    >
-      <span class="text-xl">⚡</span>
-      <span class="text-[10px] font-bold">Магнитные</span>
-    </button>
-
-    <button
-      onclick="setTab('eq')"
-      id="nav-eq"
-      class="nav-btn py-2 text-slate-400 flex flex-col items-center gap-1"
-    >
-      <span class="text-xl">🌋</span>
-      <span class="text-[10px] font-bold">Сейсмо</span>
-    </button>
-
-    <button
-      onclick="setTab('moon')"
-      id="nav-moon"
-      class="nav-btn py-2 text-slate-400 flex flex-col items-center gap-1"
-    >
-      <span class="text-xl">🌙</span>
-      <span class="text-[10px] font-bold">Луна</span>
+    <button class="city-btn" data-city="odesa">
+      ОДЕССА
     </button>
 
   </div>
+
+</header>
+
+<section class="telegram">
+
+  <div class="telegram-title">
+    Уведомления в Telegram
+  </div>
+
+  <div class="telegram-text">
+    Предупреждения о магнитных бурях Kp≥5,
+    сильной погоде и землетрясениях.
+  </div>
+
+  <a class="telegram-btn"
+     href="#"
+     id="telegramLink"
+     aria-disabled="true">
+    Подключить
+  </a>
+
+</section>
+
+<main class="grid">
+
+<section class="card full" id="weatherCard">
+
+  <div class="card-head">
+
+    <div class="card-title">
+      Погода
+    </div>
+
+    <button class="card-action"
+            onclick="refreshAll()">
+      Обновить
+    </button>
+
+  </div>
+
+  <div id="weather">
+    Загрузка данных...
+  </div>
+
+</section>
+
+<section class="card" id="airCard">
+
+  <div class="card-head">
+
+    <div class="card-title">
+      Воздух
+    </div>
+
+    <button class="card-action"
+            onclick="openAirGuide()">
+      Что означает
+    </button>
+
+  </div>
+
+  <div id="air">
+    Загрузка...
+  </div>
+
+</section>
+
+<section class="card" id="magneticCard">
+
+  <div class="card-head">
+
+    <div class="card-title">
+      Магнитные
+    </div>
+
+    <button class="card-action"
+            onclick="openKpGuide()">
+      Шкала Kp
+    </button>
+
+  </div>
+
+  <div id="magnetic">
+    Загрузка...
+  </div>
+
+</section>
+
+<section class="card full" id="seismoCard">
+
+  <div class="card-head">
+
+    <div class="card-title">
+      Сейсмо
+    </div>
+
+    <button class="card-action"
+            onclick="refreshQuakes()">
+      Обновить
+    </button>
+
+  </div>
+
+  <div id="seismo">
+    Загрузка...
+  </div>
+
+</section>
+
+<section class="card full" id="moonCard">
+
+  <div class="card-head">
+    <div class="card-title">
+      Луна
+    </div>
+  </div>
+
+  <div id="moon">
+    Загрузка...
+  </div>
+
+</section>
+
+</main>
+
+</div>
+
+<nav class="bottom">
+
+  <button class="nav active"
+          data-target="weatherCard">
+    Погода
+  </button>
+
+  <button class="nav"
+          data-target="airCard">
+    Воздух
+  </button>
+
+  <button class="nav"
+          data-target="magneticCard">
+    Kp
+  </button>
+
+  <button class="nav"
+          data-target="seismoCard">
+    Сейсмо
+  </button>
+
+  <button class="nav"
+          data-target="moonCard">
+    Луна
+  </button>
 
 </nav>
 
+<div class="modal"
+     id="modal"
+     onclick="if(event.target===this)closeModal()">
 
-<!-- MODAL -->
-<div
-  id="modal"
-  class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-  onclick="closeModal(event)"
->
+  <div class="sheet">
 
-  <div
-    class="glass-panel rounded-2xl max-w-sm w-full p-6 border-brand-gold/40 shadow-2xl relative"
-    onclick="event.stopPropagation()"
-  >
+    <div class="sheet-head">
 
-    <button
-      onclick="closeModal(event)"
-      class="absolute top-4 right-4 text-slate-400 p-2 text-xl font-bold"
-    >
-      ✕
-    </button>
+      <h2 id="modalTitle">
+        Подробно
+      </h2>
 
-    <div class="flex items-center gap-3 mb-4">
-
-      <div id="m-icon" class="text-3xl">
-        📊
-      </div>
-
-      <div>
-
-        <h3 id="m-title" class="text-lg font-bold text-white">
-          Показатель
-        </h3>
-
-        <p id="m-status" class="text-xs text-brand-gold font-bold uppercase">
-          Статус
-        </p>
-
-      </div>
+      <button class="close"
+              onclick="closeModal()">
+        ×
+      </button>
 
     </div>
 
-    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 mb-4">
-
-      <div class="text-xs text-slate-400 mb-1">
-        Текущее значение:
-      </div>
-
-      <div id="m-val" class="text-3xl font-extrabold text-white">
-        --
-      </div>
-
-    </div>
-
-    <p id="m-desc" class="text-sm text-slate-300 leading-relaxed mb-6">
-      Описание показателя...
-    </p>
-
-    <button
-      onclick="closeModal(event)"
-      class="w-full py-3 bg-brand-gold text-black font-bold rounded-xl"
-    >
-      Понятно
-    </button>
+    <div id="modalBody"></div>
 
   </div>
 
 </div>
 
-
 <script>
-
-/* =========================================================
-   ГОРОДА
-========================================================= */
+"use strict";
 
 const CITIES = {
 
-  varna: {
-    name: "Варна",
-    country: "Болгария",
-    lat: 43.21,
-    lon: 27.91
+  varna:{
+    name:"Варна",
+    country:"Болгария",
+    lat:43.21,
+    lon:27.91
   },
 
-  odesa: {
-    name: "Одесса",
-    country: "Украина",
-    lat: 46.48,
-    lon: 30.72
+  odesa:{
+    name:"Одесса",
+    country:"Украина",
+    lat:46.48,
+    lon:30.72
   }
 
 };
 
+const state = {
 
-/* =========================================================
-   СОСТОЯНИЕ
-========================================================= */
+  city:"varna",
 
-let state = {
-  city: "varna",
-  tab: "weather",
-  data: null
+  weather:null,
+
+  air:null,
+
+  kp:null,
+
+  kpForecast:null,
+
+  quakes:[],
+
+  lastUpdate:null
+
 };
-
-
-/* =========================================================
-   WEATHER CODES
-========================================================= */
 
 const WMO = {
 
-  0:  { t: "Ясно", i: "☀️" },
-  1:  { t: "Преимущественно ясно", i: "🌤️" },
-  2:  { t: "Переменная облачность", i: "⛅" },
-  3:  { t: "Пасмурно", i: "☁️" },
+  0:["Ясно","☀"],
 
-  45: { t: "Туман", i: "🌫️" },
-  48: { t: "Изморозь / туман", i: "🌫️" },
+  1:["Преимущественно ясно","🌤"],
 
-  51: { t: "Слабая морось", i: "🌧️" },
-  53: { t: "Морось", i: "🌧️" },
-  55: { t: "Сильная морось", i: "🌧️" },
+  2:["Переменная облачность","⛅"],
 
-  56: { t: "Ледяная морось", i: "🌧️" },
-  57: { t: "Сильная ледяная морось", i: "🌧️" },
+  3:["Пасмурно","☁"],
 
-  61: { t: "Небольшой дождь", i: "🌧️" },
-  63: { t: "Дождь", i: "🌧️" },
-  65: { t: "Сильный дождь", i: "🌧️" },
+  45:["Туман","🌫"],
 
-  66: { t: "Ледяной дождь", i: "🌧️" },
-  67: { t: "Сильный ледяной дождь", i: "🌧️" },
+  48:["Изморозь/туман","🌫"],
 
-  71: { t: "Небольшой снег", i: "🌨️" },
-  73: { t: "Снег", i: "❄️" },
-  75: { t: "Сильный снег", i: "❄️" },
+  51:["Морось","🌦"],
 
-  77: { t: "Снежные зёрна", i: "❄️" },
+  53:["Морось","🌦"],
 
-  80: { t: "Небольшой ливень", i: "🌦️" },
-  81: { t: "Ливень", i: "🌧️" },
-  82: { t: "Сильный ливень", i: "⛈️" },
+  55:["Сильная морось","🌧"],
 
-  85: { t: "Снегопад", i: "🌨️" },
-  86: { t: "Сильный снегопад", i: "❄️" },
+  56:["Ледяная морось","🌧"],
 
-  95: { t: "Гроза", i: "⛈️" },
-  96: { t: "Гроза с градом", i: "⛈️" },
-  99: { t: "Сильная гроза с градом", i: "⛈️" }
+  57:["Ледяная морось","🌧"],
+
+  61:["Небольшой дождь","🌦"],
+
+  63:["Дождь","🌧"],
+
+  65:["Сильный дождь","🌧"],
+
+  66:["Ледяной дождь","🌧"],
+
+  67:["Сильный ледяной дождь","🌧"],
+
+  71:["Небольшой снег","🌨"],
+
+  73:["Снег","🌨"],
+
+  75:["Сильный снег","❄"],
+
+  77:["Снежные зерна","❄"],
+
+  80:["Ливни","🌦"],
+
+  81:["Сильные ливни","🌧"],
+
+  82:["Очень сильные ливни","⛈"],
+
+  85:["Снегопад","🌨"],
+
+  86:["Сильный снегопад","❄"],
+
+  95:["Гроза","⛈"],
+
+  96:["Гроза с градом","⛈"],
+
+  99:["Сильная гроза с градом","⛈"]
 
 };
 
+const AQI_BANDS = [
 
-function getW(code) {
+  {
+    max:20,
+    label:"Хорошо",
+    cls:"good"
+  },
 
-  return WMO[code] || {
-    t: "Переменчиво",
-    i: "⛅"
-  };
+  {
+    max:40,
+    label:"Удовлетворительно",
+    cls:"good"
+  },
+
+  {
+    max:60,
+    label:"Умеренно",
+    cls:"warn"
+  },
+
+  {
+    max:80,
+    label:"Плохо",
+    cls:"warn"
+  },
+
+  {
+    max:100,
+    label:"Очень плохо",
+    cls:"bad"
+  },
+
+  {
+    max:Infinity,
+    label:"Крайне плохо",
+    cls:"bad"
+  }
+
+];
+
+const POLLUTANTS = {
+
+  pm2_5:{
+    label:"PM2.5",
+    unit:"µg/m³",
+    bands:[5,15,50,90,140]
+  },
+
+  pm10:{
+    label:"PM10",
+    unit:"µg/m³",
+    bands:[15,45,120,195,270]
+  },
+
+  nitrogen_dioxide:{
+    label:"NO₂",
+    unit:"µg/m³",
+    bands:[10,25,60,100,150]
+  },
+
+  ozone:{
+    label:"O₃",
+    unit:"µg/m³",
+    bands:[60,100,120,160,180]
+  },
+
+  sulphur_dioxide:{
+    label:"SO₂",
+    unit:"µg/m³",
+    bands:[20,40,125,190,275]
+  }
+
+};
+
+function city(){
+  return CITIES[state.city];
+}
+
+function esc(v){
+
+  return String(v ?? "")
+    .replace(/[&<>"']/g,m=>({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[m]));
 
 }
 
+function num(v,dec=0){
 
-/* =========================================================
-   FETCH DATA
-========================================================= */
+  const n=Number(v);
 
-async function fetchData() {
+  return Number.isFinite(n)
+    ? n.toFixed(dec)
+    : "—";
 
-  const loc = CITIES[state.city];
+}
 
-  document.getElementById("status-text").innerText =
-    "Синхронизация...";
+function weatherInfo(code){
 
-  try {
+  return WMO[code] || [
+    "Неизвестно",
+    "•"
+  ];
 
-    const weatherURL =
-      `https://api.open-meteo.com/v1/forecast` +
-      `?latitude=${loc.lat}` +
-      `&longitude=${loc.lon}` +
-      `&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,pressure_msl,wind_speed_10m,is_day` +
-      `&hourly=temperature_2m,precipitation_probability,precipitation,rain,snowfall,weather_code,is_day` +
-      `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,uv_index_max,sunrise,sunset` +
-      `&timezone=auto` +
-      `&forecast_days=5`;
+}
 
-    const airURL =
-      `https://air-quality-api.open-meteo.com/v1/air-quality` +
-      `?latitude=${loc.lat}` +
-      `&longitude=${loc.lon}` +
-      `&current=european_aqi` +
-      `&timezone=auto`;
+function formatTime(iso){
 
-    const kpURL =
-      `https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json`;
+  if(!iso) return "—";
 
-    /*
-      Радиус землетрясений:
-      примерно 500 км вокруг выбранного города.
-    */
+  const d=new Date(iso);
 
-    const radiusKm = 500;
+  return Number.isNaN(d.getTime())
 
-    const latDelta = radiusKm / 111;
+    ? String(iso).slice(11,16)
 
-    const lonDelta =
-      radiusKm /
-      (111 * Math.cos(loc.lat * Math.PI / 180));
-
-    const eqURL =
-      `https://earthquake.usgs.gov/fdsnws/event/1/query` +
-      `?format=geojson` +
-      `&limit=20` +
-      `&orderby=time` +
-      `&minmagnitude=2.5` +
-      `&minlatitude=${loc.lat - latDelta}` +
-      `&maxlatitude=${loc.lat + latDelta}` +
-      `&minlongitude=${loc.lon - lonDelta}` +
-      `&maxlongitude=${loc.lon + lonDelta}`;
-
-
-    const results = await Promise.allSettled([
-
-      fetch(weatherURL),
-
-      fetch(airURL),
-
-      fetch(kpURL),
-
-      fetch(eqURL)
-
-    ]);
-
-
-    /* WEATHER */
-
-    let weather = null;
-
-    if (
-      results[0].status === "fulfilled" &&
-      results[0].value.ok
-    ) {
-
-      weather = await results[0].value.json();
-
-    }
-
-
-    /* AIR */
-
-    let air = null;
-
-    if (
-      results[1].status === "fulfilled" &&
-      results[1].value.ok
-    ) {
-
-      air = await results[1].value.json();
-
-    }
-
-
-    /* KP */
-
-    let kp = null;
-
-    if (
-      results[2].status === "fulfilled" &&
-      results[2].value.ok
-    ) {
-
-      const kpJson =
-        await results[2].value.json();
-
-      if (Array.isArray(kpJson)) {
-
-        const rows = kpJson.filter((row, index) => {
-
-          if (index === 0) return false;
-
-          return (
-            Array.isArray(row) &&
-            row.length > 1 &&
-            Number.isFinite(parseFloat(row[1]))
-          );
-
-        });
-
-        if (rows.length) {
-
-          const last = rows[rows.length - 1];
-
-          kp = parseFloat(last[1]);
-
+    : d.toLocaleTimeString(
+        "ru-RU",
+        {
+          hour:"2-digit",
+          minute:"2-digit"
         }
-
-      }
-
-    }
-
-
-    /* EARTHQUAKES */
-
-    let earthquakes = [];
-
-    if (
-      results[3].status === "fulfilled" &&
-      results[3].value.ok
-    ) {
-
-      const eqJson =
-        await results[3].value.json();
-
-      if (
-        eqJson.features &&
-        eqJson.features.length
-      ) {
-
-        earthquakes =
-          eqJson.features.map(feature => {
-
-            const coords =
-              feature.geometry.coordinates;
-
-            const eqLon = coords[0];
-            const eqLat = coords[1];
-            const depth = coords[2];
-
-            const dist =
-              haversine(
-                loc.lat,
-                loc.lon,
-                eqLat,
-                eqLon
-              );
-
-            return {
-
-              title:
-                feature.properties.place ||
-                "Землетрясение",
-
-              mag:
-                Number(feature.properties.mag) || 0,
-
-              depth:
-                Number(depth) || 0,
-
-              dist:
-                Math.round(dist),
-
-              time:
-                feature.properties.time
-                  ? new Date(feature.properties.time)
-                  : null
-
-            };
-
-          });
-
-      }
-
-    }
-
-
-    state.data = {
-
-      weather,
-      air,
-      kp,
-      eq: earthquakes
-
-    };
-
-
-    document.getElementById("status-text").innerText =
-      `Обновлено: ${
-        new Date().toLocaleTimeString(
-          "ru-RU",
-          {
-            hour: "2-digit",
-            minute: "2-digit"
-          }
-        )
-      }`;
-
-
-    renderTab();
-
-  }
-
-  catch (error) {
-
-    console.error(error);
-
-    state.data = {
-      weather: null,
-      air: null,
-      kp: null,
-      eq: []
-    };
-
-    document.getElementById("status-text").innerText =
-      "Ошибка получения данных";
-
-    renderTab();
-
-  }
-
-}
-
-
-/* =========================================================
-   HAVERSINE
-========================================================= */
-
-function haversine(lat1, lon1, lat2, lon2) {
-
-  const R = 6371;
-
-  const dLat =
-    (lat2 - lat1) *
-    Math.PI / 180;
-
-  const dLon =
-    (lon2 - lon1) *
-    Math.PI / 180;
-
-  const a =
-    Math.sin(dLat / 2) *
-    Math.sin(dLat / 2) +
-
-    Math.cos(lat1 * Math.PI / 180) *
-    Math.cos(lat2 * Math.PI / 180) *
-
-    Math.sin(dLon / 2) *
-    Math.sin(dLon / 2);
-
-  const c =
-    2 *
-    Math.atan2(
-      Math.sqrt(a),
-      Math.sqrt(1 - a)
-    );
-
-  return R * c;
-
-}
-
-
-/* =========================================================
-   CITY
-========================================================= */
-
-function setCity(city) {
-
-  if (state.city === city) return;
-
-  state.city = city;
-
-  document.getElementById("btn-varna").className =
-    city === "varna"
-
-      ? "flex-1 px-6 py-2 rounded-lg text-sm font-bold bg-brand-gold text-black transition-all"
-
-      : "flex-1 px-6 py-2 rounded-lg text-sm font-bold text-slate-400 transition-all";
-
-
-  document.getElementById("btn-odesa").className =
-    city === "odesa"
-
-      ? "flex-1 px-6 py-2 rounded-lg text-sm font-bold bg-brand-gold text-black transition-all"
-
-      : "flex-1 px-6 py-2 rounded-lg text-sm font-bold text-slate-400 transition-all";
-
-
-  fetchData();
-
-}
-
-
-/* =========================================================
-   TABS
-========================================================= */
-
-function setTab(tab) {
-
-  state.tab = tab;
-
-  document
-    .querySelectorAll(".nav-btn")
-    .forEach(button => {
-
-      button.classList.remove(
-        "text-brand-gold"
       );
 
-      button.classList.add(
-        "text-slate-400"
-      );
+}
 
-    });
+function formatDate(iso){
 
+  if(!iso) return "—";
 
-  const active =
-    document.getElementById(
-      `nav-${tab}`
-    );
-
-  active.classList.remove(
-    "text-slate-400"
+  const d=new Date(
+    iso+"T12:00:00"
   );
 
-  active.classList.add(
-    "text-brand-gold"
+  return d.toLocaleDateString(
+    "ru-RU",
+    {
+      day:"2-digit",
+      month:"2-digit"
+    }
   );
 
+}
 
-  renderTab();
+function dayName(iso){
+
+  const d=new Date(
+    iso+"T12:00:00"
+  );
+
+  return d
+    .toLocaleDateString(
+      "ru-RU",
+      {weekday:"short"}
+    )
+    .replace(".","");
 
 }
 
+function setStatus(text){
 
-/* =========================================================
-   MODAL
-========================================================= */
-
-function showModal(
-  id,
-  val,
-  title,
-  icon,
-  desc,
-  status
-) {
-
-  document.getElementById("m-title").innerText =
-    title;
-
-  document.getElementById("m-icon").innerText =
-    icon;
-
-  document.getElementById("m-val").innerHTML =
-    val;
-
-  document.getElementById("m-desc").innerText =
-    desc;
-
-  document.getElementById("m-status").innerText =
-    status;
-
-  document
-    .getElementById("modal")
-    .classList.remove("hidden");
+  document.getElementById(
+    "status"
+  ).textContent=text;
 
 }
 
+function showError(id,msg){
 
-function closeModal(event) {
-
-  event.preventDefault();
-
-  document
-    .getElementById("modal")
-    .classList.add("hidden");
+  document.getElementById(id).innerHTML=
+    '<div class="error">'+
+    esc(msg)+
+    '</div>';
 
 }
 
+async function getJSON(url){
 
-/* =========================================================
-   WEATHER TAB
-========================================================= */
-
-function renderWeather() {
-
-  const c =
-    document.getElementById("content");
-
-  const weather =
-    state.data.weather;
-
-  if (!weather || !weather.current) {
-
-    c.innerHTML = `
-      <div class="glass-panel p-6 rounded-2xl text-center">
-        <div class="text-4xl mb-4">⚠️</div>
-        <h2 class="text-lg font-bold text-white">
-          Данные погоды недоступны
-        </h2>
-        <p class="text-sm text-slate-400 mt-2">
-          Сервер Open-Meteo не ответил.
-        </p>
-      </div>
-    `;
-
-    return;
-
-  }
-
-
-  const cur =
-    weather.current;
-
-  const w =
-    getW(cur.weather_code);
-
-
-  const daily =
-    weather.daily;
-
-
-  let days = "";
-
-
-  if (daily && daily.time) {
-
-    for (
-      let i = 0;
-      i < daily.time.length;
-      i++
-    ) {
-
-      const date =
-        new Date(
-          daily.time[i] + "T12:00:00"
-        );
-
-
-      const dw =
-        getW(
-          daily.weather_code[i]
-        );
-
-
-      const precipitation =
-        daily.precipitation_sum?.[i] ?? 0;
-
-
-      const precipProbability =
-        daily.precipitation_probability_max?.[i] ?? 0;
-
-
-      const dayName =
-        i === 0
-          ? "Сегодня"
-          : date.toLocaleDateString(
-              "ru-RU",
-              {
-                weekday: "short"
-              }
-            );
-
-
-      days += `
-
-        <div
-          onclick="showModal(
-            'day${i}',
-            '${Math.round(daily.temperature_2m_max[i])}° / ${Math.round(daily.temperature_2m_min[i])}°',
-            '${dayName}',
-            '${dw.i}',
-            'Осадки: ${precipitation} мм. Вероятность осадков: ${precipProbability}%.',
-            'Прогноз'
-          )"
-          class="glass-card p-3 rounded-xl text-center cursor-pointer"
-        >
-
-          <div class="text-xs text-slate-400 uppercase font-bold">
-            ${dayName}
-          </div>
-
-          <div class="text-3xl my-2">
-            ${dw.i}
-          </div>
-
-          <div class="text-sm font-bold text-white">
-            ${Math.round(daily.temperature_2m_max[i])}°
-            <span class="text-slate-500 font-normal">
-              ${Math.round(daily.temperature_2m_min[i])}°
-            </span>
-          </div>
-
-          <div class="text-[10px] text-sky-400 mt-2">
-            ${precipProbability}% · ${precipitation} мм
-          </div>
-
-        </div>
-
-      `;
-
+  const r=await fetch(
+    url,
+    {
+      cache:"no-store"
     }
+  );
 
-  }
+  if(!r.ok){
 
-
-  const uv =
-    daily?.uv_index_max?.[0] ?? null;
-
-
-  const sunrise =
-    daily?.sunrise?.[0]
-      ? new Date(daily.sunrise[0])
-          .toLocaleTimeString(
-            "ru-RU",
-            {
-              hour: "2-digit",
-              minute: "2-digit"
-            }
-          )
-      : "--";
-
-
-  const sunset =
-    daily?.sunset?.[0]
-      ? new Date(daily.sunset[0])
-          .toLocaleTimeString(
-            "ru-RU",
-            {
-              hour: "2-digit",
-              minute: "2-digit"
-            }
-          )
-      : "--";
-
-
-  const isDay =
-    cur.is_day === 1;
-
-
-  c.innerHTML = `
-
-    <div class="glass-panel p-6 rounded-2xl mb-4">
-
-      <div class="text-xs font-bold text-brand-gold uppercase tracking-widest mb-2">
-        ${CITIES[state.city].name},
-        ${CITIES[state.city].country}
-      </div>
-
-
-      <div class="flex items-center justify-between mb-6">
-
-        <div
-          onclick="showModal(
-            'temperature',
-            '${Math.round(cur.temperature_2m)}°C',
-            'Температура',
-            '🌡️',
-            'Фактическая температура воздуха.',
-            'Сейчас'
-          )"
-          class="cursor-pointer"
-        >
-
-          <div class="text-6xl font-extrabold text-white tracking-tighter">
-            ${Math.round(cur.temperature_2m)}°
-          </div>
-
-          <div class="text-lg font-bold text-white mt-1">
-            ${w.t}
-          </div>
-
-          <div class="text-sm text-slate-400 mt-1">
-            Ощущается как
-            ${Math.round(cur.apparent_temperature)}°
-          </div>
-
-          <div class="text-xs text-slate-500 mt-2">
-            ${isDay ? "День" : "Ночь"}
-          </div>
-
-        </div>
-
-
-        <div class="text-7xl">
-          ${w.i}
-        </div>
-
-      </div>
-
-
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-4 border-t border-slate-800/80">
-
-
-        <div
-          onclick="showModal(
-            'wind',
-            '${Math.round(cur.wind_speed_10m)} км/ч',
-            'Ветер',
-            '💨',
-            'Скорость ветра на высоте 10 метров.',
-            'Сейчас'
-          )"
-          class="glass-card p-3 rounded-xl cursor-pointer"
-        >
-
-          <div class="text-xs text-slate-400">
-            Ветер
-          </div>
-
-          <div class="font-bold text-white mt-0.5">
-            ${Math.round(cur.wind_speed_10m)} км/ч
-          </div>
-
-        </div>
-
-
-        <div
-          onclick="showModal(
-            'humidity',
-            '${Math.round(cur.relative_humidity_2m)}%',
-            'Влажность',
-            '💧',
-            'Относительная влажность воздуха.',
-            'Сейчас'
-          )"
-          class="glass-card p-3 rounded-xl cursor-pointer"
-        >
-
-          <div class="text-xs text-slate-400">
-            Влажность
-          </div>
-
-          <div class="font-bold text-white mt-0.5">
-            ${Math.round(cur.relative_humidity_2m)}%
-          </div>
-
-        </div>
-
-
-        <div
-          onclick="showModal(
-            'pressure',
-            '${Math.round(cur.pressure_msl)} hPa',
-            'Давление',
-            '⏲️',
-            'Атмосферное давление на уровне моря.',
-            'Сейчас'
-          )"
-          class="glass-card p-3 rounded-xl cursor-pointer"
-        >
-
-          <div class="text-xs text-slate-400">
-            Давление
-          </div>
-
-          <div class="font-bold text-white mt-0.5">
-            ${Math.round(cur.pressure_msl)} hPa
-          </div>
-
-        </div>
-
-
-        <div
-          onclick="showModal(
-            'uv',
-            '${uv !== null ? uv : "--"}',
-            'UV Индекс',
-            '☀️',
-            'Максимальный прогнозируемый UV-индекс на сегодня.',
-            'Сегодня'
-          )"
-          class="glass-card p-3 rounded-xl cursor-pointer"
-        >
-
-          <div class="text-xs text-slate-400">
-            UV Индекс
-          </div>
-
-          <div class="font-bold text-white mt-0.5">
-            ${uv !== null ? uv : "--"}
-          </div>
-
-        </div>
-
-
-      </div>
-
-
-      <div class="grid grid-cols-2 gap-2 mt-2">
-
-        <div class="glass-card p-3 rounded-xl">
-
-          <div class="text-xs text-slate-400">
-            Восход
-          </div>
-
-          <div class="font-bold text-white mt-1">
-            ${sunrise}
-          </div>
-
-        </div>
-
-
-        <div class="glass-card p-3 rounded-xl">
-
-          <div class="text-xs text-slate-400">
-            Закат
-          </div>
-
-          <div class="font-bold text-white mt-1">
-            ${sunset}
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 ml-2">
-      Почасовой прогноз
-    </h2>
-
-
-    ${renderHourly(weather)}
-
-
-    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 ml-2 mt-6">
-      Прогноз на 5 дней
-    </h2>
-
-
-    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-6">
-
-      ${days}
-
-    </div>
-
-  `;
-
-}
-
-
-/* =========================================================
-   HOURLY WEATHER
-========================================================= */
-
-function renderHourly(weather) {
-
-  const hourly =
-    weather.hourly;
-
-  if (!hourly || !hourly.time) {
-
-    return `
-      <div class="glass-panel p-5 rounded-2xl text-center text-slate-400">
-        Почасовые данные недоступны.
-      </div>
-    `;
-
-  }
-
-
-  const now =
-    new Date();
-
-
-  let startIndex = 0;
-
-
-  for (
-    let i = 0;
-    i < hourly.time.length;
-    i++
-  ) {
-
-    const t =
-      new Date(hourly.time[i]);
-
-    if (t >= now) {
-
-      startIndex = i;
-      break;
-
-    }
-
-  }
-
-
-  let html = `
-    <div class="glass-panel rounded-2xl p-4">
-      <div class="hour-scroll flex gap-2 pb-2">
-  `;
-
-
-  const end =
-    Math.min(
-      startIndex + 24,
-      hourly.time.length
+    throw new Error(
+      "HTTP "+r.status
     );
 
-
-  for (
-    let i = startIndex;
-    i < end;
-    i++
-  ) {
-
-    const time =
-      new Date(hourly.time[i]);
-
-
-    const w =
-      getW(
-        hourly.weather_code[i]
-      );
-
-
-    const temp =
-      Math.round(
-        hourly.temperature_2m[i]
-      );
-
-
-    const rainProbability =
-      hourly.precipitation_probability?.[i] ?? 0;
-
-
-    const precipitation =
-      hourly.precipitation?.[i] ?? 0;
-
-
-    const day =
-      hourly.is_day?.[i] === 1;
-
-
-    html += `
-
-      <div
-        class="glass-card rounded-xl p-3 min-w-[82px] text-center"
-      >
-
-        <div class="text-[11px] font-bold text-slate-400">
-          ${time.toLocaleTimeString(
-            "ru-RU",
-            {
-              hour: "2-digit",
-              minute: "2-digit"
-            }
-          )}
-        </div>
-
-        <div class="text-2xl my-2">
-          ${day ? w.i : "🌙"}
-        </div>
-
-        <div class="text-lg font-extrabold text-white">
-          ${temp}°
-        </div>
-
-        <div class="text-[10px] text-sky-400 mt-1">
-          ${rainProbability}%
-        </div>
-
-        <div class="text-[10px] text-slate-500">
-          ${precipitation} мм
-        </div>
-
-      </div>
-
-    `;
-
   }
 
-
-  html += `
-      </div>
-    </div>
-  `;
-
-
-  return html;
+  return r.json();
 
 }
 
-
-/* =========================================================
-   AIR
-========================================================= */
-
-function renderAir() {
-
-  const c =
-    document.getElementById("content");
-
-  const aqi =
-    state.data.air?.current?.european_aqi ?? null;
-
-
-  if (aqi === null) {
-
-    c.innerHTML = `
-
-      <div class="glass-panel p-6 rounded-2xl text-center">
-
-        <div class="text-4xl mb-4">
-          🫁
-        </div>
-
-        <h2 class="text-lg font-bold text-white">
-          Данные о воздухе недоступны
-        </h2>
-
-        <p class="text-sm text-slate-400 mt-2">
-          Сервер качества воздуха не ответил.
-        </p>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  let status;
-  let color;
-
-
-  if (aqi <= 20) {
-
-    status = "Очень хорошо";
-
-    color =
-      "text-emerald-400 border-emerald-500/30 bg-emerald-900/20";
-
-  }
-  else if (aqi <= 40) {
-
-    status = "Хорошо";
-
-    color =
-      "text-emerald-400 border-emerald-500/30 bg-emerald-900/20";
-
-  }
-  else if (aqi <= 60) {
-
-    status = "Умеренно";
-
-    color =
-      "text-amber-400 border-amber-500/30 bg-amber-900/20";
-
-  }
-  else if (aqi <= 80) {
-
-    status = "Плоховато";
-
-    color =
-      "text-amber-400 border-amber-500/30 bg-amber-900/20";
-
-  }
-  else if (aqi <= 100) {
-
-    status = "Плохо";
-
-    color =
-      "text-orange-400 border-orange-500/30 bg-orange-900/20";
-
-  }
-  else {
-
-    status = "Очень плохо";
-
-    color =
-      "text-rose-400 border-rose-500/30 bg-rose-900/20";
-
-  }
-
-
-  c.innerHTML = `
-
-    <div class="glass-panel p-6 rounded-2xl">
-
-      <h2 class="text-lg font-bold text-white mb-4 uppercase tracking-wide">
-        Качество воздуха
-      </h2>
-
-
-      <div
-        onclick="showModal(
-          'aqi',
-          '${aqi}',
-          'EAQI',
-          '🫁',
-          'Европейский индекс качества воздуха. Чем выше значение, тем хуже качество воздуха.',
-          '${status}'
-        )"
-        class="${color} p-6 rounded-2xl flex items-center justify-between cursor-pointer border"
-      >
-
-        <div>
-
-          <div class="text-xs font-bold uppercase mb-1 opacity-80">
-            Европейский AQI
-          </div>
-
-          <div class="text-6xl font-extrabold">
-            ${aqi}
-          </div>
-
-          <div class="text-sm font-bold uppercase mt-2">
-            ${status}
-          </div>
-
-        </div>
-
-        <div class="text-6xl opacity-80">
-          🫁
-        </div>
-
-      </div>
-
-
-      <p class="text-sm text-slate-400 mt-6 text-center">
-        Индекс основан на текущих данных Open-Meteo Air Quality.
-      </p>
-
-    </div>
-
-  `;
-
-}
-
-
-/* =========================================================
-   KP
-========================================================= */
-
-function renderGeo() {
-
-  const c =
-    document.getElementById("content");
-
-  const kp =
-    state.data.kp;
-
-
-  if (kp === null || !Number.isFinite(kp)) {
-
-    c.innerHTML = `
-
-      <div class="glass-panel p-6 rounded-2xl text-center">
-
-        <div class="text-4xl mb-4">
-          ⚡
-        </div>
-
-        <h2 class="text-lg font-bold text-white">
-          Kp сейчас недоступен
-        </h2>
-
-        <p class="text-sm text-slate-400 mt-2">
-          NOAA не предоставила последнее значение.
-        </p>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  let status;
-  let color;
-
-
-  if (kp >= 5) {
-
-    status = "Магнитная буря";
-
-    color =
-      "text-rose-400 border-rose-500/30 bg-rose-900/20";
-
-  }
-  else if (kp >= 4) {
-
-    status = "Возмущённая обстановка";
-
-    color =
-      "text-amber-400 border-amber-500/30 bg-amber-900/20";
-
-  }
-  else {
-
-    status = "Спокойная обстановка";
-
-    color =
-      "text-emerald-400 border-emerald-500/30 bg-emerald-900/20";
-
-  }
-
-
-  c.innerHTML = `
-
-    <div class="glass-panel p-6 rounded-2xl">
-
-      <h2 class="text-lg font-bold text-white mb-4 uppercase tracking-wide">
-        Геомагнитная обстановка
-      </h2>
-
-
-      <div
-        onclick="showModal(
-          'kp',
-          '${kp.toFixed(1)}',
-          'Планетарный индекс Kp',
-          '⚡',
-          'Kp — глобальный планетарный индекс геомагнитной активности от 0 до 9. Значение 5 и выше соответствует магнитной буре уровня G1 или выше.',
-          '${status}'
-        )"
-        class="${color} p-6 border rounded-2xl text-center cursor-pointer"
-      >
-
-        <div class="text-xs font-bold uppercase mb-2 opacity-80">
-          Последний Kp · NOAA
-        </div>
-
-        <div class="text-6xl font-extrabold mb-2">
-          ${kp.toFixed(1)}
-        </div>
-
-        <div class="text-sm font-bold uppercase tracking-wide">
-          ${status}
-        </div>
-
-      </div>
-
-
-      <div class="grid grid-cols-3 gap-2 mt-4">
-
-        <div class="glass-card rounded-xl p-3 text-center">
-
-          <div class="text-xs text-slate-500">
-            0–3
-          </div>
-
-          <div class="text-xs text-emerald-400 font-bold mt-1">
-            Спокойно
-          </div>
-
-        </div>
-
-
-        <div class="glass-card rounded-xl p-3 text-center">
-
-          <div class="text-xs text-slate-500">
-            4
-          </div>
-
-          <div class="text-xs text-amber-400 font-bold mt-1">
-            Возмущение
-          </div>
-
-        </div>
-
-
-        <div class="glass-card rounded-xl p-3 text-center">
-
-          <div class="text-xs text-slate-500">
-            ≥5
-          </div>
-
-          <div class="text-xs text-rose-400 font-bold mt-1">
-            Буря
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <p class="text-sm text-slate-400 mt-6 text-center">
-        Данные геомагнитной активности предоставляются NOAA.
-      </p>
-
-    </div>
-
-  `;
-
-}
-
-
-/* =========================================================
-   EARTHQUAKES
-========================================================= */
-
-function renderEarthquakes() {
-
-  const c =
-    document.getElementById("content");
-
-  const eq =
-    state.data.eq || [];
-
-
-  if (!eq.length) {
-
-    c.innerHTML = `
-
-      <div class="glass-panel p-6 rounded-2xl">
-
-        <h2 class="text-lg font-bold text-white mb-4 uppercase tracking-wide">
-          Сейсмоактивность
-        </h2>
-
-        <div class="text-center text-slate-400 py-8">
-
-          <div class="text-4xl mb-3">
-            🌍
-          </div>
-
-          <div class="font-bold">
-            Землетрясений M2.5+ рядом не обнаружено
-          </div>
-
-          <div class="text-xs text-slate-500 mt-2">
-            Проверяется область примерно 500 км вокруг города.
-          </div>
-
-        </div>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  let html = "";
-
-
-  eq.forEach((earthquake, index) => {
-
-    const magnitude =
-      earthquake.mag.toFixed(1);
-
-
-    const date =
-      earthquake.time
-        ? earthquake.time.toLocaleString(
-            "ru-RU",
-            {
-              day: "2-digit",
-              month: "2-digit",
-              hour: "2-digit",
-              minute: "2-digit"
-            }
-          )
-        : "";
-
-
-    html += `
-
-      <div
-        onclick="showModal(
-          'eq${index}',
-          'M ${magnitude}',
-          'Землетрясение',
-          '🌋',
-          '${escapeText(earthquake.title)}. Глубина ${Math.round(earthquake.depth)} км. Расстояние от ${CITIES[state.city].name}: примерно ${earthquake.dist} км.',
-          '${date}'
-        )"
-        class="glass-card p-4 rounded-xl mb-3 cursor-pointer"
-      >
-
-        <div class="flex justify-between items-start gap-3">
-
-          <span class="font-bold text-white text-sm leading-tight">
-            ${escapeText(earthquake.title)}
-          </span>
-
-          <span class="px-2 py-1 bg-amber-500/20 text-amber-400 font-bold rounded text-sm shrink-0">
-            M ${magnitude}
-          </span>
-
-        </div>
-
-
-        <div class="text-xs text-slate-400 mt-3">
-
-          Глубина:
-          ${Math.round(earthquake.depth)} км
-
-          ·
-
-          Расстояние:
-          ~${earthquake.dist} км
-
-        </div>
-
-
-        <div class="text-[10px] text-slate-500 mt-1">
-          ${date}
-        </div>
-
-      </div>
-
-    `;
+function weatherURL(c){
+
+  const p=new URLSearchParams({
+
+    latitude:c.lat,
+
+    longitude:c.lon,
+
+    timezone:"auto",
+
+    forecast_days:"7",
+
+    current:
+      "temperature_2m,"+
+      "relative_humidity_2m,"+
+      "apparent_temperature,"+
+      "weather_code,"+
+      "pressure_msl,"+
+      "wind_speed_10m,"+
+      "wind_gusts_10m,"+
+      "is_day",
+
+    hourly:
+      "temperature_2m,"+
+      "apparent_temperature,"+
+      "precipitation_probability,"+
+      "precipitation,"+
+      "rain,"+
+      "snowfall,"+
+      "weather_code,"+
+      "wind_speed_10m,"+
+      "wind_gusts_10m,"+
+      "relative_humidity_2m",
+
+    daily:
+      "weather_code,"+
+      "temperature_2m_max,"+
+      "temperature_2m_min,"+
+      "apparent_temperature_max,"+
+      "apparent_temperature_min,"+
+      "precipitation_sum,"+
+      "rain_sum,"+
+      "snowfall_sum,"+
+      "precipitation_probability_max,"+
+      "wind_speed_10m_max,"+
+      "wind_gusts_10m_max,"+
+      "uv_index_max,"+
+      "sunrise,"+
+      "sunset"
 
   });
 
+  return (
+    "https://api.open-meteo.com/v1/forecast?"+
+    p
+  );
 
-  c.innerHTML = `
+}
 
-    <div class="glass-panel p-6 rounded-2xl">
+function airURL(c){
 
-      <div class="flex justify-between items-center mb-4">
+  const p=new URLSearchParams({
 
-        <h2 class="text-lg font-bold text-white uppercase tracking-wide">
-          Сейсмоактивность
-        </h2>
+    latitude:c.lat,
 
-        <span class="text-[10px] text-slate-500">
-          Радиус ~500 км
+    longitude:c.lon,
+
+    timezone:"auto",
+
+    current:
+      "european_aqi,"+
+      "pm2_5,"+
+      "pm10,"+
+      "nitrogen_dioxide,"+
+      "ozone,"+
+      "sulphur_dioxide",
+
+    hourly:
+      "european_aqi,"+
+      "pm2_5,"+
+      "pm10,"+
+      "nitrogen_dioxide,"+
+      "ozone,"+
+      "sulphur_dioxide"
+
+  });
+
+  return (
+    "https://air-quality-api.open-meteo.com/v1/air-quality?"+
+    p
+  );
+
+}
+
+async function loadWeather(){
+
+  try{
+
+    state.weather=
+      await getJSON(
+        weatherURL(city())
+      );
+
+    renderWeather();
+
+  }catch(e){
+
+    showError(
+      "weather",
+      "Не удалось загрузить погоду. Проверьте интернет-соединение."
+    );
+
+  }
+
+}
+
+async function loadAir(){
+
+  try{
+
+    state.air=
+      await getJSON(
+        airURL(city())
+      );
+
+    renderAir();
+
+  }catch(e){
+
+    showError(
+      "air",
+      "Не удалось загрузить данные о качестве воздуха."
+    );
+
+  }
+
+}
+
+function parseKpRows(data){
+
+  if(!Array.isArray(data))
+    return [];
+
+  const out=[];
+
+  for(const row of data){
+
+    let time=null;
+
+    let kp=null;
+
+    let observed=null;
+
+    let scale=null;
+
+    if(Array.isArray(row)){
+
+      if(row.length>=2){
+
+        time=row[0];
+
+        kp=Number(row[1]);
+
+        observed=row[2];
+
+        scale=row[3];
+
+      }
+
+    }else if(
+      row &&
+      typeof row==="object"
+    ){
+
+      time=
+        row.time_tag ??
+        row.observation_time ??
+        row.time ??
+        row.valid_time ??
+        null;
+
+      kp=Number(
+        row.kp ??
+        row.kp_index ??
+        row.planetary_k_index ??
+        row.Kp
+      );
+
+      observed=row.observed;
+
+      scale=
+        row.noaa_scale ??
+        row.scale ??
+        null;
+
+    }
+
+    if(
+      time &&
+      Number.isFinite(kp)
+    ){
+
+      out.push({
+        time,
+        kp,
+        observed,
+        scale
+      });
+
+    }
+
+  }
+
+  return out.sort(
+    (a,b)=>
+      new Date(a.time) -
+      new Date(b.time)
+  );
+
+}
+
+async function loadKp(){
+
+  try{
+
+    const [
+      current,
+      forecast
+    ]=await Promise.all([
+
+      getJSON(
+        "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json"
+      ),
+
+      getJSON(
+        "https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json"
+      )
+
+    ]);
+
+    state.kp=
+      parseKpRows(current);
+
+    state.kpForecast=
+      parseKpRows(forecast);
+
+    renderMagnetic();
+
+  }catch(e){
+
+    showError(
+      "magnetic",
+      "Данные Kp NOAA сейчас недоступны."
+    );
+
+  }
+
+}
+
+function kpLevel(kp){
+
+  if(kp>=9)
+
+    return [
+      "G5",
+      "Экстремальная буря",
+      "bad"
+    ];
+
+  if(kp>=8)
+
+    return [
+      "G4",
+      "Очень сильная буря",
+      "bad"
+    ];
+
+  if(kp>=7)
+
+    return [
+      "G3",
+      "Сильная буря",
+      "bad"
+    ];
+
+  if(kp>=6)
+
+    return [
+      "G2",
+      "Умеренная буря",
+      "warn"
+    ];
+
+  if(kp>=5)
+
+    return [
+      "G1",
+      "Слабая магнитная буря",
+      "warn"
+    ];
+
+  if(kp>=4)
+
+    return [
+      "Возмущение",
+      "Возмущённая обстановка",
+      "warn"
+    ];
+
+  return [
+    "Спокойно",
+    "Спокойная обстановка",
+    "good"
+  ];
+
+}
+
+function currentKp(){
+
+  if(!state.kp?.length)
+    return null;
+
+  return state.kp[
+    state.kp.length-1
+  ];
+
+}
+
+function renderMagnetic(){
+
+  const el=
+    document.getElementById(
+      "magnetic"
+    );
+
+  const cur=currentKp();
+
+  if(!cur){
+
+    el.innerHTML=
+      '<div class="empty">'+
+      'Kp сейчас недоступен.'+
+      '</div>';
+
+    return;
+
+  }
+
+  const level=
+    kpLevel(cur.kp);
+
+  const future=
+    (state.kpForecast||[])
+      .filter(x=>x.kp>=4)
+      .slice(0,8);
+
+  el.innerHTML=`
+
+    <div class="kp-box">
+
+      <div>
+
+        <div class="kp-number">
+          ${num(cur.kp,1)}
+        </div>
+
+        <div class="muted">
+          Kp сейчас · ${formatTime(cur.time)}
+        </div>
+
+      </div>
+
+      <div style="text-align:right">
+
+        <div class="kp-label ${level[2]}">
+          ${level[0]}
+        </div>
+
+        <div class="kp-help">
+          ${level[1]}
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="kp-list">
+
+      ${
+        future.length
+
+        ?
+
+        future.map(x=>`
+
+          <div class="row">
+
+            <span>
+              ${formatTime(x.time)}
+            </span>
+
+            <b>
+              Kp ${num(x.kp,1)}
+            </b>
+
+          </div>
+
+        `).join("")
+
+        :
+
+        '<div class="empty">'+
+        'В прогнозе нет возмущений Kp≥4.'+
+        '</div>'
+
+      }
+
+    </div>
+
+  `;
+
+}
+
+function renderWeather(){
+
+  const w=state.weather;
+
+  if(!w?.current){
+
+    showError(
+      "weather",
+      "Нет данных о погоде."
+    );
+
+    return;
+
+  }
+
+  const c=w.current;
+
+  const d=w.daily;
+
+  const info=
+    weatherInfo(
+      c.weather_code
+    );
+
+  const days=
+    d.time.map(
+      (date,i)=>`
+
+      <button
+        class="day ${i===0?"active":""}"
+        onclick="openDay(${i})"
+      >
+
+        <div class="day-name">
+          ${
+            i===0
+              ?"Сегодня"
+              :i===1
+                ?"Завтра"
+                :dayName(date)
+          }
+        </div>
+
+        <div class="day-date">
+          ${formatDate(date)}
+        </div>
+
+        <div class="day-icon">
+          ${weatherInfo(
+            d.weather_code[i]
+          )[1]}
+        </div>
+
+        <div class="day-temp">
+          ${num(d.temperature_2m_max[i])}°
+          /
+          ${num(d.temperature_2m_min[i])}°
+        </div>
+
+        <div class="day-rain">
+          Осадки
+          ${num(
+            d.precipitation_probability_max[i]
+          )}%
+        </div>
+
+      </button>
+
+    `
+    ).join("");
+
+  document.getElementById(
+    "weather"
+  ).innerHTML=`
+
+    <div class="current">
+
+      <div>
+
+        <div class="temp">
+          ${num(c.temperature_2m)}°
+        </div>
+
+        <div class="weather-main">
+          ${info[1]}
+          ${esc(info[0])}
+        </div>
+
+        <div class="weather-sub">
+          Ощущается
+          ${num(c.apparent_temperature)}°
+          ·
+          ${city().name}
+        </div>
+
+      </div>
+
+      <div
+        style="text-align:right"
+        class="muted"
+      >
+
+        <div>
+          Ветер
+          ${num(c.wind_speed_10m)}
+          км/ч
+        </div>
+
+        <div>
+          Порывы
+          ${num(c.wind_gusts_10m)}
+          км/ч
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="metrics">
+
+      <div class="metric">
+
+        <div class="metric-label">
+          Влажность
+        </div>
+
+        <div class="metric-value">
+          ${num(c.relative_humidity_2m)}%
+        </div>
+
+      </div>
+
+      <div class="metric">
+
+        <div class="metric-label">
+          Давление
+        </div>
+
+        <div class="metric-value">
+          ${num(c.pressure_msl)}
+          hPa
+        </div>
+
+      </div>
+
+      <div class="metric">
+
+        <div class="metric-label">
+          UV сегодня
+        </div>
+
+        <div class="metric-value">
+          ${num(d.uv_index_max[0],1)}
+        </div>
+
+      </div>
+
+      <div class="metric">
+
+        <div class="metric-label">
+          Закат
+        </div>
+
+        <div class="metric-value">
+          ${formatTime(d.sunset[0])}
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="forecast">
+      ${days}
+    </div>
+
+  `;
+
+}
+
+function openDay(i){
+
+  const d=state.weather?.daily;
+
+  const h=state.weather?.hourly;
+
+  if(!d||!h)
+    return;
+
+  const date=d.time[i];
+
+  const rows=[];
+
+  for(
+    let j=0;
+    j<h.time.length;
+    j++
+  ){
+
+    if(
+      String(h.time[j])
+        .slice(0,10)
+      ===date
+    ){
+
+      rows.push(j);
+
+    }
+
+  }
+
+  const title=
+    i===0
+      ?"Погода сегодня"
+      :i===1
+        ?"Погода завтра"
+        :"Погода "+formatDate(date);
+
+  document.getElementById(
+    "modalTitle"
+  ).textContent=title;
+
+  document.getElementById(
+    "modalBody"
+  ).innerHTML=`
+
+    <div class="metrics">
+
+      <div class="metric">
+        <div class="metric-label">
+          Максимум
+        </div>
+        <div class="metric-value">
+          ${num(d.temperature_2m_max[i])}°
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">
+          Минимум
+        </div>
+        <div class="metric-value">
+          ${num(d.temperature_2m_min[i])}°
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">
+          Ощущается до
+        </div>
+        <div class="metric-value">
+          ${num(d.apparent_temperature_max[i])}°
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">
+          Вероятность осадков
+        </div>
+        <div class="metric-value">
+          ${num(
+            d.precipitation_probability_max[i]
+          )}%
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">
+          Дождь
+        </div>
+        <div class="metric-value">
+          ${num(d.rain_sum[i],1)} мм
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">
+          Снег
+        </div>
+        <div class="metric-value">
+          ${num(d.snowfall_sum[i],1)} см
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">
+          Макс. ветер
+        </div>
+        <div class="metric-value">
+          ${num(d.wind_speed_10m_max[i])}
+          км/ч
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">
+          Порывы
+        </div>
+        <div class="metric-value">
+          ${num(d.wind_gusts_10m_max[i])}
+          км/ч
+        </div>
+      </div>
+
+    </div>
+
+    <h3 style="margin:20px 0 0">
+      Почасовой прогноз
+    </h3>
+
+    <div class="hour-grid">
+
+      ${
+        rows.map(j=>`
+
+          <div class="hour">
+
+            <div class="hour-time">
+              ${formatTime(h.time[j])}
+            </div>
+
+            <div class="hour-icon">
+              ${weatherInfo(
+                h.weather_code[j]
+              )[1]}
+            </div>
+
+            <div class="hour-temp">
+              ${num(h.temperature_2m[j])}°
+            </div>
+
+            <div class="hour-rain">
+              Осадки
+              ${num(
+                h.precipitation_probability[j]
+              )}%
+            </div>
+
+            <div
+              class="muted"
+              style="font-size:11px;margin-top:4px"
+            >
+              ${num(h.wind_speed_10m[j])}
+              км/ч
+            </div>
+
+          </div>
+
+        `).join("")
+
+      }
+
+    </div>
+
+  `;
+
+  openModal();
+
+}
+
+function aqiInfo(aqi){
+
+  const band=
+    AQI_BANDS.find(
+      x=>aqi<=x.max
+    )
+    ||
+    AQI_BANDS[
+      AQI_BANDS.length-1
+    ];
+
+  return band;
+
+}
+
+function renderAir(){
+
+  const a=
+    state.air?.current;
+
+  if(!a){
+
+    showError(
+      "air",
+      "Нет данных о воздухе."
+    );
+
+    return;
+
+  }
+
+  const band=
+    aqiInfo(
+      Number(a.european_aqi)
+    );
+
+  const vals=[
+
+    "pm2_5",
+
+    "pm10",
+
+    "nitrogen_dioxide",
+
+    "ozone",
+
+    "sulphur_dioxide"
+
+  ];
+
+  document.getElementById(
+    "air"
+  ).innerHTML=`
+
+    <div class="air-score ${band.cls}">
+      ${num(a.european_aqi)}
+    </div>
+
+    <div>
+      <b>${band.label}</b>
+      <span class="muted">
+        · European AQI
+      </span>
+    </div>
+
+    <div class="pollutants">
+
+      ${
+        vals.map(k=>{
+
+          const p=POLLUTANTS[k];
+
+          return `
+
+            <button
+              class="pollutant"
+              onclick="openPollutant('${k}')"
+            >
+
+              <b>
+                ${num(a[k],1)}
+              </b>
+
+              <span>
+                ${p.label}
+                <br>
+                ${p.unit}
+              </span>
+
+            </button>
+
+          `;
+
+        }).join("")
+      }
+
+    </div>
+
+  `;
+
+}
+
+function openPollutant(k){
+
+  const p=POLLUTANTS[k];
+
+  const a=
+    state.air?.current?.[k];
+
+  if(!p)
+    return;
+
+  document.getElementById(
+    "modalTitle"
+  ).textContent=p.label;
+
+  document.getElementById(
+    "modalBody"
+  ).innerHTML=`
+
+    <div class="air-score">
+
+      ${num(a,1)}
+
+      <span style="font-size:16px">
+        ${p.unit}
+      </span>
+
+    </div>
+
+    <div class="guide">
+
+      <div class="guide-item">
+
+        Ориентиры Open-Meteo
+        European AQI:
+
+        ${p.bands.map(
+          (x,i)=>
+            `${
+              i===0
+                ?"0"
+                :p.bands[i-1]
+            }–${x}`
+        ).join(", ")}
+
+        и выше.
+
+      </div>
+
+      <div class="guide-item muted">
+
+        Значение является текущей
+        концентрацией и не заменяет
+        медицинскую оценку качества воздуха.
+
+      </div>
+
+    </div>
+
+  `;
+
+  openModal();
+
+}
+
+function openAirGuide(){
+
+  document.getElementById(
+    "modalTitle"
+  ).textContent="European AQI";
+
+  document.getElementById(
+    "modalBody"
+  ).innerHTML=`
+
+    <div class="guide">
+
+      ${
+        AQI_BANDS.map(
+          (x,i)=>`
+
+          <div class="guide-item">
+
+            <b class="${x.cls}">
+
+              ${
+                i===0
+                  ?"0–20"
+                  :i===1
+                    ?"21–40"
+                    :i===2
+                      ?"41–60"
+                      :i===3
+                        ?"61–80"
+                        :i===4
+                          ?"81–100"
+                          :">100"
+              }
+
+              ·
+
+              ${x.label}
+
+            </b>
+
+          </div>
+
+        `
+        ).join("")
+      }
+
+    </div>
+
+  `;
+
+  openModal();
+
+}
+
+function openKpGuide(){
+
+  document.getElementById(
+    "modalTitle"
+  ).textContent="Шкала Kp";
+
+  document.getElementById(
+    "modalBody"
+  ).innerHTML=`
+
+    <div class="guide">
+
+      <div class="guide-item">
+
+        <b>Kp 0–3</b>
+
+        <br>
+
+        <span class="muted">
+          Спокойная геомагнитная
+          обстановка.
         </span>
 
       </div>
 
-      ${html}
+      <div class="guide-item">
+
+        <b>Kp 4</b>
+
+        <br>
+
+        <span class="muted">
+          Возмущённая обстановка.
+        </span>
+
+      </div>
+
+      <div class="guide-item">
+
+        <b>Kp 5–6</b>
+
+        <br>
+
+        <span class="muted">
+          G1–G2, магнитная буря.
+        </span>
+
+      </div>
+
+      <div class="guide-item">
+
+        <b>Kp 7–8</b>
+
+        <br>
+
+        <span class="muted">
+          G3–G4, сильная/очень
+          сильная буря.
+        </span>
+
+      </div>
+
+      <div class="guide-item">
+
+        <b>Kp 9</b>
+
+        <br>
+
+        <span class="muted">
+          G5, экстремальная буря.
+        </span>
+
+      </div>
 
     </div>
 
   `;
 
+  openModal();
+
 }
 
+function distanceKm(
+  lat1,
+  lon1,
+  lat2,
+  lon2
+){
 
-/* =========================================================
-   MOON
-========================================================= */
+  const R=6371;
 
-function calculateMoon(date = new Date()) {
+  const rad=Math.PI/180;
 
-  /*
-    Расчёт синодического возраста Луны.
-    Используется астрономическая аппроксимация,
-    поэтому значение является расчётным, а не API.
-  */
+  const p1=lat1*rad;
 
-  const knownNewMoon =
-    new Date(
-      "2000-01-06T18:14:00Z"
+  const p2=lat2*rad;
+
+  const dp=
+    (lat2-lat1)*rad;
+
+  const dl=
+    (lon2-lon1)*rad;
+
+  const a=
+    Math.sin(dp/2)**2+
+    Math.cos(p1)*
+    Math.cos(p2)*
+    Math.sin(dl/2)**2;
+
+  return 2*R*
+    Math.asin(
+      Math.sqrt(a)
     );
 
+}
 
-  const synodicMonth =
+async function loadQuakes(){
+
+  try{
+
+    const data=
+      await getJSON(
+        "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson"
+      );
+
+    const c=city();
+
+    state.quakes=
+      (data.features||[])
+      .map(f=>{
+
+        const [
+          lon,
+          lat,
+          depth
+        ]=
+          f.geometry.coordinates;
+
+        return {
+
+          mag:Number(
+            f.properties.mag
+          ),
+
+          place:
+            f.properties.place ||
+            "Неизвестно",
+
+          time:
+            f.properties.time,
+
+          lat,
+
+          lon,
+
+          depth,
+
+          distance:
+            distanceKm(
+              c.lat,
+              c.lon,
+              lat,
+              lon
+            ),
+
+          url:
+            f.properties.url
+
+        };
+
+      })
+
+      .filter(q=>
+
+        Number.isFinite(q.mag) &&
+        q.distance<=500
+
+      )
+
+      .sort(
+        (a,b)=>
+          b.time-a.time
+      )
+
+      .slice(0,12);
+
+    renderEarthquakes();
+
+  }catch(e){
+
+    showError(
+      "seismo",
+      "Не удалось загрузить землетрясения USGS."
+    );
+
+  }
+
+}
+
+function renderEarthquakes(){
+
+  const el=
+    document.getElementById(
+      "seismo"
+    );
+
+  if(!state.quakes.length){
+
+    el.innerHTML=
+      '<div class="empty">'+
+      'За последние 24 часа в радиусе 500 км '+
+      'значимых событий не найдено.'+
+      '</div>';
+
+    return;
+
+  }
+
+  el.innerHTML=
+    '<div class="quake-list">'+
+
+    state.quakes.map(
+      (q,i)=>`
+
+        <button
+          class="row"
+          onclick="openEarthquake(${i})"
+        >
+
+          <span>
+
+            <b>
+              M ${num(q.mag,1)}
+            </b>
+
+            ·
+
+            ${esc(q.place)}
+
+          </span>
+
+          <small>
+            ${num(q.distance)}
+            км
+          </small>
+
+        </button>
+
+      `
+    ).join("")
+
+    +
+
+    '</div>';
+
+}
+
+function openEarthquake(i){
+
+  const q=state.quakes[i];
+
+  if(!q)
+    return;
+
+  document.getElementById(
+    "modalTitle"
+  ).textContent=
+    "Землетрясение";
+
+  document.getElementById(
+    "modalBody"
+  ).innerHTML=`
+
+    <div class="metrics">
+
+      <div class="metric">
+
+        <div class="metric-label">
+          Магнитуда
+        </div>
+
+        <div class="metric-value">
+          M ${num(q.mag,1)}
+        </div>
+
+      </div>
+
+      <div class="metric">
+
+        <div class="metric-label">
+          Расстояние от ${city().name}
+        </div>
+
+        <div class="metric-value">
+          ${num(q.distance)}
+          км
+        </div>
+
+      </div>
+
+      <div class="metric">
+
+        <div class="metric-label">
+          Глубина
+        </div>
+
+        <div class="metric-value">
+          ${num(q.depth,1)}
+          км
+        </div>
+
+      </div>
+
+      <div class="metric">
+
+        <div class="metric-label">
+          Время
+        </div>
+
+        <div class="metric-value">
+          ${
+            new Date(
+              q.time
+            ).toLocaleString("ru-RU")
+          }
+        </div>
+
+      </div>
+
+    </div>
+
+    <p class="muted">
+      ${esc(q.place)}
+    </p>
+
+  `;
+
+  openModal();
+
+}
+
+function calculateMoon(
+  date=new Date()
+){
+
+  const synodic=
     29.530588853;
 
+  const known=
+    new Date(
+      Date.UTC(
+        2000,
+        0,
+        6,
+        18,
+        14,
+        0
+      )
+    );
 
-  const days =
-    (date - knownNewMoon) /
-    86400000;
-
-
-  let age =
-    days % synodicMonth;
-
-
-  if (age < 0) {
-    age += synodicMonth;
-  }
-
-
-  const illumination =
+  const age=
     (
-      (1 - Math.cos(
-        2 * Math.PI *
-        age /
-        synodicMonth
-      )) / 2
-    ) * 100;
+      (date-known) /
+      86400000
+    ) %
+    synodic;
 
+  const a=
+    (age+synodic) %
+    synodic;
 
-  let phase;
+  const phase=
+    a/synodic;
+
+  let name;
+
   let icon;
 
+  if(a<1.85){
 
-  if (age < 1.84566) {
+    name="Новолуние";
+    icon="🌑";
 
-    phase = "Новолуние";
-    icon = "🌑";
+  }else if(a<7.38){
 
-  }
-  else if (age < 7.38264) {
+    name="Растущий серп";
+    icon="🌒";
 
-    phase = "Растущий серп";
-    icon = "🌒";
+  }else if(a<9.22){
 
-  }
-  else if (age < 9.22830) {
+    name="Первая четверть";
+    icon="🌓";
 
-    phase = "Первая четверть";
-    icon = "🌓";
+  }else if(a<14.76){
 
-  }
-  else if (age < 14.76529) {
+    name="Растущая Луна";
+    icon="🌔";
 
-    phase = "Растущая Луна";
-    icon = "🌔";
+  }else if(a<16.61){
 
-  }
-  else if (age < 16.61095) {
+    name="Полнолуние";
+    icon="🌕";
 
-    phase = "Полнолуние";
-    icon = "🌕";
+  }else if(a<22.15){
 
-  }
-  else if (age < 22.14793) {
+    name="Убывающая Луна";
+    icon="🌖";
 
-    phase = "Убывающая Луна";
-    icon = "🌖";
+  }else if(a<23.99){
 
-  }
-  else if (age < 23.99359) {
+    name="Последняя четверть";
+    icon="🌗";
 
-    phase = "Последняя четверть";
-    icon = "🌗";
+  }else{
+
+    name="Убывающий серп";
+    icon="🌘";
 
   }
-  else if (age < 28.53059) {
-
-    phase = "Убывающий серп";
-    icon = "🌘";
-
-  }
-  else {
-
-    phase = "Новолуние";
-    icon = "🌑";
-
-  }
-
 
   return {
 
-    age,
-    illumination,
-    phase,
-    icon
+    name,
+
+    icon,
+
+    age:a,
+
+    illumination:
+      (
+        0.5*
+        (
+          1-
+          Math.cos(
+            2*Math.PI*phase
+          )
+        )
+      )*100
 
   };
 
 }
 
+function renderMoon(){
 
-function renderMoon() {
+  const m=
+    calculateMoon();
 
-  const c =
-    document.getElementById("content");
+  document.getElementById(
+    "moon"
+  ).innerHTML=`
 
+    <div class="moon">
 
-  const moon =
-    calculateMoon(
-      new Date()
-    );
-
-
-  c.innerHTML = `
-
-    <div class="glass-panel p-6 rounded-2xl text-center min-h-[380px] flex flex-col items-center justify-center relative">
-
-      <h2 class="text-lg font-bold text-white mb-6 uppercase tracking-wide absolute top-6">
-        Лунный цикл
-      </h2>
-
-
-      <div class="text-9xl my-6 drop-shadow-[0_0_30px_rgba(212,175,55,0.4)]">
-        ${moon.icon}
+      <div class="moon-icon">
+        ${m.icon}
       </div>
 
+      <div>
 
-      <h3 class="text-2xl font-extrabold gold-text mb-2">
-        ${moon.phase}
-      </h3>
-
-
-      <p class="text-sm text-slate-400">
-        Освещённость диска:
-        ${moon.illumination.toFixed(1)}%
-      </p>
-
-
-      <div class="grid grid-cols-2 gap-2 w-full max-w-sm mt-6">
-
-        <div class="glass-card rounded-xl p-3">
-
-          <div class="text-xs text-slate-500">
-            Возраст Луны
-          </div>
-
-          <div class="font-bold text-white mt-1">
-            ${moon.age.toFixed(1)} суток
-          </div>
-
+        <div class="moon-name">
+          ${m.name}
         </div>
 
+        <div class="muted">
 
-        <div class="glass-card rounded-xl p-3">
+          Возраст
+          ${num(m.age,1)}
+          суток
 
-          <div class="text-xs text-slate-500">
-            Цикл
-          </div>
+          ·
 
-          <div class="font-bold text-white mt-1">
-            29,53 суток
-          </div>
+          освещённость
+          ${num(m.illumination,0)}%
 
         </div>
 
       </div>
-
-
-      <p class="text-[11px] text-slate-500 mt-5">
-        Фаза рассчитывается автоматически по текущей дате.
-      </p>
 
     </div>
 
@@ -1970,79 +2489,164 @@ function renderMoon() {
 
 }
 
+async function refreshQuakes(){
 
-/* =========================================================
-   ESCAPE TEXT
-========================================================= */
-
-function escapeText(text) {
-
-  return String(text)
-    .replace(/'/g, "\\'")
-    .replace(/"/g, "&quot;");
+  await loadQuakes();
 
 }
 
+async function refreshAll(){
 
-/* =========================================================
-   RENDER
-========================================================= */
+  setStatus(
+    "Синхронизация..."
+  );
 
-function renderTab() {
+  await Promise.all([
 
-  if (!state.data) return;
+    loadWeather(),
 
+    loadAir(),
 
-  if (state.tab === "weather") {
+    loadKp(),
 
-    renderWeather();
+    loadQuakes()
 
-  }
+  ]);
 
-  else if (state.tab === "air") {
+  renderMoon();
 
-    renderAir();
+  state.lastUpdate=
+    new Date();
 
-  }
-
-  else if (state.tab === "geo") {
-
-    renderGeo();
-
-  }
-
-  else if (state.tab === "eq") {
-
-    renderEarthquakes();
-
-  }
-
-  else if (state.tab === "moon") {
-
-    renderMoon();
-
-  }
+  setStatus(
+    "Обновлено "+
+    state.lastUpdate.toLocaleTimeString(
+      "ru-RU",
+      {
+        hour:"2-digit",
+        minute:"2-digit"
+      }
+    )
+  );
 
 }
 
+function openModal(){
 
-/* =========================================================
-   START
-========================================================= */
+  document
+    .getElementById("modal")
+    .classList
+    .add("show");
 
-window.addEventListener(
-  "load",
-  fetchData
+}
+
+function closeModal(){
+
+  document
+    .getElementById("modal")
+    .classList
+    .remove("show");
+
+}
+
+document
+  .querySelectorAll(".city-btn")
+  .forEach(btn=>{
+
+    btn.addEventListener(
+      "click",
+      ()=>{
+
+        document
+          .querySelectorAll(".city-btn")
+          .forEach(
+            b=>
+              b.classList
+               .remove("active")
+          );
+
+        btn.classList.add(
+          "active"
+        );
+
+        state.city=
+          btn.dataset.city;
+
+        refreshAll();
+
+      }
+    );
+
+  });
+
+document
+  .querySelectorAll(".nav")
+  .forEach(btn=>{
+
+    btn.addEventListener(
+      "click",
+      ()=>{
+
+        document
+          .querySelectorAll(".nav")
+          .forEach(
+            b=>
+              b.classList
+               .remove("active")
+          );
+
+        btn.classList.add(
+          "active"
+        );
+
+        document
+          .getElementById(
+            btn.dataset.target
+          )
+          .scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+          });
+
+      }
+    );
+
+  });
+
+document.addEventListener(
+  "keydown",
+  e=>{
+
+    if(e.key==="Escape")
+      closeModal();
+
+  }
 );
 
+document
+  .getElementById(
+    "telegramLink"
+  )
+  .addEventListener(
+    "click",
+    e=>{
 
-/* =========================================================
-   АВТООБНОВЛЕНИЕ
-========================================================= */
+      e.preventDefault();
+
+      alert(
+        "Ссылка на Telegram-бота не указана в этом файле."
+      );
+
+    }
+  );
+
+renderMoon();
+
+refreshAll();
 
 setInterval(
-  fetchData,
-  10 * 60 * 1000
+  refreshAll,
+  15*60*1000
 );
 
 </script>
