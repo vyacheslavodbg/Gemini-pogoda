@@ -10,31 +10,30 @@
 :root{
 --bg:#08090c;
 --panel:rgba(18,20,25,.78);
---panel2:rgba(255,255,255,.025);
 --line:rgba(255,255,255,.08);
 --text:#f3f2ee;
---muted:#8f929b;
+--muted:#a0a3ac;
 --gold:#c7a86b;
 --gold2:#ead7a7;
 --green:#75d5a4;
 --red:#ef727c;
 --blue:#8ca9ff;
 --cyan:#76d7e8;
---radius:22px
 }
 
 *{
 box-sizing:border-box
 }
 
-html,body{
+html,
+body{
 margin:0;
 width:100%;
 height:100%;
 overflow:hidden;
 background:var(--bg);
 color:var(--text);
-font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Inter,sans-serif;
+font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
 -webkit-text-size-adjust:100%
 }
 
@@ -79,14 +78,14 @@ width:100%;
 height:100dvh;
 padding:
 env(safe-area-inset-top)
-14px
-calc(67px + env(safe-area-inset-bottom))
-14px;
+13px
+calc(68px + env(safe-area-inset-bottom))
+13px;
 overflow:hidden
 }
 
 .topbar{
-height:55px;
+height:58px;
 display:flex;
 justify-content:space-between;
 align-items:center;
@@ -95,55 +94,56 @@ border-bottom:1px solid var(--line)
 
 .brand{
 display:flex;
-gap:10px;
+gap:11px;
 align-items:center
 }
 
 .brand-mark{
 display:grid;
 place-items:center;
-width:34px;
-height:34px;
+width:36px;
+height:36px;
 border:1px solid rgba(199,168,107,.55);
-border-radius:10px;
+border-radius:11px;
 color:var(--gold2);
+font-size:17px;
 font-weight:800
 }
 
 .brand-name{
 font-weight:800;
-font-size:16px;
+font-size:18px;
 letter-spacing:.15em
 }
 
 .brand-sub{
-font-size:7px;
+font-size:8px;
 letter-spacing:.2em;
 color:var(--muted);
-margin-top:2px
+margin-top:3px
 }
 
 .status{
 display:flex;
 align-items:center;
-gap:6px;
-font-size:8px;
-color:#8d9099
+gap:7px;
+font-size:10px;
+color:#999ca5
 }
 
 .live{
-width:6px;
-height:6px;
+width:7px;
+height:7px;
 border-radius:50%;
 background:var(--green);
-box-shadow:0 0 10px var(--green)
+box-shadow:0 0 11px var(--green)
 }
 
 .screen{
 height:calc(
 100dvh -
-55px -
-67px -
+58px -
+68px -
 env(safe-area-inset-top) -
 env(safe-area-inset-bottom)
 );
@@ -165,8 +165,7 @@ display:block
 .weather-page{
 height:100%;
 display:grid;
-grid-template-rows:73px 112px 38px 205px 1fr;
-gap:0
+grid-template-rows:76px 112px 39px 202px 1fr
 }
 
 .hero{
@@ -177,16 +176,16 @@ border-bottom:1px solid var(--line)
 }
 
 .location-name{
-font-size:25px;
+font-size:28px;
 font-weight:750;
-letter-spacing:-.04em
+letter-spacing:-.045em
 }
 
 .location-state{
-font-size:8px;
-letter-spacing:.18em;
+font-size:9px;
+letter-spacing:.17em;
 color:var(--muted);
-margin-top:4px
+margin-top:5px
 }
 
 .city-switch{
@@ -198,11 +197,11 @@ background:rgba(255,255,255,.025)
 }
 
 .city{
-padding:8px 10px;
+padding:9px 11px;
 border-radius:10px;
-font-size:9px;
+font-size:10px;
 font-weight:700;
-color:#777a83
+color:#858892
 }
 
 .city.active{
@@ -219,33 +218,34 @@ border-bottom:1px solid var(--line)
 }
 
 .temp{
-font-size:61px;
+font-size:66px;
 font-weight:750;
 letter-spacing:-.075em;
-line-height:1
+line-height:.95
 }
 
 .condition{
-font-size:14px;
-font-weight:600;
-margin-top:4px
+font-size:16px;
+font-weight:650;
+margin-top:5px
 }
 
 .feels{
-font-size:9px;
+font-size:11px;
 color:var(--muted);
-margin-top:4px
+margin-top:5px
 }
 
 .current-right{
 text-align:right;
-font-size:10px;
+font-size:11px;
 color:var(--muted);
-line-height:1.9
+line-height:2
 }
 
 .current-right strong{
-color:#e1e0dd
+color:#e1e0dd;
+font-size:12px
 }
 
 .chart-head{
@@ -255,8 +255,8 @@ justify-content:space-between
 }
 
 .chart-title{
-font-size:8px;
-letter-spacing:.18em;
+font-size:10px;
+letter-spacing:.16em;
 color:var(--muted);
 font-weight:700
 }
@@ -267,10 +267,10 @@ gap:4px
 }
 
 .chart-tab{
-padding:4px 8px;
+padding:5px 9px;
 border-radius:9px;
-font-size:8px;
-color:#777a83
+font-size:10px;
+color:#858892
 }
 
 .chart-tab.active{
@@ -279,101 +279,81 @@ color:var(--gold2)
 }
 
 .chart-box{
-height:205px;
+height:202px;
 position:relative;
 padding-top:2px
 }
 
 .chart-svg{
 width:100%;
-height:172px;
+height:177px;
 display:block;
 touch-action:none
 }
 
-.chart-read{
-position:absolute;
-top:3px;
-left:5px;
-min-width:104px;
-padding:5px 7px;
-border:1px solid rgba(255,255,255,.09);
-border-radius:9px;
-background:rgba(10,12,16,.9);
-backdrop-filter:blur(12px);
-font-size:8px;
-line-height:1.35;
-pointer-events:none
-}
-
-.chart-read strong{
-display:block;
-font-size:14px;
-color:var(--gold2)
-}
-
 .day-strip{
 display:grid;
-grid-template-columns:repeat(7,1fr);
-gap:5px;
-align-items:stretch
+grid-template-columns:repeat(5,1fr);
+gap:6px;
+align-items:stretch;
+padding-top:4px
 }
 
 .day{
 min-width:0;
 border:1px solid var(--line);
-border-radius:12px;
+border-radius:13px;
 background:rgba(255,255,255,.018);
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-gap:3px;
-padding:4px 2px
+gap:4px;
+padding:5px 2px
 }
 
 .day.selected{
-border-color:rgba(199,168,107,.42);
+border-color:rgba(199,168,107,.45);
 background:rgba(199,168,107,.08)
 }
 
 .day-name{
-font-size:8px;
+font-size:10px;
 font-weight:700;
-color:#c9c8c5
+color:#d2d1ce
 }
 
 .day-date{
-font-size:7px;
-color:#686b73
+font-size:8px;
+color:#777a83
 }
 
 .day-icon{
-font-size:17px;
-line-height:20px
+font-size:19px;
+line-height:21px
 }
 
 .day-temp{
-font-size:8px;
+font-size:9px;
 font-weight:700
 }
 
 .day-rain{
-font-size:7px;
+font-size:8px;
 color:var(--blue)
 }
 
-/* OTHER PAGES */
+/* AIR */
 
 .simple{
 height:100%;
 display:grid;
-grid-template-rows:43px 1fr;
+grid-template-rows:49px 1fr;
 overflow:hidden
 }
 
 .page-title{
-height:43px;
+height:49px;
 display:flex;
 align-items:center;
 justify-content:space-between;
@@ -381,14 +361,14 @@ border-bottom:1px solid var(--line)
 }
 
 .page-title h2{
-margin:0;
-font-size:19px;
-letter-spacing:-.03em
+margin:3px 0 0;
+font-size:22px;
+letter-spacing:-.035em
 }
 
 .kicker{
-font-size:7px;
-letter-spacing:.2em;
+font-size:9px;
+letter-spacing:.18em;
 color:var(--muted)
 }
 
@@ -397,43 +377,41 @@ height:100%;
 overflow:hidden
 }
 
-/* AIR */
-
 .air-main{
 height:100%;
 display:grid;
-grid-template-rows:105px 72px 1fr
+grid-template-rows:112px 78px 1fr
 }
 
 .air-score{
 display:flex;
 align-items:center;
-gap:16px;
+gap:18px;
 border-bottom:1px solid var(--line)
 }
 
 .score{
-font-size:54px;
+font-size:62px;
 font-weight:750;
-letter-spacing:-.06em
+letter-spacing:-.07em
 }
 
 .score small{
-font-size:7px;
+font-size:9px;
 font-weight:500;
-letter-spacing:.15em;
+letter-spacing:.12em;
 color:var(--muted)
 }
 
 .air-label{
-font-size:16px;
+font-size:18px;
 font-weight:650
 }
 
 .air-sub{
-font-size:9px;
+font-size:11px;
 color:var(--muted);
-margin-top:4px
+margin-top:5px
 }
 
 .pollutants{
@@ -446,8 +424,8 @@ border-bottom:1px solid var(--line)
 display:flex;
 flex-direction:column;
 justify-content:center;
-gap:4px;
-padding-left:8px
+gap:5px;
+padding-left:7px
 }
 
 .pollutant+.pollutant{
@@ -455,31 +433,27 @@ border-left:1px solid var(--line)
 }
 
 .pollutant span{
-font-size:7px;
-color:#737680;
-letter-spacing:.1em
+font-size:9px;
+color:#858892;
+letter-spacing:.08em
 }
 
 .pollutant strong{
-font-size:13px
+font-size:15px
 }
 
 .pollutant small{
-font-size:7px;
-color:#656870
-}
-
-.air-info{
-padding-top:10px
+font-size:8px;
+color:#777a83
 }
 
 .info-row{
-height:39px;
+height:45px;
 display:flex;
 align-items:center;
 justify-content:space-between;
 border-bottom:1px solid var(--line);
-font-size:10px
+font-size:12px
 }
 
 .info-row span{
@@ -487,15 +461,15 @@ color:var(--muted)
 }
 
 .info-row strong{
-font-size:11px
+font-size:13px
 }
 
-/* KP */
+/* MAGNETIC */
 
 .kp-page{
 height:100%;
 display:grid;
-grid-template-rows:100px 64px 1fr
+grid-template-rows:108px 65px 1fr
 }
 
 .kp-hero{
@@ -506,21 +480,21 @@ border-bottom:1px solid var(--line)
 }
 
 .kp-number{
-font-size:57px;
+font-size:64px;
 font-weight:750;
-letter-spacing:-.07em
+letter-spacing:-.075em
 }
 
 .kp-label{
-font-size:16px;
+font-size:17px;
 font-weight:650;
 text-align:right
 }
 
 .kp-sub{
-font-size:8px;
+font-size:10px;
 color:var(--muted);
-margin-top:4px;
+margin-top:5px;
 text-align:right
 }
 
@@ -530,7 +504,7 @@ align-items:center
 }
 
 .kp-meter{
-height:7px;
+height:8px;
 width:100%;
 border-radius:99px;
 background:linear-gradient(
@@ -561,7 +535,7 @@ display:flex;
 align-items:center;
 justify-content:space-between;
 border-bottom:1px solid var(--line);
-font-size:10px
+font-size:12px
 }
 
 .kp-row span{
@@ -569,7 +543,7 @@ color:var(--muted)
 }
 
 .kp-row strong{
-font-size:12px
+font-size:14px
 }
 
 /* EARTHQUAKES */
@@ -577,31 +551,31 @@ font-size:12px
 .quake-page{
 height:100%;
 display:grid;
-grid-template-rows:80px 1fr
+grid-template-rows:88px 1fr
 }
 
 .quake-summary{
 display:flex;
 align-items:center;
-gap:15px;
+gap:16px;
 border-bottom:1px solid var(--line)
 }
 
 .quake-count{
-font-size:53px;
+font-size:60px;
 font-weight:750;
-letter-spacing:-.07em
+letter-spacing:-.075em
 }
 
 .quake-summary-text{
-font-size:12px;
-font-weight:600
+font-size:14px;
+font-weight:650
 }
 
 .quake-summary-sub{
-font-size:8px;
+font-size:10px;
 color:var(--muted);
-margin-top:4px
+margin-top:5px
 }
 
 .quake-list{
@@ -611,34 +585,34 @@ grid-template-rows:repeat(8,1fr)
 
 .quake{
 display:grid;
-grid-template-columns:49px 1fr 53px;
+grid-template-columns:55px 1fr 58px;
 align-items:center;
-gap:8px;
+gap:9px;
 border-bottom:1px solid var(--line)
 }
 
 .mag{
-font-size:15px;
+font-size:17px;
 font-weight:750;
 color:var(--gold2)
 }
 
 .place{
-font-size:9px;
+font-size:11px;
 overflow:hidden;
 text-overflow:ellipsis;
 white-space:nowrap
 }
 
 .qtime{
-font-size:7px;
+font-size:9px;
 color:var(--muted);
-margin-top:2px
+margin-top:3px
 }
 
 .qdistance{
 text-align:right;
-font-size:8px;
+font-size:10px;
 color:var(--muted)
 }
 
@@ -654,34 +628,34 @@ text-align:center
 }
 
 .moon-icon{
-font-size:86px;
+font-size:92px;
 line-height:1
 }
 
 .moon-name{
-font-size:25px;
+font-size:28px;
 font-weight:750;
-margin-top:18px
+margin-top:20px
 }
 
 .moon-sub{
-font-size:10px;
+font-size:11px;
 color:var(--muted);
-margin-top:6px
+margin-top:7px
 }
 
 .moon-data{
 display:grid;
 grid-template-columns:repeat(2,1fr);
 width:100%;
-max-width:310px;
-margin-top:25px;
+max-width:320px;
+margin-top:28px;
 border-top:1px solid var(--line);
 border-bottom:1px solid var(--line)
 }
 
 .moon-cell{
-padding:13px
+padding:15px
 }
 
 .moon-cell+.moon-cell{
@@ -690,15 +664,15 @@ border-left:1px solid var(--line)
 
 .moon-cell span{
 display:block;
-font-size:7px;
+font-size:8px;
 color:var(--muted);
 letter-spacing:.12em
 }
 
 .moon-cell strong{
 display:block;
-font-size:14px;
-margin-top:5px
+font-size:16px;
+margin-top:6px
 }
 
 /* NAV */
@@ -709,14 +683,14 @@ z-index:50;
 left:0;
 right:0;
 bottom:0;
-height:calc(64px + env(safe-area-inset-bottom));
+height:calc(66px + env(safe-area-inset-bottom));
 padding:
 4px
 7px
 env(safe-area-inset-bottom);
 display:grid;
 grid-template-columns:repeat(5,1fr);
-background:rgba(8,9,12,.94);
+background:rgba(8,9,12,.95);
 backdrop-filter:blur(18px);
 border-top:1px solid var(--line)
 }
@@ -726,15 +700,15 @@ display:flex;
 flex-direction:column;
 align-items:center;
 justify-content:center;
-gap:3px;
-color:#70737c;
-font-size:8px;
+gap:4px;
+color:#777a83;
+font-size:10px;
 font-weight:700
 }
 
 .nav-icon{
-font-size:19px;
-line-height:20px
+font-size:21px;
+line-height:22px
 }
 
 .nav-btn.active{
@@ -760,7 +734,7 @@ width:100%;
 background:#111419;
 border:1px solid var(--line);
 border-radius:20px 20px 0 0;
-padding:15px
+padding:16px
 }
 
 .sheet-head{
@@ -770,24 +744,24 @@ justify-content:space-between
 }
 
 .sheet-title{
-font-size:19px;
+font-size:21px;
 font-weight:700
 }
 
 .close{
-width:32px;
-height:32px;
+width:34px;
+height:34px;
 border-radius:50%;
 background:#20242b;
-font-size:20px
+font-size:21px
 }
 
 .sheet-row{
 display:flex;
 justify-content:space-between;
-padding:11px 0;
+padding:13px 0;
 border-bottom:1px solid var(--line);
-font-size:10px
+font-size:12px
 }
 
 .sheet-row span{
@@ -802,32 +776,35 @@ padding-right:12px
 }
 
 .topbar{
-height:53px
-}
-
-.brand-mark{
-width:32px;
-height:32px
+height:56px
 }
 
 .brand-name{
-font-size:15px
+font-size:17px
 }
 
 .weather-page{
-grid-template-rows:69px 107px 36px 198px 1fr
+grid-template-rows:73px 110px 38px 198px 1fr
 }
 
 .location-name{
-font-size:23px
+font-size:27px
 }
 
 .temp{
-font-size:57px
+font-size:63px
+}
+
+.condition{
+font-size:15px
 }
 
 .current-right{
-font-size:9px
+font-size:10px
+}
+
+.current-right strong{
+font-size:11px
 }
 
 .chart-box{
@@ -835,11 +812,68 @@ height:198px
 }
 
 .chart-svg{
-height:166px
+height:174px
+}
+
+.day-name{
+font-size:9px
+}
+
+.day-temp{
+font-size:8px
+}
+
+.day-rain{
+font-size:7px
+}
+
+.page-title h2{
+font-size:21px
+}
+
+}
+
+@media(max-width:370px){
+
+.city{
+padding:8px 8px;
+font-size:9px
+}
+
+.weather-page{
+grid-template-rows:70px 104px 36px 190px 1fr
+}
+
+.temp{
+font-size:57px
+}
+
+.location-name{
+font-size:24px
+}
+
+.condition{
+font-size:14px
+}
+
+.current-right{
+font-size:9px
+}
+
+.day{
+padding:4px 1px
+}
+
+.day-name{
+font-size:8px
+}
+
+.day-date{
+font-size:7px
 }
 
 .day-icon{
-font-size:15px
+font-size:16px
 }
 
 .day-temp{
@@ -848,27 +882,6 @@ font-size:7px
 
 .day-rain{
 font-size:6px
-}
-
-}
-
-@media(max-width:370px){
-
-.city{
-padding:7px 8px;
-font-size:8px
-}
-
-.weather-page{
-grid-template-rows:67px 102px 35px 190px 1fr
-}
-
-.temp{
-font-size:52px
-}
-
-.location-name{
-font-size:21px
 }
 
 }
@@ -905,7 +918,7 @@ GEO METEO
 <div class="status">
 <span class="live"></span>
 <span>LIVE</span>
-<span id="updated">обновление…</span>
+<span id="updated">—</span>
 </div>
 
 </header>
@@ -1015,7 +1028,7 @@ AQI
 <div class="pollutants" id="pollutants">
 </div>
 
-<div class="air-info" id="air-info">
+<div id="air-info">
 </div>
 
 </div>
@@ -1243,43 +1256,71 @@ return CITIES[S.city];
 }
 
 function n(v,d=0){
+
 const x=Number(v);
+
 return Number.isFinite(x)
 ?x.toFixed(d).replace(".0","")
 :"—";
 }
 
 function time(v){
-return new Date(v).toLocaleTimeString("ru-RU",{
+
+return new Date(v).toLocaleTimeString(
+"ru-RU",
+{
 hour:"2-digit",
 minute:"2-digit"
-});
+}
+);
 }
 
 function dateShort(v){
-return new Date(v+"T12:00:00").toLocaleDateString(
+
+return new Date(v+"T12:00:00")
+.toLocaleDateString(
 "ru-RU",
-{day:"2-digit",month:"2-digit"}
+{
+day:"2-digit",
+month:"2-digit"
+}
 );
 }
 
 function dayName(v,i){
+
 if(i===0)return"Сегодня";
+
 if(i===1)return"Завтра";
 
 return new Date(v+"T12:00:00")
-.toLocaleDateString("ru-RU",{weekday:"short"})
+.toLocaleDateString(
+"ru-RU",
+{
+weekday:"short"
+}
+)
 .replace(".","")
-.replace(/^./,x=>x.toUpperCase());
+.replace(
+/^./,
+x=>x.toUpperCase()
+);
 }
 
 async function json(url){
+
 const r=await fetch(
-url+(url.includes("?")?"&":"?")+"_="+Date.now(),
-{cache:"no-store"}
+url+
+(url.includes("?")?"&":"?")+
+"_="+Date.now(),
+{
+cache:"no-store"
+}
 );
 
-if(!r.ok)throw new Error("HTTP "+r.status);
+if(!r.ok){
+throw new Error("HTTP "+r.status);
+}
 
 return r.json();
 }
@@ -1333,7 +1374,7 @@ daily:[
 ].join(","),
 
 timezone:c.tz,
-forecast_days:7
+forecast_days:5
 });
 
 S.weather=await json(
@@ -1364,7 +1405,8 @@ ${w[1]} ${w[0]}
 </div>
 
 <div class="feels">
-Ощущается ${n(c.apparent_temperature)}° · влажность ${n(c.relative_humidity_2m)}%
+Ощущается ${n(c.apparent_temperature)}°
+ · влажность ${n(c.relative_humidity_2m)}%
 </div>
 
 </div>
@@ -1387,14 +1429,20 @@ ${w[1]} ${w[0]}
 
 `;
 
-$("days").innerHTML=d.daily.time.map((date,i)=>{
+$("days").innerHTML=d.daily.time.map(
+(date,i)=>{
 
-const w=WMO[d.daily.weather_code[i]]||["","•"];
+const w=
+WMO[d.daily.weather_code[i]]
+||
+["","•"];
 
 return`
 
-<button class="day ${i===S.day?"selected":""}"
-onclick="selectDay(${i})">
+<button
+class="day ${i===S.day?"selected":""}"
+onclick="selectDay(${i})"
+>
 
 <div class="day-name">
 ${dayName(date,i)}
@@ -1409,7 +1457,8 @@ ${w[1]}
 </div>
 
 <div class="day-temp">
-${n(d.daily.temperature_2m_max[i])}° /
+${n(d.daily.temperature_2m_max[i])}°
+/
 ${n(d.daily.temperature_2m_min[i])}°
 </div>
 
@@ -1421,17 +1470,23 @@ ${n(d.daily.precipitation_probability_max[i])}%
 
 `;
 
-}).join("");
+}
+).join("");
 
 renderChart();
 }
 
 function selectDay(i){
+
 S.day=i;
 
-document.querySelectorAll(".day")
+document
+.querySelectorAll(".day")
 .forEach((x,n)=>{
-x.classList.toggle("selected",n===i);
+x.classList.toggle(
+"selected",
+n===i
+);
 });
 
 renderChart();
@@ -1439,10 +1494,16 @@ renderChart();
 
 function getHours(){
 
-const target=S.weather.daily.time[S.day];
+const target=
+S.weather.daily.time[S.day];
 
 return S.weather.hourly.time
-.map((t,i)=>String(t).startsWith(target)?i:-1)
+.map(
+(t,i)=>
+String(t).startsWith(target)
+?i
+:-1
+)
 .filter(i=>i>=0);
 }
 
@@ -1456,12 +1517,30 @@ if(!ids.length)return;
 const pts=ids.map(i=>({
 
 time:time(h.time[i]),
-temp:Number(h.temperature_2m[i]),
-feels:Number(h.apparent_temperature[i]),
-rain:Number(h.precipitation_probability[i]??0),
-precip:Number(h.precipitation[i]??0),
-wind:Number(h.wind_speed_10m[i]??0),
-gust:Number(h.wind_gusts_10m[i]??0)
+
+temp:Number(
+h.temperature_2m[i]
+),
+
+feels:Number(
+h.apparent_temperature[i]
+),
+
+rain:Number(
+h.precipitation_probability[i]??0
+),
+
+precip:Number(
+h.precipitation[i]??0
+),
+
+wind:Number(
+h.wind_speed_10m[i]??0
+),
+
+gust:Number(
+h.wind_gusts_10m[i]??0
+)
 
 }));
 
@@ -1473,6 +1552,7 @@ const L=34;
 const R=10;
 const T=14;
 const B=25;
+
 const PW=W-L-R;
 const PH=H-T-B;
 
@@ -1483,8 +1563,13 @@ S.metric==="temp"
 ?pts.map(x=>x.rain)
 :pts.map(x=>x.wind);
 
-let min=Math.floor(Math.min(...vals));
-let max=Math.ceil(Math.max(...vals));
+let min=Math.floor(
+Math.min(...vals)
+);
+
+let max=Math.ceil(
+Math.max(...vals)
+);
 
 if(min===max){
 min--;
@@ -1492,28 +1577,38 @@ max++;
 }
 
 const x=i=>
-L+(pts.length===1
+L+
+(
+pts.length===1
 ?PW/2
-:i*PW/(pts.length-1));
+:i*PW/(pts.length-1)
+);
 
 const y=v=>
-T+(max-v)*PH/(max-min);
+T+
+(max-v)*PH/(max-min);
 
-const path=pts.map((p,i)=>
+const path=pts
+.map(
+(p,i)=>
 (i?"L":"M")+
-x(i).toFixed(1)+" "+
+x(i).toFixed(1)+
+" "+
 y(vals[i]).toFixed(1)
-).join(" ");
+)
+.join(" ");
 
 const area=
 path+
-` L ${x(pts.length-1)} ${H-B} L ${x(0)} ${H-B} Z`;
+` L ${x(pts.length-1)} ${H-B}
+L ${x(0)} ${H-B} Z`;
 
 const grid=[
 max,
 Math.round((max+min)/2),
 min
-].map(v=>`
+]
+.map(v=>`
 
 <line
 x1="${L}"
@@ -1527,39 +1622,46 @@ stroke="rgba(255,255,255,.07)"
 x="${L-6}"
 y="${y(v)+3}"
 text-anchor="end"
-fill="#737680"
-font-size="10"
+fill="#858892"
+font-size="11"
 >
 ${n(v)}
 </text>
 
-`).join("");
+`)
+.join("");
 
-const labels=pts.map((p,i)=>
-(i%4===0||i===pts.length-1)
+const labels=pts
+.map(
+(p,i)=>
+(i%4===0||
+i===pts.length-1)
 ?`
 
 <text
 x="${x(i)}"
 y="${H-5}"
 text-anchor="middle"
-fill="#737680"
-font-size="9"
+fill="#858892"
+font-size="10"
 >
 ${p.time}
 </text>
 
 `
 :""
-).join("");
+)
+.join("");
 
 let bars="";
 
 if(S.metric==="rain"){
 
-bars=pts.map((p,i)=>{
+bars=pts
+.map((p,i)=>{
 
-const bh=(p.rain/100)*PH;
+const bh=
+(p.rain/100)*PH;
 
 return`
 
@@ -1575,17 +1677,20 @@ opacity=".45"
 
 `;
 
-}).join("");
-
+})
+.join("");
 }
 
 if(S.metric==="wind"){
 
-const scale=Math.max(1,max);
+const scale=
+Math.max(1,max);
 
-bars=pts.map((p,i)=>{
+bars=pts
+.map((p,i)=>{
 
-const bh=Math.min(
+const bh=
+Math.min(
 PH,
 p.wind/scale*PH
 );
@@ -1604,8 +1709,8 @@ opacity=".35"
 
 `;
 
-}).join("");
-
+})
+.join("");
 }
 
 const stroke=
@@ -1652,9 +1757,14 @@ stop-opacity="0"
 
 ${grid}
 
-${S.metric==="temp"
-?`<path d="${area}" fill="url(#chartGradient)"/>`
-:""}
+${
+S.metric==="temp"
+?`<path
+d="${area}"
+fill="url(#chartGradient)"
+/>`
+:""
+}
 
 ${bars}
 
@@ -1667,8 +1777,11 @@ stroke-linecap="round"
 stroke-linejoin="round"
 />
 
-${S.metric==="temp"
-?pts.map((p,i)=>`
+${
+S.metric==="temp"
+?
+pts.map(
+(p,i)=>`
 
 <circle
 class="dot"
@@ -1681,8 +1794,10 @@ stroke="#0a0c10"
 stroke-width="2"
 />
 
-`).join("")
-:""}
+`
+).join("")
+:""
+}
 
 <line
 id="marker"
@@ -1690,16 +1805,14 @@ x1="${x(0)}"
 y1="${T}"
 x2="${x(0)}"
 y2="${H-B}"
-stroke="#fff"
+stroke="#ffffff"
 stroke-width="1"
-opacity=".7"
+opacity=".65"
 />
 
 ${labels}
 
 </svg>
-
-<div class="chart-read" id="chartRead"></div>
 `;
 
 bindChart();
@@ -1709,7 +1822,6 @@ function bindChart(){
 
 const svg=$("weatherChart");
 const marker=$("marker");
-const read=$("chartRead");
 
 if(!svg||!S.points.length)return;
 
@@ -1717,63 +1829,53 @@ function show(i){
 
 i=Math.max(
 0,
-Math.min(S.points.length-1,Number(i))
+Math.min(
+S.points.length-1,
+Number(i)
+)
 );
-
-const p=S.points[i];
 
 const W=720;
 const L=34;
 const R=10;
 const PW=W-L-R;
 
-const xx=L+
-(S.points.length===1
+const xx=
+L+
+(
+S.points.length===1
 ?PW/2
-:i*PW/(S.points.length-1));
+:i*PW/(S.points.length-1)
+);
 
 marker.setAttribute("x1",xx);
 marker.setAttribute("x2",xx);
 
 svg.querySelectorAll(".dot")
 .forEach((d,n)=>{
-d.setAttribute("r",n===i?7:4);
+d.setAttribute(
+"r",
+n===i?7:4
+);
 });
-
-let value;
-
-if(S.metric==="temp"){
-value=n(p.temp)+"°C";
-}else if(S.metric==="rain"){
-value=n(p.rain)+"%";
-}else{
-value=n(p.wind)+" км/ч";
-}
-
-read.innerHTML=`
-
-<strong>
-${p.time} · ${value}
-</strong>
-
-Ощущается ${n(p.feels)}° ·
-дождь ${n(p.precip,1)} мм ·
-порывы ${n(p.gust)} км/ч
-
-`;
 }
 
 function pick(e){
 
-const r=svg.getBoundingClientRect();
+const r=
+svg.getBoundingClientRect();
 
 const px=Math.max(
 0,
-Math.min(r.width,e.clientX-r.left)
+Math.min(
+r.width,
+e.clientX-r.left
+)
 );
 
 const i=Math.round(
-px/r.width*(S.points.length-1)
+px/r.width*
+(S.points.length-1)
 );
 
 show(i);
@@ -1782,7 +1884,9 @@ show(i);
 svg.addEventListener(
 "pointerdown",
 e=>{
-svg.setPointerCapture?.(e.pointerId);
+svg.setPointerCapture?.(
+e.pointerId
+);
 pick(e);
 }
 );
@@ -1790,7 +1894,9 @@ pick(e);
 svg.addEventListener(
 "pointermove",
 e=>{
-if(e.buttons)pick(e);
+if(e.buttons){
+pick(e);
+}
 }
 );
 
@@ -1828,6 +1934,7 @@ current:[
 ].join(","),
 
 timezone:c.tz
+
 });
 
 S.air=await json(
@@ -1851,13 +1958,16 @@ if(v<=40)return"Удовлетворительно";
 if(v<=60)return"Умеренно";
 if(v<=80)return"Плохо";
 if(v<=100)return"Очень плохо";
+
 return"Крайне плохо";
 }
 
 function renderAir(){
 
 const a=S.air.current;
-const value=Number(a.european_aqi??0);
+
+const value=
+Number(a.european_aqi??0);
 
 $("air-score").innerHTML=`
 
@@ -1867,6 +1977,7 @@ ${n(value)}
 </div>
 
 <div>
+
 <div class="air-label">
 ${aqName(value)}
 </div>
@@ -1874,27 +1985,39 @@ ${aqName(value)}
 <div class="air-sub">
 ${city().name} · европейская шкала
 </div>
+
 </div>
 
 `;
 
 const items=[
+
 ["PM2.5",a.pm2_5],
+
 ["PM10",a.pm10],
+
 ["NO₂",a.nitrogen_dioxide],
+
 ["O₃",a.ozone],
+
 ["SO₂",a.sulphur_dioxide]
+
 ];
 
-$("pollutants").innerHTML=items.map(x=>`
+$("pollutants").innerHTML=
+items.map(x=>`
 
 <div class="pollutant">
 
 <span>${x[0]}</span>
 
-<strong>${n(x[1],1)}</strong>
+<strong>
+${n(x[1],1)}
+</strong>
 
-<small>µg/m³</small>
+<small>
+µg/m³
+</small>
 
 </div>
 
@@ -1932,7 +2055,8 @@ $("air-info").innerHTML=`
 
 function openAirGuide(){
 
-$("modalTitle").textContent="European AQI";
+$("modalTitle").textContent=
+"European AQI";
 
 $("modalBody").innerHTML=`
 
@@ -1977,9 +2101,12 @@ function parseKp(data){
 
 if(!Array.isArray(data))return[];
 
-return data.map(x=>({
+return data
+.map(x=>({
 
-time:x.time_tag??x[0],
+time:
+x.time_tag??
+x[0],
 
 kp:Number(
 x.kp??
@@ -1987,16 +2114,23 @@ x.Kp??
 x[1]
 ),
 
-observed:x.observed??x[2],
-scale:x.noaa_scale
+observed:
+x.observed??
+x[2],
+
+scale:
+x.noaa_scale
 
 }))
-.filter(x=>
-x.time&&Number.isFinite(x.kp)
+.filter(
+x=>
+x.time&&
+Number.isFinite(x.kp)
 )
 .sort(
 (a,b)=>
-new Date(a.time)-new Date(b.time)
+new Date(a.time)-
+new Date(b.time)
 );
 }
 
@@ -2040,6 +2174,7 @@ if(v>=7)return"Сильная буря";
 if(v>=6)return"Умеренная буря";
 if(v>=5)return"Слабая буря";
 if(v>=4)return"Возмущённо";
+
 return"Спокойно";
 }
 
@@ -2047,30 +2182,47 @@ function renderKp(){
 
 const now=Date.now();
 
-const past=S.kp.filter(x=>
-new Date(x.time).getTime()<=now
+const past=S.kp.filter(
+x=>
+new Date(x.time).getTime()
+<=now
 );
 
 const current=
-past.at(-1)||S.kp.at(-1);
+past.at(-1)||
+S.kp.at(-1);
 
 if(!current)return;
 
-const future=S.forecastKp.filter(x=>{
-const t=new Date(x.time).getTime();
+const future=
+S.forecastKp.filter(x=>{
 
-return t>now&&
-t<=now+24*60*60*1000;
+const t=
+new Date(x.time).getTime();
+
+return(
+t>now&&
+t<=now+86400000
+);
+
+});
+
+const recent=
+S.kp.filter(x=>{
+
+const t=
+new Date(x.time).getTime();
+
+return(
+t<=now&&
+now-t<=86400000
+);
+
 });
 
 const max24=Math.max(
 current.kp,
-...S.kp
-.filter(x=>{
-const t=new Date(x.time).getTime();
-return now-t<=86400000&&t<=now;
-})
-.map(x=>x.kp)
+...recent.map(x=>x.kp)
 );
 
 $("kpHero").innerHTML=`
@@ -2110,19 +2262,37 @@ current.kp/9*100
 const rows=[];
 
 rows.push(`
+
 <div class="kp-row">
-<span>Максимум за 24 часа</span>
-<strong>${n(max24,1)}</strong>
+
+<span>
+Максимум за 24 часа
+</span>
+
+<strong>
+${n(max24,1)}
+</strong>
+
 </div>
+
 `);
 
 future.slice(0,5).forEach(x=>{
 
 rows.push(`
+
 <div class="kp-row">
-<span>${time(x.time)}</span>
-<strong>Kp ${n(x.kp,1)}</strong>
+
+<span>
+${time(x.time)}
+</span>
+
+<strong>
+Kp ${n(x.kp,1)}
+</strong>
+
 </div>
+
 `);
 
 });
@@ -2130,20 +2300,29 @@ rows.push(`
 while(rows.length<6){
 
 rows.push(`
+
 <div class="kp-row">
-<span>Прогноз</span>
+
+<span>
+Прогноз
+</span>
+
 <strong>—</strong>
+
 </div>
+
 `);
 
 }
 
-$("kpList").innerHTML=rows.join("");
+$("kpList").innerHTML=
+rows.join("");
 }
 
 function openKpGuide(){
 
-$("modalTitle").textContent="Шкала Kp";
+$("modalTitle").textContent=
+"Шкала Kp";
 
 $("modalBody").innerHTML=`
 
@@ -2189,18 +2368,30 @@ openModal();
 
 /* EARTHQUAKES */
 
-function distance(lat1,lon1,lat2,lon2){
+function distance(
+lat1,
+lon1,
+lat2,
+lon2
+){
 
 const R=6371;
 const r=Math.PI/180;
 
 const a=
-Math.sin((lat2-lat1)*r/2)**2+
+Math.sin(
+(lat2-lat1)*r/2
+)**2+
 Math.cos(lat1*r)*
 Math.cos(lat2*r)*
-Math.sin((lon2-lon1)*r/2)**2;
+Math.sin(
+(lon2-lon1)*r/2
+)**2;
 
-return 2*R*Math.asin(Math.sqrt(a));
+return 2*R*
+Math.asin(
+Math.sqrt(a)
+);
 }
 
 async function loadQuakes(){
@@ -2216,7 +2407,7 @@ const c=city();
 S.quakes=(data.features||[])
 .map(f=>{
 
-const [
+const[
 lon,
 lat,
 depth
@@ -2224,12 +2415,25 @@ depth
 
 return{
 
-mag:Number(f.properties.mag),
-place:f.properties.place||"Неизвестно",
-time:f.properties.time,
+mag:Number(
+f.properties.mag
+),
+
+place:
+f.properties.place||
+"Неизвестно",
+
+time:
+f.properties.time,
+
 depth,
-distance:distance(
-c.lat,c.lon,lat,lon
+
+distance:
+distance(
+c.lat,
+c.lon,
+lat,
+lon
 )
 
 };
@@ -2239,7 +2443,9 @@ c.lat,c.lon,lat,lon
 Number.isFinite(x.mag)&&
 x.distance<=500
 )
-.sort((a,b)=>b.time-a.time)
+.sort(
+(a,b)=>b.time-a.time
+)
 .slice(0,8);
 
 $("quakeSummary").innerHTML=`
@@ -2262,11 +2468,15 @@ ${S.quakes.length}
 
 `;
 
-$("quakeList").innerHTML=S.quakes.length
-?S.quakes.map((q,i)=>`
+$("quakeList").innerHTML=
+S.quakes.length
+?S.quakes.map(
+(q,i)=>`
 
-<div class="quake"
-onclick="quakeDetail(${i})">
+<div
+class="quake"
+onclick="quakeDetail(${i})"
+>
 
 <div class="mag">
 M ${n(q.mag,1)}
@@ -2279,7 +2489,8 @@ ${escapeHTML(q.place)}
 </div>
 
 <div class="qtime">
-${new Date(q.time).toLocaleString("ru-RU")}
+${new Date(q.time)
+.toLocaleString("ru-RU")}
 </div>
 
 </div>
@@ -2290,7 +2501,8 @@ ${n(q.distance)} км
 
 </div>
 
-`).join("")
+`
+).join("")
 :`
 
 <div class="qtime" style="padding-top:15px">
@@ -2330,22 +2542,31 @@ $("modalBody").innerHTML=`
 
 <div class="sheet-row">
 <span>Место</span>
-<strong>${escapeHTML(q.place)}</strong>
+<strong>
+${escapeHTML(q.place)}
+</strong>
 </div>
 
 <div class="sheet-row">
 <span>Расстояние</span>
-<strong>${n(q.distance)} км</strong>
+<strong>
+${n(q.distance)} км
+</strong>
 </div>
 
 <div class="sheet-row">
 <span>Глубина</span>
-<strong>${n(q.depth)} км</strong>
+<strong>
+${n(q.depth)} км
+</strong>
 </div>
 
 <div class="sheet-row">
 <span>Время</span>
-<strong>${new Date(q.time).toLocaleString("ru-RU")}</strong>
+<strong>
+${new Date(q.time)
+.toLocaleString("ru-RU")}
+</strong>
 </div>
 
 `;
@@ -2360,7 +2581,11 @@ function renderMoon(){
 const syn=29.530588853;
 
 const epoch=Date.UTC(
-2000,0,6,18,14
+2000,
+0,
+6,
+18,
+14
 );
 
 const age=
@@ -2378,31 +2603,45 @@ let icon;
 if(age<1.85){
 name="Новолуние";
 icon="🌑";
-}else if(age<7.38){
+}
+else if(age<7.38){
 name="Растущий серп";
 icon="🌒";
-}else if(age<9.22){
+}
+else if(age<9.22){
 name="Первая четверть";
 icon="🌓";
-}else if(age<14.76){
+}
+else if(age<14.76){
 name="Растущая Луна";
 icon="🌔";
-}else if(age<16.61){
+}
+else if(age<16.61){
 name="Полнолуние";
 icon="🌕";
-}else if(age<22.15){
+}
+else if(age<22.15){
 name="Убывающая Луна";
 icon="🌖";
-}else if(age<23.99){
+}
+else if(age<23.99){
 name="Последняя четверть";
 icon="🌗";
-}else{
+}
+else{
 name="Убывающий серп";
 icon="🌘";
 }
 
 const illumination=
-.5*(1-Math.cos(2*Math.PI*phase))*100;
+.5*
+(
+1-
+Math.cos(
+2*Math.PI*phase
+)
+)*
+100;
 
 $("moon").innerHTML=`
 
@@ -2421,13 +2660,27 @@ ${city().name} · текущая фаза Луны
 <div class="moon-data">
 
 <div class="moon-cell">
-<span>ВОЗРАСТ</span>
-<strong>${n(age,1)} суток</strong>
+
+<span>
+ВОЗРАСТ
+</span>
+
+<strong>
+${n(age,1)} суток
+</strong>
+
 </div>
 
 <div class="moon-cell">
-<span>ОСВЕЩЁННОСТЬ</span>
-<strong>${n(illumination)}%</strong>
+
+<span>
+ОСВЕЩЁННОСТЬ
+</span>
+
+<strong>
+${n(illumination)}%
+</strong>
+
 </div>
 
 </div>
@@ -2439,40 +2692,47 @@ ${city().name} · текущая фаза Луны
 
 function openPage(page){
 
-document.querySelectorAll(".page")
-.forEach(x=>x.classList.remove("active"));
+document
+.querySelectorAll(".page")
+.forEach(x=>
+x.classList.remove("active")
+);
 
 $("page-"+page)
 .classList.add("active");
 
-document.querySelectorAll(".nav-btn")
+document
+.querySelectorAll(".nav-btn")
 .forEach(x=>
 x.classList.toggle(
 "active",
 x.dataset.page===page
 )
 );
-
 }
 
-document.querySelectorAll(".nav-btn")
+document
+.querySelectorAll(".nav-btn")
 .forEach(btn=>{
 
-btn.onclick=()=>openPage(
-btn.dataset.page
-);
+btn.onclick=()=>
+openPage(btn.dataset.page);
 
 });
 
 /* CITY */
 
-document.querySelectorAll(".city")
+document
+.querySelectorAll(".city")
 .forEach(btn=>{
 
 btn.onclick=async()=>{
 
-document.querySelectorAll(".city")
-.forEach(x=>x.classList.remove("active"));
+document
+.querySelectorAll(".city")
+.forEach(x=>
+x.classList.remove("active")
+);
 
 btn.classList.add("active");
 
@@ -2487,14 +2747,16 @@ await refresh();
 
 /* CHART */
 
-document.querySelectorAll(".chart-tab")
+document
+.querySelectorAll(".chart-tab")
 .forEach(btn=>{
 
 btn.onclick=()=>{
 
 S.metric=btn.dataset.metric;
 
-document.querySelectorAll(".chart-tab")
+document
+.querySelectorAll(".chart-tab")
 .forEach(x=>
 x.classList.toggle(
 "active",
@@ -2522,7 +2784,8 @@ $("modal").classList.remove("show");
 
 async function refresh(){
 
-$("updated").textContent="обновление…";
+$("updated").textContent=
+"обновление…";
 
 await Promise.allSettled([
 
@@ -2546,6 +2809,7 @@ minute:"2-digit"
 }
 
 renderMoon();
+
 refresh();
 
 setInterval(
