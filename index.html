@@ -23,22 +23,34 @@
   --orange:#ffb45e;
   --shadow:0 14px 40px rgba(0,0,0,.28);
 }
-*{box-sizing:border-box}
+
+*{
+  box-sizing:border-box
+}
+
 html{
   background:var(--bg);
   color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Arial,sans-serif
 }
+
 body{
   margin:0;
   background:var(--bg);
-  min-height:100vh
+  min-height:100vh;
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden
 }
+
 .app{
   max-width:980px;
+  width:100%;
   margin:0 auto;
-  padding:18px 16px 100px
+  padding:12px 12px 92px;
+  overflow:hidden
 }
+
 .header{
   background:linear-gradient(145deg,#171c26,#0f131a);
   border:1px solid #353b46;
@@ -48,6 +60,7 @@ body{
   position:relative;
   overflow:hidden
 }
+
 .header:after{
   content:"";
   position:absolute;
@@ -58,34 +71,41 @@ body{
   background:rgba(231,202,114,.08);
   filter:blur(5px)
 }
+
 .brand{
   position:relative;
   z-index:1
 }
+
 .brand-icon{
   font-size:32px;
   line-height:1;
   margin-bottom:16px
 }
+
 h1{
   margin:0;
   font-size:clamp(34px,8vw,62px);
   line-height:.98;
   letter-spacing:-2px
 }
+
 .gold{
   color:var(--gold)
 }
+
 .subtitle{
   margin:12px 0 0;
   color:#d7dce5;
   font-size:18px
 }
+
 .status{
   margin-top:18px;
   color:var(--muted);
   font-size:15px
 }
+
 .city-tabs{
   display:flex;
   gap:10px;
@@ -93,6 +113,7 @@ h1{
   position:relative;
   z-index:1
 }
+
 .city-btn{
   border:1px solid #4a5260;
   background:#202631;
@@ -101,11 +122,13 @@ h1{
   border-radius:999px;
   font-weight:700
 }
+
 .city-btn.active{
   background:var(--gold);
   border-color:var(--gold);
   color:#101216
 }
+
 .telegram{
   margin-top:16px;
   padding:16px 18px;
@@ -113,16 +136,19 @@ h1{
   border-radius:18px;
   background:#10151d
 }
+
 .telegram-title{
   font-weight:800;
   font-size:17px
 }
+
 .telegram-text{
   color:var(--muted);
   font-size:14px;
   margin-top:5px;
   line-height:1.4
 }
+
 .telegram-btn{
   display:inline-block;
   margin-top:12px;
@@ -133,34 +159,43 @@ h1{
   text-decoration:none;
   font-weight:700
 }
+
 .grid{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:14px;
-  margin-top:18px
+  gap:12px;
+  margin-top:14px;
+  min-width:0
 }
+
 .card{
+  min-width:0;
+  overflow:hidden;
   background:var(--panel);
   border:1px solid var(--line);
   border-radius:20px;
   padding:18px;
   box-shadow:0 8px 26px rgba(0,0,0,.18)
 }
+
 .card.full{
   grid-column:1/-1
 }
+
 .card-head{
   display:flex;
   justify-content:space-between;
   align-items:center;
   gap:12px
 }
+
 .card-title{
   font-size:14px;
   color:var(--muted);
   text-transform:uppercase;
   letter-spacing:.12em
 }
+
 .card-action{
   border:0;
   background:transparent;
@@ -168,57 +203,68 @@ h1{
   padding:0;
   font-weight:700
 }
+
 .current{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:16px;
-  margin-top:12px
+  gap:12px;
+  margin-top:10px;
+  min-width:0
 }
+
 .temp{
   font-size:58px;
   font-weight:800;
   letter-spacing:-2px
 }
+
 .weather-main{
   font-size:18px;
   font-weight:700
 }
+
 .weather-sub{
   color:var(--muted);
   font-size:14px;
   margin-top:5px
 }
+
 .metrics{
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:10px;
   margin-top:16px
 }
+
 .metric{
   background:var(--panel2);
   border-radius:14px;
   padding:12px
 }
+
 .metric-label{
   font-size:12px;
   color:var(--muted)
 }
+
 .metric-value{
   font-size:17px;
   font-weight:700;
   margin-top:4px
 }
+
 .forecast{
   display:grid;
-  grid-template-columns:repeat(7,minmax(100px,1fr));
-  gap:9px;
-  overflow-x:auto;
-  margin-top:14px;
-  padding-bottom:3px
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:6px;
+  width:100%;
+  margin-top:12px;
+  padding-bottom:0
 }
+
 .day{
-  min-width:100px;
+  min-width:0;
   background:var(--panel2);
   border:1px solid #252d38;
   border-radius:15px;
@@ -226,58 +272,81 @@ h1{
   text-align:left;
   color:var(--text)
 }
+
 .day.active{
   border-color:var(--gold)
 }
+
 .day-name{
   font-size:13px;
   font-weight:800
 }
+
 .day-date{
   font-size:11px;
   color:var(--muted);
   margin-top:2px
 }
+
 .day-icon{
   font-size:27px;
   margin:9px 0
 }
+
 .day-temp{
   font-weight:800
 }
+
 .day-rain{
   font-size:12px;
   color:var(--blue);
   margin-top:5px
 }
+
 .air-score{
   font-size:46px;
   font-weight:800;
   margin-top:10px
 }
-.good{color:var(--green)}
-.warn{color:var(--orange)}
-.bad{color:var(--red)}
+
+.good{
+  color:var(--green)
+}
+
+.warn{
+  color:var(--orange)
+}
+
+.bad{
+  color:var(--red)
+}
+
 .pollutants{
   display:grid;
-  grid-template-columns:repeat(5,1fr);
+  grid-template-columns:repeat(5,minmax(0,1fr));
   gap:8px;
   margin-top:14px
 }
+
 .pollutant{
   background:var(--panel2);
   border-radius:12px;
   padding:10px;
-  text-align:center
+  text-align:center;
+  border:0;
+  color:var(--text)
 }
+
 .pollutant b{
   display:block;
   font-size:16px
 }
+
 .pollutant span{
   font-size:11px;
   color:var(--muted)
 }
+
 .kp-box{
   display:flex;
   align-items:center;
@@ -285,25 +354,35 @@ h1{
   gap:16px;
   margin-top:10px
 }
+
 .kp-number{
   font-size:50px;
   font-weight:900
 }
+
 .kp-label{
   font-weight:800
 }
+
 .kp-help{
   color:var(--muted);
   font-size:13px;
   margin-top:4px
 }
+
 .kp-list,
 .quake-list{
   display:grid;
   gap:8px;
   margin-top:14px
 }
+
 .row{
+  width:100%;
+  min-width:0;
+  border:0;
+  color:var(--text);
+  text-align:left;
   display:flex;
   justify-content:space-between;
   gap:12px;
@@ -312,38 +391,55 @@ h1{
   border-radius:12px;
   font-size:14px
 }
+
+.row span{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}
+
 .row small{
+  flex:0 0 auto;
   color:var(--muted)
 }
+
 .empty{
   color:var(--muted);
   padding:12px 0
 }
+
 .loading{
   color:var(--muted);
   padding:14px 0
 }
+
 .error{
   color:var(--red);
   padding:12px 0;
   line-height:1.4
 }
+
 .moon{
   display:flex;
   align-items:center;
   gap:18px;
   margin-top:10px
 }
+
 .moon-icon{
   font-size:55px
 }
+
 .moon-name{
   font-size:20px;
   font-weight:800
 }
+
 .muted{
   color:var(--muted)
 }
+
 .bottom{
   position:fixed;
   left:50%;
@@ -359,6 +455,7 @@ h1{
   gap:6px;
   z-index:20
 }
+
 .nav{
   border:0;
   background:transparent;
@@ -366,9 +463,11 @@ h1{
   padding:7px 2px;
   font-size:12px
 }
+
 .nav.active{
   color:var(--gold)
 }
+
 .modal{
   position:fixed;
   inset:0;
@@ -379,11 +478,14 @@ h1{
   z-index:50;
   padding:12px
 }
+
 .modal.show{
   display:flex
 }
+
 .sheet{
   width:min(760px,100%);
+  min-width:0;
   max-height:88vh;
   overflow:auto;
   background:#11151d;
@@ -392,16 +494,19 @@ h1{
   padding:20px;
   box-shadow:0 20px 60px rgba(0,0,0,.5)
 }
+
 .sheet-head{
   display:flex;
   justify-content:space-between;
   align-items:center;
   gap:12px
 }
+
 .sheet h2{
   margin:0;
   font-size:24px
 }
+
 .close{
   width:38px;
   height:38px;
@@ -411,77 +516,338 @@ h1{
   color:white;
   font-size:22px
 }
+
 .hour-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:8px;
   margin-top:14px
 }
+
 .hour{
   background:#181e27;
   border-radius:12px;
   padding:10px;
   text-align:center
 }
+
 .hour-time{
   font-size:12px;
   color:var(--muted)
 }
+
 .hour-icon{
   font-size:22px;
   margin:4px 0
 }
+
 .hour-temp{
   font-weight:800
 }
+
 .hour-rain{
   font-size:11px;
   color:var(--blue)
 }
+
 .guide{
   display:grid;
   gap:9px;
   margin-top:14px
 }
+
 .guide-item{
   background:#181e27;
   border-radius:12px;
   padding:12px
 }
+
 @media(max-width:700px){
+
+  body{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden
+  }
+
+  .app{
+    width:100%;
+    max-width:100%;
+    padding:10px 10px 88px;
+    overflow:hidden
+  }
+
+  .header{
+    width:100%;
+    padding:16px 14px;
+    border-radius:18px
+  }
+
+  h1{
+    font-size:31px;
+    letter-spacing:-1.4px;
+    white-space:nowrap
+  }
+
+  .brand-icon{
+    font-size:25px;
+    margin-bottom:10px
+  }
+
+  .subtitle{
+    font-size:14px
+  }
+
+  .status{
+    font-size:13px;
+    margin-top:10px
+  }
+
+  .city-tabs{
+    margin-top:14px
+  }
+
+  .city-btn{
+    padding:8px 13px;
+    font-size:13px
+  }
+
+  .telegram{
+    margin-top:10px;
+    padding:12px 13px
+  }
+
+  .telegram-title{
+    font-size:15px
+  }
+
+  .telegram-text{
+    font-size:12px
+  }
+
   .grid{
-    grid-template-columns:1fr
+    width:100%;
+    grid-template-columns:1fr;
+    gap:10px;
+    margin-top:10px
   }
+
+  .card,
   .card.full{
-    grid-column:auto
+    width:100%;
+    min-width:0;
+    grid-column:auto;
+    padding:13px;
+    border-radius:16px;
+    overflow:hidden
   }
+
+  .current{
+    gap:7px;
+    min-width:0
+  }
+
+  .temp{
+    font-size:42px
+  }
+
+  .weather-main{
+    font-size:14px
+  }
+
+  .weather-sub{
+    font-size:11px
+  }
+
+  .current > div:last-child{
+    font-size:11px;
+    white-space:nowrap
+  }
+
+  .metrics{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:7px;
+    margin-top:10px
+  }
+
+  .metric{
+    min-width:0;
+    padding:8px
+  }
+
+  .metric-label{
+    font-size:10px
+  }
+
+  .metric-value{
+    font-size:13px;
+    white-space:nowrap
+  }
+
+  .forecast{
+    width:100%;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:5px;
+    overflow:visible
+  }
+
+  .day{
+    min-width:0;
+    width:100%;
+    padding:7px 4px;
+    border-radius:10px
+  }
+
+  .day-name{
+    font-size:10px;
+    white-space:nowrap
+  }
+
+  .day-date{
+    font-size:8px
+  }
+
+  .day-icon{
+    font-size:20px;
+    margin:4px 0
+  }
+
+  .day-temp{
+    font-size:10px;
+    white-space:nowrap
+  }
+
+  .day-rain{
+    font-size:8px;
+    white-space:nowrap
+  }
+
   .pollutants{
-    grid-template-columns:repeat(3,1fr)
+    width:100%;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:4px
   }
+
+  .pollutant{
+    min-width:0;
+    padding:7px 2px
+  }
+
+  .pollutant b{
+    font-size:12px
+  }
+
+  .pollutant span{
+    font-size:7px;
+    line-height:1.05
+  }
+
+  .kp-box{
+    min-width:0
+  }
+
+  .kp-number{
+    font-size:40px
+  }
+
+  .kp-label{
+    font-size:13px
+  }
+
+  .kp-help{
+    font-size:10px
+  }
+
+  .row{
+    width:100%;
+    min-width:0
+  }
+
+  .row span{
+    min-width:0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap
+  }
+
+  .bottom{
+    width:100%;
+    left:0;
+    transform:none;
+    padding-left:6px;
+    padding-right:6px
+  }
+
+  .nav{
+    font-size:10px
+  }
+
   .hour-grid{
-    grid-template-columns:repeat(3,1fr)
+    width:100%;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:5px
+  }
+
+  .hour{
+    min-width:0;
+    padding:7px 3px
+  }
+
+  .hour-time{
+    font-size:9px
+  }
+
+  .hour-icon{
+    font-size:18px;
+    margin:3px 0
+  }
+
+  .hour-temp{
+    font-size:12px
+  }
+
+  .hour-rain{
+    font-size:8px
+  }
+
+  .sheet{
+    width:100%;
+    max-width:100%;
+    min-width:0
   }
 }
-@media(max-width:430px){
-  .app{
-    padding-left:12px;
-    padding-right:12px
-  }
-  .header{
-    padding:20px 16px
-  }
+
+@media(max-width:360px){
+
   h1{
+    font-size:28px
+  }
+
+  .temp{
     font-size:38px
   }
-  .temp{
-    font-size:50px
+
+  .day{
+    padding-left:2px;
+    padding-right:2px
   }
-  .pollutants{
-    grid-template-columns:repeat(2,1fr)
+
+  .day-icon{
+    font-size:18px
   }
-  .hour-grid{
-    grid-template-columns:repeat(2,1fr)
+
+  .day-temp{
+    font-size:9px
   }
+
+  .day-rain{
+    font-size:7px
+  }
+
+  .pollutant span{
+    font-size:6.5px
+  }
+
 }
 </style>
 </head>
@@ -633,9 +999,11 @@ h1{
 <section class="card full" id="moonCard">
 
   <div class="card-head">
+
     <div class="card-title">
       Луна
     </div>
+
   </div>
 
   <div id="moon">
@@ -744,59 +1112,32 @@ const state = {
 const WMO = {
 
   0:["Ясно","☀"],
-
   1:["Преимущественно ясно","🌤"],
-
   2:["Переменная облачность","⛅"],
-
   3:["Пасмурно","☁"],
-
   45:["Туман","🌫"],
-
   48:["Изморозь/туман","🌫"],
-
   51:["Морось","🌦"],
-
   53:["Морось","🌦"],
-
   55:["Сильная морось","🌧"],
-
   56:["Ледяная морось","🌧"],
-
   57:["Ледяная морось","🌧"],
-
   61:["Небольшой дождь","🌦"],
-
   63:["Дождь","🌧"],
-
   65:["Сильный дождь","🌧"],
-
   66:["Ледяной дождь","🌧"],
-
   67:["Сильный ледяной дождь","🌧"],
-
   71:["Небольшой снег","🌨"],
-
   73:["Снег","🌨"],
-
   75:["Сильный снег","❄"],
-
   77:["Снежные зерна","❄"],
-
   80:["Ливни","🌦"],
-
   81:["Сильные ливни","🌧"],
-
   82:["Очень сильные ливни","⛈"],
-
   85:["Снегопад","🌨"],
-
   86:["Сильный снегопад","❄"],
-
   95:["Гроза","⛈"],
-
   96:["Гроза с градом","⛈"],
-
   99:["Сильная гроза с градом","⛈"]
 
 };
@@ -913,7 +1254,8 @@ function weatherInfo(code){
 
 function formatTime(iso){
 
-  if(!iso) return "—";
+  if(!iso)
+    return "—";
 
   const d=new Date(iso);
 
@@ -933,7 +1275,8 @@ function formatTime(iso){
 
 function formatDate(iso){
 
-  if(!iso) return "—";
+  if(!iso)
+    return "—";
 
   const d=new Date(
     iso+"T12:00:00"
