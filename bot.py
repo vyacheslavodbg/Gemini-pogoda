@@ -216,5 +216,6 @@ def main():
         print("No alert conditions detected.")
 
     print("Execution completed.")
+    
     if __name__ == "__main__":
     main()
