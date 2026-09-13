@@ -1,0 +1,21 @@
+{
+  "name": "AURA GEO METEO",
+  "short_name": "AURA METEO",
+  "description": "Погода, качество воздуха, геомагнитная активность, землетрясения и фазы Луны для Варны и Одессы.",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#071018",
+  "theme_color": "#071018",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
