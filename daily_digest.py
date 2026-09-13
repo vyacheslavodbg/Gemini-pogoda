@@ -57,18 +57,61 @@ def weather_summary(location, end):
 
 def magnetic_summary(end):
     rows = get_json("https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json")
+
+    if isinstance(rows, dict):
+        for key in ("data", "values", "observations", "results"):
+            candidate = rows.get(key)
+            if isinstance(candidate, list):
+                rows = candidate
+                break
+
     if not isinstance(rows, list) or not rows:
         raise ValueError("Missing Kp data")
+
     values = []
-    for row in rows[1:]:
-        when = datetime.fromisoformat(row[0].replace("Z", "+00:00"))
-        if when.tzinfo is None:
-            when = when.replace(tzinfo=timezone.utc)
-        kp = float(row[1])
-        if end - 86400 < when.timestamp() <= end and math.isfinite(kp):
-            values.append(kp)
+
+    for row in rows:
+        try:
+            if isinstance(row, dict):
+                time_value = (
+                    row.get("time_tag")
+                    or row.get("time")
+                    or row.get("timestamp")
+                    or row.get("date")
+                )
+                kp_value = (
+                    row.get("Kp")
+                    if row.get("Kp") is not None
+                    else row.get("kp")
+                )
+                if kp_value is None:
+                    kp_value = row.get("kp_index")
+            elif isinstance(row, (list, tuple)) and len(row) >= 2:
+                time_value, kp_value = row[0], row[1]
+            else:
+                continue
+
+            if not time_value or kp_value is None:
+                continue
+
+            time_text = str(time_value).strip()
+            if time_text.lower() in {"time_tag", "time", "timestamp", "date"}:
+                continue
+
+            when = datetime.fromisoformat(time_text.replace("Z", "+00:00"))
+            if when.tzinfo is None:
+                when = when.replace(tzinfo=timezone.utc)
+
+            kp = float(kp_value)
+            if end - 86400 < when.timestamp() <= end and math.isfinite(kp):
+                values.append(kp)
+
+        except (TypeError, ValueError, KeyError, IndexError):
+            continue
+
     if not values:
         return "Магнитное поле: нет данных за период"
+
     return f"Магнитное поле: максимум Kp {max(values):.1f} (получено интервалов: {len(values)})"
 
 
@@ -79,7 +122,6 @@ def distance(lat1, lon1, lat2, lon2):
 
 
 def quake_summary(end):
-    # Week feed covers the complete period even when the run is delayed.
     data = get_json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson")
     lines = ["<b>Землетрясения за сутки · USGS</b>"]
     for location in LOCATIONS.values():
