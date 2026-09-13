@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#071018">
+<title>AURA GEO METEO</title>
+
+<style>
+:root{
+  --bg:#071018;
+  --bg2:#0b1620;
+  --panel:#101e29;
+  --panel2:#132531;
+  --line:rgba(255,255,255,.10);
+  --text:#f5f7f9;
+  --muted:#aebbc5;
+  --gold:#d7b56d;
+  --blue:#6db9ff;
+  --green:#65d39a;
+  --red:#ff7777;
+  --bottom:86px;
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% -20%,#183142 0%,transparent 42%),
+    linear-gradient(180deg,var(--bg2),var(--bg));
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Inter",Arial,sans-serif;
+  font-size:17px;
+}
+
+body{
+  min-height:100dvh;
+}
+
+button{
+  font:inherit;
+  color:inherit;
+  border:0;
+  background:none;
+}
+
+.app{
+  width:100%;
+  height:100dvh;
+  overflow:hidden;
+  position:relative;
+}
+
+.screen{
+  display:none;
+  width:100%;
+  height:calc(100dvh - var(--bottom));
+  overflow:hidden;
+  padding:
+    max(18px,env(safe-area-inset-top))
+    18px
+    12px;
+}
+
+.screen.active{
+  display:block;
+}
+
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:14px;
+}
+
+.brand{
+  font-size:20px;
+  line-height:1;
+  font-weight:800;
+  letter-spacing:.08em;
+  color:var(--gold);
+}
+
+.city-switch{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  background:rgba(255,255,255,.07);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:9px 12px;
+  font-size:16px;
+  font-weight:700;
+}
+
+.city-switch select{
+  appearance:none;
+  border:0;
+  outline:0;
+  color:var(--text);
+  background:transparent;
+  font-size:16px;
+  font-weight:700;
+}
+
+.city-switch option{
+  color:#111;
+}
+
+.hero{
+  text-align:center;
+  margin:2px 0 12px;
+}
+
+.hero-icon{
+  font-size:50px;
+  line-height:1;
+  margin-bottom:2px;
+}
+
+.hero-temp{
+  font-size:44px;
+  line-height:1;
+  font-weight:800;
+  letter-spacing:-.04em;
+}
+
+.hero-state{
+  margin-top:7px;
+  font-size:19px;
+  font-weight:650;
+  color:var(--muted);
+}
+
+.hero-feels{
+  margin-top:3px;
+  font-size:16px;
+  color:#c7d1d8;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:7px;
+  margin-bottom:10px;
+}
+
+.stat{
+  min-width:0;
+  padding:10px 6px;
+  text-align:center;
+  background:rgba(255,255,255,.055);
+  border:1px solid var(--line);
+  border-radius:16px;
+}
+
+.stat-label{
+  font-size:13px;
+  line-height:1.15;
+  color:var(--muted);
+  white-space:nowrap;
+}
+
+.stat-value{
+  margin-top:5px;
+  font-size:17px;
+  line-height:1;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:9px 2px 7px;
+}
+
+.section-title strong{
+  font-size:19px;
+  font-weight:800;
+}
+
+.section-title span{
+  font-size:15px;
+  color:var(--muted);
+}
+
+.days{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:6px;
+}
+
+.day{
+  min-width:0;
+  padding:9px 4px;
+  background:rgba(255,255,255,.055);
+  border:1px solid var(--line);
+  border-radius:15px;
+  text-align:center;
+}
+
+.day.active{
+  border-color:rgba(215,181,109,.65);
+  background:rgba(215,181,109,.10);
+}
+
+.day-name{
+  font-size:15px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.day-icon{
+  margin:5px 0 2px;
+  font-size:25px;
+  line-height:1;
+}
+
+.day-temp{
+  font-size:17px;
+  font-weight:800;
+}
+
+.day-min{
+  margin-top:2px;
+  font-size:14px;
+  color:var(--muted);
+}
+
+.day-rain{
+  margin-top:4px;
+  font-size:13px;
+  color:var(--blue);
+}
+
+.chart-panel{
+  margin-top:8px;
+  padding:10px 9px 8px;
+  background:rgba(255,255,255,.045);
+  border:1px solid var(--line);
+  border-radius:18px;
+}
+
+.tabs{
+  display:flex;
+  gap:6px;
+  margin-bottom:4px;
+}
+
+.tab{
+  flex:1;
+  padding:8px 4px;
+  border-radius:12px;
+  background:rgba(255,255,255,.055);
+  color:var(--muted);
+  font-size:15px;
+  font-weight:750;
+}
+
+.tab.active{
+  color:var(--text);
+  background:rgba(215,181,109,.16);
+}
+
+.chart-wrap{
+  position:relative;
+  width:100%;
+  height:116px;
+}
+
+.chart{
+  width:100%;
+  height:100%;
+  display:block;
+  overflow:visible;
+}
+
+.chart-grid{
+  stroke:rgba(255,255,255,.08);
+  stroke-width:1;
+}
+
+.chart-line{
+  fill:none;
+  stroke:var(--gold);
+  stroke-width:3;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.chart-area{
+  fill:rgba(215,181,109,.08);
+}
+
+.chart-marker{
+  stroke:rgba(255,255,255,.55);
+  stroke-width:1.5;
+  stroke-dasharray:4 4;
+}
+
+.chart-dot{
+  fill:var(--gold);
+  stroke:#071018;
+  stroke-width:3;
+}
+
+.chart-value{
+  fill:#fff;
+  font-size:18px;
+  font-weight:800;
+  text-anchor:middle;
+  paint-order:stroke;
+  stroke:#071018;
+  stroke-width:4px;
+  stroke-linejoin:round;
+}
+
+.chart-hours{
+  display:flex;
+  justify-content:space-between;
+  padding:0 4px;
+  color:var(--muted);
+  font-size:13px;
+  font-weight:650;
+}
+
+.compact-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:8px;
+}
+
+.info-card{
+  min-width:0;
+  padding:10px 12px;
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+  border-radius:16px;
+}
+
+.info-title{
+  color:var(--muted);
+  font-size:14px;
+}
+
+.info-value{
+  margin-top:3px;
+  font-size:18px;
+  font-weight:800;
+}
+
+.page-title{
+  font-size:27px;
+  font-weight:850;
+  letter-spacing:-.03em;
+  margin:3px 0 4px;
+}
+
+.page-subtitle{
+  font-size:16px;
+  line-height:1.3;
+  color:var(--muted);
+  margin-bottom:12px;
+}
+
+.big-value{
+  font-size:48px;
+  line-height:1;
+  font-weight:850;
+  letter-spacing:-.04em;
+}
+
+.big-label{
+  margin-top:6px;
+  font-size:18px;
+  color:var(--muted);
+}
+
+.progress{
+  height:9px;
+  border-radius:20px;
+  background:rgba(255,255,255,.08);
+  overflow:hidden;
+  margin:12px 0;
+}
+
+.progress > div{
+  height:100%;
+  border-radius:inherit;
+  background:var(--gold);
+}
+
+.metric-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.metric{
+  padding:12px;
+  min-height:75px;
+  background:rgba(255,255,255,.055);
+  border:1px solid var(--line);
+  border-radius:17px;
+}
+
+.metric-label{
+  font-size:14px;
+  color:var(--muted);
+}
+
+.metric-value{
+  margin-top:5px;
+  font-size:21px;
+  font-weight:800;
+}
+
+.event-list{
+  margin-top:10px;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+
+.event{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:11px 12px;
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+  border-radius:16px;
+}
+
+.event-main{
+  min-width:0;
+}
+
+.event-title{
+  font-size:16px;
+  font-weight:750;
+}
+
+.event-meta{
+  margin-top:3px;
+  font-size:14px;
+  color:var(--muted);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.event-mag{
+  flex:none;
+  font-size:21px;
+  font-weight:850;
+}
+
+.empty{
+  padding:22px 10px;
+  text-align:center;
+  color:var(--muted);
+  font-size:16px;
+}
+
+.moon{
+  text-align:center;
+  padding-top:5px;
+}
+
+.moon-icon{
+  font-size:92px;
+  line-height:1;
+  margin:3px 0 7px;
+}
+
+.moon-phase{
+  font-size:25px;
+  font-weight:850;
+}
+
+.moon-info{
+  margin-top:6px;
+  font-size:17px;
+  color:var(--muted);
+}
+
+.bottom-nav{
+  position:fixed;
+  z-index:50;
+  left:0;
+  right:0;
+  bottom:0;
+  height:var(--bottom);
+  padding:
+    7px
+    8px
+    max(7px,env(safe-area-inset-bottom));
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:4px;
+  background:rgba(7,16,24,.94);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border-top:1px solid var(--line);
+}
+
+.nav-btn{
+  min-width:0;
+  border-radius:14px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  color:#8997a1;
+}
+
+.nav-btn.active{
+  color:var(--gold);
+  background:rgba(215,181,109,.09);
+}
+
+.nav-icon{
+  font-size:22px;
+  line-height:1;
+}
+
+.nav-label{
+  font-size:14px;
+  line-height:1;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  display:none;
+  align-items:flex-end;
+  background:rgba(0,0,0,.58);
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modal-box{
+  width:100%;
+  max-height:72dvh;
+  overflow:hidden;
+  padding:
+    18px
+    18px
+    max(20px,env(safe-area-inset-bottom));
+  background:#101e29;
+  border-radius:25px 25px 0 0;
+  border-top:1px solid var(--line);
+}
+
+.modal-title{
+  font-size:22px;
+  font-weight:850;
+  margin-bottom:12px;
+}
+
+.modal-row{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:9px 0;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  font-size:17px;
+}
+
+.modal-row span:first-child{
+  color:var(--muted);
+}
+
+.close{
+  width:100%;
+  margin-top:13px;
+  padding:12px;
+  border-radius:14px;
+  background:rgba(255,255,255,.08);
+  font-size:17px;
+  font-weight:750;
+}
+
+/* Дополнительное увеличение на небольших экранах */
+@media(max-width:390px){
+  :root{
+    --bottom:82px;
+  }
+
+  html,body{
+    font-size:16px;
+  }
+
+  .screen{
+    padding-left:14px;
+    padding-right:14px;
+  }
+
+  .brand{
+    font-size:18px;
+  }
+
+  .hero-icon{
+    font-size:44px;
+  }
+
+  .hero-temp{
+    font-size:40px;
+  }
+
+  .hero-state{
+    font-size:18px;
+  }
+
+  .stat{
+    padding:9px 3px;
+  }
+
+  .stat-label{
+    font-size:12px;
+  }
+
+  .stat-value{
+    font-size:16px;
+  }
+
+  .day-name{
+    font-size:14px;
+  }
+
+  .day-icon{
+    font-size:22px;
+  }
+
+  .day-temp{
+    font-size:16px;
+  }
+
+  .day-min{
+    font-size:13px;
+  }
+
+  .day-rain{
+    font-size:12px;
+  }
+
+  .nav-label{
+    font-size:13px;
+  }
+
+  .nav-icon{
+    font-size:20px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- WEATHER -->
+  <section id="screen-weather" class="screen active">
+
+    <div class="header">
+      <div class="brand">AURA GEO METEO</div>
+
+      <div class="city-switch">
+        <span>⌖</span>
+        <select id="citySelect">
+          <option value="varna">Варна</option>
+          <option value="odesa">Одесса</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div class="hero-icon" id="weatherIcon">☀️</div>
+      <div class="hero-temp" id="currentTemp">--°</div>
+      <div class="hero-state" id="weatherState">Загрузка...</div>
+      <div class="hero-feels" id="feelsLike">Ощущается как --°</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Влажность</div>
+        <div class="stat-value" id="humidity">--%</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Давление</div>
+        <div class="stat-value" id="pressure">--</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Ветер</div>
+        <div class="stat-value" id="wind">--</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Порывы</div>
+        <div class="stat-value" id="gust">--</div>
+      </div>
+    </div>
+
+    <div class="section-title">
+      <strong>5 дней</strong>
+      <span id="forecastCity">Варна</span>
+    </div>
+
+    <div class="days" id="days"></div>
+
+    <div class="chart-panel">
+      <div class="tabs">
+        <button class="tab active" data-metric="temp">Температура</button>
+        <button class="tab" data-metric="wind">Ветер</button>
+        <button class="tab" data-metric="humidity">Влажность</button>
+      </div>
+
+      <div class="chart-wrap">
+        <svg id="chart" class="chart" viewBox="0 0 600 116" preserveAspectRatio="none">
+          <line class="chart-grid" x1="0" y1="20" x2="600" y2="20"></line>
+          <line class="chart-grid" x1="0" y1="58" x2="600" y2="58"></line>
+          <line class="chart-grid" x1="0" y1="96" x2="600" y2="96"></line>
+
+          <path id="chartArea" class="chart-area"></path>
+          <path id="chartLine" class="chart-line"></path>
+
+          <line id="chartMarker" class="chart-marker" x1="0" y1="5" x2="0" y2="106" style="display:none"></line>
+          <circle id="chartDot" class="chart-dot" cx="0" cy="0" r="7" style="display:none"></circle>
+          <text id="chartValue" class="chart-value" x="0" y="0" style="display:none"></text>
+        </svg>
+      </div>
+
+      <div class="chart-hours">
+        <span>00</span>
+        <span>06</span>
+        <span>12</span>
+        <span>18</span>
+        <span>24</span>
+      </div>
+    </div>
+
+    <div class="compact-row">
+      <div class="info-card">
+        <div class="info-title">Восход</div>
+        <div class="info-value" id="sunrise">--:--</div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-title">Закат</div>
+        <div class="info-value" id="sunset">--:--</div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- AIR -->
+  <section id="screen-air" class="screen">
+
+    <div class="page-title">Качество воздуха</div>
+    <div class="page-subtitle" id="airCity">Варна</div>
+
+    <div class="info-card">
+      <div class="big-value" id="aqi">--</div>
+      <div class="big-label" id="aqiText">Загрузка...</div>
+
+      <div class="progress">
+        <div id="aqiProgress" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="metric-grid" style="margin-top:9px">
+
+      <div class="metric">
+        <div class="metric-label">PM2.5</div>
+        <div class="metric-value" id="pm25">--</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">PM10</div>
+        <div class="metric-value" id="pm10">--</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">NO₂</div>
+        <div class="metric-value" id="no2">--</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">O₃</div>
+        <div class="metric-value" id="o3">--</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">SO₂</div>
+        <div class="metric-value" id="so2">--</div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- MAGNETIC -->
+  <section id="screen-magnetic" class="screen">
+
+    <div class="page-title">Магнитные бури</div>
+    <div class="page-subtitle">Индекс геомагнитной активности Kp</div>
+
+    <div class="info-card">
+      <div class="big-value" id="kpCurrent">--</div>
+      <div class="big-label" id="kpState">Загрузка...</div>
+    </div>
+
+    <div class="metric-grid" style="margin-top:9px">
+
+      <div class="metric">
+        <div class="metric-label">Максимум за 24 ч</div>
+        <div class="metric-value" id="kpMax">--</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">Следующие 24 ч</div>
+        <div class="metric-value" id="kpForecast">--</div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- EARTHQUAKES -->
+  <section id="screen-earthquakes" class="screen">
+
+    <div class="page-title">Землетрясения</div>
+    <div class="page-subtitle" id="quakeCity">В пределах 500 км</div>
+
+    <div id="quakeList" class="event-list">
+      <div class="empty">Загрузка данных...</div>
+    </div>
+
+  </section>
+
+
+  <!-- MOON -->
+  <section id="screen-moon" class="screen">
+
+    <div class="page-title">Луна</div>
+    <div class="page-subtitle" id="moonCity">Текущая фаза</div>
+
+    <div class="moon">
+
+      <div class="moon-icon" id="moonIcon">🌕</div>
+
+      <div class="moon-phase" id="moonPhase">
+        Загрузка...
+      </div>
+
+      <div class="moon-info" id="moonAge">
+        Возраст Луны: --
+      </div>
+
+      <div class="moon-info" id="moonIllum">
+        Освещённость: --
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+
+    <button class="nav-btn active" data-screen="weather">
+      <span class="nav-icon">☀️</span>
+      <span class="nav-label">Погода</span>
+    </button>
+
+    <button class="nav-btn" data-screen="air">
+      <span class="nav-icon">◌</span>
+      <span class="nav-label">Воздух</span>
+    </button>
+
+    <button class="nav-btn" data-screen="magnetic">
+      <span class="nav-icon">✦</span>
+      <span class="nav-label">Бури</span>
+    </button>
+
+    <button class="nav-btn" data-screen="earthquakes">
+      <span class="nav-icon">⌁</span>
+      <span class="nav-label">Землетрясения</span>
+    </button>
+
+    <button class="nav-btn" data-screen="moon">
+      <span class="nav-icon">☾</span>
+      <span class="nav-label">Луна</span>
+    </button>
+
+  </nav>
+
+
+  <!-- MODAL -->
+  <div id="modal" class="modal">
+    <div class="modal-box">
+      <div class="modal-title" id="modalTitle">Подробности</div>
+      <div id="modalContent"></div>
+      <button class="close" id="modalClose">Закрыть</button>
+    </div>
+  </div>
+
+</div>
+
+
+<script>
+"use strict";
+
+const CITIES = {
+  varna:{
+    name:"Варна",
+    lat:43.2141,
+    lon:27.9147,
+    tz:"Europe/Sofia"
+  },
+  odesa:{
+    name:"Одесса",
+    lat:46.4825,
+    lon:30.7233,
+    tz:"Europe/Kyiv"
+  }
+};
+
+let cityKey = "varna";
+let weatherData = null;
+let selectedDay = 0;
+let currentMetric = "temp";
+let chartPoints = [];
+
+
+/* ---------------- WEATHER ---------------- */
+
+function weatherDescription(code){
+  const map = {
+    0:["☀️","Ясно"],
+    1:["🌤️","Преимущественно ясно"],
+    2:["⛅","Переменная облачность"],
+    3:["☁️","Пасмурно"],
+    45:["🌫️","Туман"],
+    48:["🌫️","Изморозь"],
+    51:["🌦️","Слабая морось"],
+    53:["🌦️","Морось"],
+    55:["🌧️","Сильная морось"],
+    61:["🌦️","Слабый дождь"],
+    63:["🌧️","Дождь"],
+    65:["🌧️","Сильный дождь"],
+    71:["🌨️","Слабый снег"],
+    73:["❄️","Снег"],
+    75:["❄️","Сильный снег"],
+    80:["🌦️","Ливни"],
+    81:["🌧️","Сильные ливни"],
+    82:["⛈️","Очень сильные ливни"],
+    95:["⛈️","Гроза"],
+    96:["⛈️","Гроза с градом"],
+    99:["⛈️","Сильная гроза"]
+  };
+
+  return map[code] || ["🌡️","Неизвестно"];
+}
+
+
+function n(value,digits=0){
+  if(value === null || value === undefined || Number.isNaN(Number(value))){
+    return "--";
+  }
+
+  return Number(value).toFixed(digits);
+}
+
+
+function formatTime(value){
+  if(!value) return "--:--";
+  return String(value).slice(11,16);
+}
+
+
+function formatDay(dateString,index){
+  if(index === 0) return "Сегодня";
+
+  const d = new Date(dateString + "T12:00:00");
+
+  const names = [
+    "Воскресенье",
+    "Понедельник",
+    "Вторник",
+    "Среда",
+    "Четверг",
+    "Пятница",
+    "Суббота"
+  ];
+
+  return names[d.getDay()];
+}
+
+
+async function loadWeather(){
+
+  const city = CITIES[cityKey];
+
+  const url =
+    "https://api.open-meteo.com/v1/forecast?" +
+    "latitude=" + city.lat +
+    "&longitude=" + city.lon +
+    "&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,pressure_msl,wind_speed_10m,wind_gusts_10m,is_day" +
+    "&hourly=temperature_2m,apparent_temperature,precipitation_probability,precipitation,weather_code,wind_speed_10m,wind_gusts_10m,relative_humidity_2m" +
+    "&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,uv_index_max,sunrise,sunset" +
+    "&timezone=" + encodeURIComponent(city.tz) +
+    "&forecast_days=5";
+
+  try{
+
+    const response = await fetch(url);
+
+    if(!response.ok){
+      throw new Error("Weather HTTP " + response.status);
+    }
+
+    weatherData = await response.json();
+
+    renderWeather();
+
+  }catch(error){
+
+    console.error(error);
+
+    document.getElementById("weatherState").textContent =
+      "Ошибка загрузки";
+
+  }
+}
+
+
+function renderWeather(){
+
+  if(!weatherData) return;
+
+  const c = weatherData.current;
+  const d = weatherData.daily;
+
+  const state = weatherDescription(c.weather_code);
+
+  document.getElementById("weatherIcon").textContent = state[0];
+
+  document.getElementById("currentTemp").textContent =
+    n(c.temperature_2m) + "°";
+
+  document.getElementById("weatherState").textContent =
+    state[1];
+
+  document.getElementById("feelsLike").textContent =
+    "Ощущается как " + n(c.apparent_temperature) + "°";
+
+  document.getElementById("humidity").textContent =
+    n(c.relative_humidity_2m) + "%";
+
+  document.getElementById("pressure").textContent =
+    n(c.pressure_msl) + " hPa";
+
+  document.getElementById("wind").textContent =
+    n(c.wind_speed_10m) + " км/ч";
+
+  document.getElementById("gust").textContent =
+    n(c.wind_gusts_10m) + " км/ч";
+
+  document.getElementById("forecastCity").textContent =
+    CITIES[cityKey].name;
+
+  document.getElementById("sunrise").textContent =
+    formatTime(d.sunrise[selectedDay]);
+
+  document.getElementById("sunset").textContent =
+    formatTime(d.sunset[selectedDay]);
+
+  renderDays();
+  renderChart();
+}
+
+
+function renderDays(){
+
+  if(!weatherData) return;
+
+  const d = weatherData.daily;
+  const container = document.getElementById("days");
+
+  container.innerHTML = "";
+
+  for(let i=0;i<5;i++){
+
+    const state = weatherDescription(d.weather_code[i]);
+
+    const el = document.createElement("button");
+
+    el.className = "day" + (i === selectedDay ? " active" : "");
+
+    el.innerHTML = `
+      <div class="day-name">${formatDay(d.time[i],i)}</div>
+      <div class="day-icon">${state[0]}</div>
+      <div class="day-temp">${n(d.temperature_2m_max[i])}°</div>
+      <div class="day-min">${n(d.temperature_2m_min[i])}°</div>
+      <div class="day-rain">${n(d.precipitation_probability_max[i])}%</div>
+    `;
+
+    el.addEventListener("click",()=>{
+
+      selectedDay = i;
+
+      renderDays();
+      renderChart();
+
+      document.getElementById("sunrise").textContent =
+        formatTime(d.sunrise[selectedDay]);
+
+      document.getElementById("sunset").textContent =
+        formatTime(d.sunset[selectedDay]);
+
+    });
+
+    container.appendChild(el);
+  }
+}
+
+
+/* ---------------- CHART ---------------- */
+
+function getDayHourly(dayIndex){
+
+  if(!weatherData) return [];
+
+  const h = weatherData.hourly;
+  const date = weatherData.daily.time[dayIndex];
+
+  const points = [];
+
+  for(let i=0;i<h.time.length;i++){
+
+    if(h.time[i].startsWith(date)){
+
+      points.push({
+        time:h.time[i],
+        temp:Number(h.temperature_2m[i]),
+        wind:Number(h.wind_speed_10m[i]),
+        humidity:Number(h.relative_humidity_2m[i])
+      });
+
+    }
+  }
+
+  return points.slice(0,24);
+}
+
+
+function getChartValue(point){
+
+  if(currentMetric === "wind"){
+    return n(point.wind) + " км/ч";
+  }
+
+  if(currentMetric === "humidity"){
+    return n(point.humidity) + "%";
+  }
+
+  return n(point.temp) + "°";
+}
+
+
+function renderChart(){
+
+  chartPoints = getDayHourly(selectedDay);
+
+  const line = document.getElementById("chartLine");
+  const area = document.getElementById("chartArea");
+  const marker = document.getElementById("chartMarker");
+  const dot = document.getElementById("chartDot");
+  const value = document.getElementById("chartValue");
+
+  if(!chartPoints.length){
+
+    line.setAttribute("d","");
+    area.setAttribute("d","");
+    marker.style.display="none";
+    dot.style.display="none";
+    value.style.display="none";
+
+    return;
+  }
+
+  const values = chartPoints.map(p=>{
+
+    if(currentMetric==="wind") return p.wind;
+    if(currentMetric==="humidity") return p.humidity;
+
+    return p.temp;
+  });
+
+  let min = Math.min(...values);
+  let max = Math.max(...values);
+
+  if(min === max){
+    min -= 1;
+    max += 1;
+  }
+
+  const pad = (max-min)*.12;
+
+  min -= pad;
+  max += pad;
+
+  const width = 600;
+  const top = 13;
+  const bottom = 103;
+  const step = width / Math.max(chartPoints.length-1,1);
+
+  const pts = chartPoints.map((p,i)=>{
+
+    const v =
+      currentMetric==="wind" ? p.wind :
+      currentMetric==="humidity" ? p.humidity :
+      p.temp;
+
+    const x = i * step;
+
+    const y =
+      bottom -
+      ((v-min)/(max-min)) *
+      (bottom-top);
+
+    return {x,y,v,p};
+  });
+
+  const path =
+    pts.map((p,i)=>
+      (i===0 ? "M" : "L") +
+      p.x.toFixed(2) + " " +
+      p.y.toFixed(2)
+    ).join(" ");
+
+  const areaPath =
+    path +
+    " L " + pts[pts.length-1].x + " " + bottom +
+    " L " + pts[0].x + " " + bottom +
+    " Z";
+
+  line.setAttribute("d",path);
+  area.setAttribute("d",areaPath);
+
+  function show(i){
+
+    const p = pts[Math.max(0,Math.min(i,pts.length-1))];
+
+    marker.setAttribute("x1",p.x);
+    marker.setAttribute("x2",p.x);
+
+    dot.setAttribute("cx",p.x);
+    dot.setAttribute("cy",p.y);
+
+    value.setAttribute("x",p.x);
+    value.setAttribute("y",Math.max(17,p.y-10));
+    value.textContent = getChartValue(p.p);
+
+    marker.style.display="block";
+    dot.style.display="block";
+    value.style.display="block";
+  }
+
+  show(0);
+
+  function pointerIndex(event){
+
+    const rect =
+      document.getElementById("chart").getBoundingClientRect();
+
+    const x =
+      (event.clientX - rect.left) /
+      rect.width *
+      width;
+
+    return Math.round(
+      x / step
+    );
+  }
+
+  const chart =
+    document.getElementById("chart");
+
+  chart.onpointerdown = event=>{
+    chart.setPointerCapture?.(event.pointerId);
+    show(pointerIndex(event));
+  };
+
+  chart.onpointermove = event=>{
+
+    if(event.buttons){
+      show(pointerIndex(event));
+    }
+
+  };
+}
+
+
+/* ---------------- AIR ---------------- */
+
+function aqiText(aqi){
+
+  if(aqi <= 20) return "Хорошее";
+  if(aqi <= 40) return "Приемлемое";
+  if(aqi <= 60) return "Умеренное";
+  if(aqi <= 80) return "Плохое";
+  if(aqi <= 100) return "Очень плохое";
+
+  return "Чрезвычайно плохое";
+}
+
+
+async function loadAir(){
+
+  const city = CITIES[cityKey];
+
+  const url =
+    "https://air-quality-api.open-meteo.com/v1/air-quality?" +
+    "latitude=" + city.lat +
+    "&longitude=" + city.lon +
+    "&current=european_aqi,pm2_5,pm10,nitrogen_dioxide,ozone,sulphur_dioxide" +
+    "&timezone=" + encodeURIComponent(city.tz);
+
+  try{
+
+    const response = await fetch(url);
+
+    if(!response.ok){
+      throw new Error("Air HTTP " + response.status);
+    }
+
+    const data = await response.json();
+    const c = data.current;
+
+    const aqi = Number(c.european_aqi);
+
+    document.getElementById("airCity").textContent =
+      city.name;
+
+    document.getElementById("aqi").textContent =
+      n(aqi);
+
+    document.getElementById("aqiText").textContent =
+      aqiText(aqi);
+
+    document.getElementById("aqiProgress").style.width =
+      Math.min(aqi,100) + "%";
+
+    document.getElementById("pm25").textContent =
+      n(c.pm2_5,1);
+
+    document.getElementById("pm10").textContent =
+      n(c.pm10,1);
+
+    document.getElementById("no2").textContent =
+      n(c.nitrogen_dioxide,1);
+
+    document.getElementById("o3").textContent =
+      n(c.ozone,1);
+
+    document.getElementById("so2").textContent =
+      n(c.sulphur_dioxide,1);
+
+  }catch(error){
+
+    console.error(error);
+
+    document.getElementById("aqiText").textContent =
+      "Нет данных";
+
+  }
+}
+
+
+/* ---------------- MAGNETIC ---------------- */
+
+function kpState(kp){
+
+  if(kp < 4) return "Спокойное поле";
+  if(kp < 5) return "Возмущённое поле";
+  if(kp < 6) return "G1 · Слабая магнитная буря";
+  if(kp < 7) return "G2 · Умеренная магнитная буря";
+  if(kp < 8) return "G3 · Сильная магнитная буря";
+  if(kp < 9) return "G4 · Очень сильная буря";
+
+  return "G5 · Экстремальная буря";
+}
+
+
+async function loadMagnetic(){
+
+  try{
+
+    const currentUrl =
+      "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json";
+
+    const forecastUrl =
+      "https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json";
+
+    const [a,b] = await Promise.all([
+      fetch(currentUrl),
+      fetch(forecastUrl)
+    ]);
+
+    const currentData = await a.json();
+    const forecastData = await b.json();
+
+    const rows = Array.isArray(currentData)
+      ? currentData.slice(1)
+      : [];
+
+    const kpValues = rows
+      .map(x=>Number(x.kp ?? x.Kp ?? x[1]))
+      .filter(Number.isFinite);
+
+    const current =
+      kpValues.length ? kpValues[kpValues.length-1] : null;
+
+    const max =
+      kpValues.length ? Math.max(...kpValues.slice(-8)) : null;
+
+    let forecastValues = [];
+
+    if(Array.isArray(forecastData)){
+
+      forecastValues =
+        forecastData
+          .slice(1)
+          .map(x=>{
+
+            if(Array.isArray(x)){
+              return Number(x[1]);
+            }
+
+            return Number(x.kp ?? x.Kp ?? x[1]);
+
+          })
+          .filter(Number.isFinite);
+
+    }
+
+    const forecast =
+      forecastValues.length
+        ? Math.max(...forecastValues.slice(0,8))
+        : null;
+
+    document.getElementById("kpCurrent").textContent =
+      current === null ? "--" : n(current,1);
+
+    document.getElementById("kpState").textContent =
+      current === null ? "Нет данных" : kpState(current);
+
+    document.getElementById("kpMax").textContent =
+      max === null ? "--" : n(max,1);
+
+    document.getElementById("kpForecast").textContent =
+      forecast === null ? "--" : n(forecast,1);
+
+  }catch(error){
+
+    console.error(error);
+
+    document.getElementById("kpState").textContent =
+      "Нет данных";
+
+  }
+}
+
+
+/* ---------------- EARTHQUAKES ---------------- */
+
+function distanceKm(lat1,lon1,lat2,lon2){
+
+  const R = 6371;
+
+  const a1 = lat1 * Math.PI / 180;
+  const a2 = lat2 * Math.PI / 180;
+
+  const da =
+    (lat2-lat1) * Math.PI / 180;
+
+  const dl =
+    (lon2-lon1) * Math.PI / 180;
+
+  const a =
+    Math.sin(da/2)**2 +
+    Math.cos(a1) *
+    Math.cos(a2) *
+    Math.sin(dl/2)**2;
+
+  return R * 2 * Math.atan2(
+    Math.sqrt(a),
+    Math.sqrt(1-a)
+  );
+}
+
+
+async function loadEarthquakes(){
+
+  const city = CITIES[cityKey];
+
+  document.getElementById("quakeCity").textContent =
+    city.name + " · радиус 500 км";
+
+  const list =
+    document.getElementById("quakeList");
+
+  try{
+
+    const response =
+      await fetch(
+        "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson"
+      );
+
+    if(!response.ok){
+      throw new Error("Earthquake HTTP " + response.status);
+    }
+
+    const data = await response.json();
+
+    const events =
+      data.features
+        .map(f=>{
+
+          const coords = f.geometry.coordinates;
+
+          const lon = coords[0];
+          const lat = coords[1];
+          const depth = coords[2];
+
+          const distance =
+            distanceKm(
+              city.lat,
+              city.lon,
+              lat,
+              lon
+            );
+
+          return {
+            feature:f,
+            distance,
+            depth,
+            magnitude:Number(f.properties.mag),
+            place:f.properties.place,
+            time:f.properties.time
+          };
+
+        })
+        .filter(e=>
+          e.distance <= 500 &&
+          Number.isFinite(e.magnitude)
+        )
+        .sort((a,b)=>b.time-a.time)
+        .slice(0,8);
+
+    list.innerHTML = "";
+
+    if(!events.length){
+
+      list.innerHTML =
+        `<div class="empty">За последние 24 часа значимых событий в радиусе 500 км не найдено.</div>`;
+
+      return;
+    }
+
+    events.forEach(event=>{
+
+      const el = document.createElement("button");
+
+      el.className = "event";
+
+      el.innerHTML = `
+        <div class="event-main">
+          <div class="event-title">${event.place || "Землетрясение"}</div>
+          <div class="event-meta">
+            ${n(event.distance,0)} км · глубина ${n(event.depth,0)} км
+          </div>
+        </div>
+        <div class="event-mag">
+          M${n(event.magnitude,1)}
+        </div>
+      `;
+
+      el.addEventListener("click",()=>{
+
+        openModal(
+          "Землетрясение",
+          `
+          <div class="modal-row">
+            <span>Магнитуда</span>
+            <strong>M${n(event.magnitude,1)}</strong>
+          </div>
+
+          <div class="modal-row">
+            <span>Расстояние</span>
+            <strong>${n(event.distance,0)} км</strong>
+          </div>
+
+          <div class="modal-row">
+            <span>Глубина</span>
+            <strong>${n(event.depth,0)} км</strong>
+          </div>
+
+          <div class="modal-row">
+            <span>Место</span>
+            <strong>${event.place || "--"}</strong>
+          </div>
+          `
+        );
+
+      });
+
+      list.appendChild(el);
+
+    });
+
+  }catch(error){
+
+    console.error(error);
+
+    list.innerHTML =
+      `<div class="empty">Не удалось загрузить данные о землетрясениях.</div>`;
+
+  }
+}
+
+
+/* ---------------- MOON ---------------- */
+
+function getMoon(){
+
+  const known =
+    Date.UTC(2000,0,6,18,14,0);
+
+  const now =
+    Date.now();
+
+  const synodic =
+    29.530588853;
+
+  const age =
+    ((now-known)/86400000) %
+    synodic;
+
+  const illumination =
+    (1-Math.cos(age/synodic*2*Math.PI))/2;
+
+  let phase;
+  let icon;
+
+  if(age < 1.845){
+    phase="Новолуние";
+    icon="🌑";
+  }else if(age < 5.536){
+    phase="Растущий серп";
+    icon="🌒";
+  }else if(age < 9.228){
+    phase="Первая четверть";
+    icon="🌓";
+  }else if(age < 12.919){
+    phase="Растущая Луна";
+    icon="🌔";
+  }else if(age < 16.611){
+    phase="Полнолуние";
+    icon="🌕";
+  }else if(age < 20.302){
+    phase="Убывающая Луна";
+    icon="🌖";
+  }else if(age < 23.994){
+    phase="Последняя четверть";
+    icon="🌗";
+  }else if(age < 27.685){
+    phase="Убывающий серп";
+    icon="🌘";
+  }else{
+    phase="Новолуние";
+    icon="🌑";
+  }
+
+  document.getElementById("moonIcon").textContent =
+    icon;
+
+  document.getElementById("moonPhase").textContent =
+    phase;
+
+  document.getElementById("moonAge").textContent =
+    "Возраст Луны: " + n(age,1) + " суток";
+
+  document.getElementById("moonIllum").textContent =
+    "Освещённость: " + n(illumination*100,0) + "%";
+
+  document.getElementById("moonCity").textContent =
+    CITIES[cityKey].name;
+}
+
+
+/* ---------------- NAVIGATION ---------------- */
+
+function showScreen(name){
+
+  document.querySelectorAll(".screen")
+    .forEach(screen=>{
+      screen.classList.remove("active");
+    });
+
+  const target =
+    document.getElementById("screen-"+name);
+
+  if(target){
+    target.classList.add("active");
+  }
+
+  document.querySelectorAll(".nav-btn")
+    .forEach(btn=>{
+      btn.classList.toggle(
+        "active",
+        btn.dataset.screen === name
+      );
+    });
+
+  if(name === "air"){
+    loadAir();
+  }
+
+  if(name === "magnetic"){
+    loadMagnetic();
+  }
+
+  if(name === "earthquakes"){
+    loadEarthquakes();
+  }
+
+  if(name === "moon"){
+    getMoon();
+  }
+}
+
+
+document.querySelectorAll(".nav-btn")
+  .forEach(btn=>{
+
+    btn.addEventListener("click",()=>{
+      showScreen(btn.dataset.screen);
+    });
+
+  });
+
+
+/* ---------------- CITY ---------------- */
+
+document.getElementById("citySelect")
+  .addEventListener("change",event=>{
+
+    cityKey = event.target.value;
+
+    selectedDay = 0;
+
+    loadWeather();
+    loadAir();
+
+    document.getElementById("airCity").textContent =
+      CITIES[cityKey].name;
+
+    document.getElementById("moonCity").textContent =
+      CITIES[cityKey].name;
+
+    document.getElementById("quakeCity").textContent =
+      CITIES[cityKey].name + " · радиус 500 км";
+
+  });
+
+
+/* ---------------- TABS ---------------- */
+
+document.querySelectorAll(".tab")
+  .forEach(tab=>{
+
+    tab.addEventListener("click",()=>{
+
+      document.querySelectorAll(".tab")
+        .forEach(t=>t.classList.remove("active"));
+
+      tab.classList.add("active");
+
+      currentMetric =
+        tab.dataset.metric;
+
+      renderChart();
+
+    });
+
+  });
+
+
+/* ---------------- MODAL ---------------- */
+
+function openModal(title,content){
+
+  document.getElementById("modalTitle").textContent =
+    title;
+
+  document.getElementById("modalContent").innerHTML =
+    content;
+
+  document.getElementById("modal")
+    .classList.add("show");
+
+}
+
+
+function closeModal(){
+
+  document.getElementById("modal")
+    .classList.remove("show");
+
+}
+
+
+document.getElementById("modalClose")
+  .addEventListener("click",closeModal);
+
+document.getElementById("modal")
+  .addEventListener("click",event=>{
+
+    if(event.target.id === "modal"){
+      closeModal();
+    }
+
+  });
+
+
+/* ---------------- START ---------------- */
+
+loadWeather();
+loadAir();
+getMoon();
+
+setInterval(()=>{
+  loadWeather();
+  loadAir();
+  loadMagnetic();
+},15*60*1000);
+
+</script>
+
+</body>
+</html>
