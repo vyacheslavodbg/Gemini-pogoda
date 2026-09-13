@@ -1,12 +1,15 @@
 "use strict";
 
-const CACHE_NAME = "aura-shell-v2";
+const CACHE_NAME = "aura-shell-v3";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./app.html",
   "./manifest.webmanifest",
-  "./icon.svg"
+  "./icon.svg",
+  "./icon-180.png",
+  "./icon-192.png",
+  "./icon-512.png"
 ];
 
 self.addEventListener("install", event => {
@@ -37,7 +40,7 @@ self.addEventListener("fetch", event => {
   const url = new URL(request.url);
 
   // Внешние погодные и геосервисы всегда идут напрямую в сеть,
-  // чтобы приложение не показывало устаревшую погоду из кэша.
+  // чтобы приложение не показывало устаревшие данные из кэша.
   if (url.origin !== self.location.origin) return;
 
   if (request.mode === "navigate") {
