@@ -3,8 +3,14 @@ import json
 import urllib.request
 from datetime import datetime, timezone
 
-BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
-CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
+
+def clean_env(name):
+    value = os.environ.get(name, "")
+    return value.strip().strip('"').strip("'")
+
+
+BOT_TOKEN = clean_env("TELEGRAM_BOT_TOKEN")
+CHAT_ID = clean_env("TELEGRAM_CHAT_ID")
 
 LOCATIONS = {
     "varna": {
@@ -113,7 +119,6 @@ def check_location(location):
 
     alerts = []
 
-    # Сильный ветер
     if gusts >= 70:
         alerts.append(
             f"💨 Очень сильный ветер: порывы до "
@@ -125,40 +130,34 @@ def check_location(location):
             f"<b>{gusts:.0f} км/ч</b>"
         )
 
-    # Очень низкая температура
     if temperature is not None and temperature <= -10:
         alerts.append(
             f"🥶 Очень низкая температура: "
             f"<b>{temperature:.1f}°C</b>"
         )
 
-    # Очень высокая температура
     if temperature is not None and temperature >= 35:
         alerts.append(
             f"🔥 Очень высокая температура: "
             f"<b>{temperature:.1f}°C</b>"
         )
 
-    # Осадки
     if precipitation >= 5:
         alerts.append(
             f"🌧 Сильные осадки: <b>{precipitation:.1f} мм</b>"
         )
 
-    # Сильный дождь
     if rain >= 5 or showers >= 5:
         alerts.append(
             f"☔ Сильный дождь: "
             f"<b>{max(rain, showers):.1f} мм</b>"
         )
 
-    # Снег
     if snowfall >= 2:
         alerts.append(
             f"❄️ Снег: <b>{snowfall:.1f} см</b>"
         )
 
-    # Коды опасной погоды Open-Meteo
     dangerous_codes = {
         65: "Сильный дождь",
         67: "Сильный ледяной дождь",
@@ -171,8 +170,6 @@ def check_location(location):
 
     if weather_code in dangerous_codes:
         condition = dangerous_codes[weather_code]
-
-        # Не дублируем дождь, если уже есть конкретное предупреждение
         if not any(condition in alert for alert in alerts):
             alerts.append(f"⚠️ {condition}")
 
@@ -186,7 +183,6 @@ def check_location(location):
             f"Порывы: {gusts:.0f} км/ч\n\n"
             + "\n".join(f"• {alert}" for alert in alerts)
         )
-
         return [message]
 
     return []
@@ -216,7 +212,7 @@ def main():
         print("No alert conditions detected.")
 
     print("Execution completed.")
-    
+
+
 if __name__ == "__main__":
     main()
-
