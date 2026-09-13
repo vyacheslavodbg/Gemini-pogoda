@@ -3,11 +3,28 @@ name: AURA Meteo Telegram Alert Bot
 on:
   schedule:
     - cron: '0 * * * *'
+    - cron: '17 17 * * *'
   workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Режим отправки'
+        type: choice
+        options:
+          - daily
+          - alerts
+        default: daily
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-telegram
+  cancel-in-progress: false
 
 jobs:
   check-and-notify:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -21,5 +38,11 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python bot.py
+          REPORT_MODE: ${{ github.event.inputs.mode || (github.event.schedule == '17 17 * * *' && 'daily' || 'alerts') }}
+        run: |
+          if [ "$REPORT_MODE" = "daily" ]; then
+            python daily_digest.py
+          else
+            python bot.py
+          fi
 

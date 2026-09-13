@@ -55,11 +55,11 @@ def send_telegram_message(text):
             print("[SUCCESS] Telegram message sent.")
             return True
 
-        print(f"[ERROR] Telegram API error: {result}")
+        print("[ERROR] Telegram API rejected message.")
         return False
 
     except Exception as error:
-        print(f"[ERROR] Telegram request failed: {error}")
+        print(f"[ERROR] Telegram request failed: {type(error).__name__}")
         return False
 
 
@@ -217,5 +217,6 @@ def main():
 
     print("Execution completed.")
     
-    if __name__ == "__main__":
-           main()
+if __name__ == "__main__":
+    main()
+
